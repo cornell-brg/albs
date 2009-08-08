@@ -9,29 +9,6 @@
 # information about the author, date, and copyright.
 
 #-------------------------------------------------------------------------
-# ALBS_INIT
-#-------------------------------------------------------------------------
-# Initialize the automatic LaTeX build system.
-#
-# Author : Christopher Batten
-# Date   : February 4, 2009
-
-AC_DEFUN([ALBS_INIT],
-[
-
-  # Normally the default prefix is an absolute path and it would never
-  # be in the source directory. For this build system though we want the
-  # default installation of document pdfs to end up in the top-level
-  # source directory so that they can be checked into version control
-  # and be available for others to view. So the only way I could figure
-  # out to do this is a little hacky requiring direct manipulation of
-  # ac_ shell variables which I am sure is not advised.
-
-  ac_default_prefix=`cd $srcdir && pwd`
-
-])
-
-#-------------------------------------------------------------------------
 # ALBS_PROG_PDFLATEX
 #-------------------------------------------------------------------------
 # Checks to make sure that pdflatex is in users path otherwise the
