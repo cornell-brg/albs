@@ -1,0 +1,67 @@
+#=========================================================================
+# SVG Module Makefile Fragment
+#=========================================================================
+# Currently we directly use inkscape and epstopdf in the makefile to
+# convert svg to pdf. Eventually we might want to modify the
+# configuration scripts and makefile so that we can support other
+# platforms which might use a different process for svg to pdf
+# conversion (ie rsvg-convert), but for now this is the simplest
+# approach. Note that if either inkscape or epstopdf are not available
+# then we do not define a svg to pdf conversion rule - so if you try to
+# build a document which needs this conversion LaTeX will complain that
+# it cannot find a .svg.pdf file. Please read the documenation in
+# 'albs-uguide.txt' for more details on how the Automatic LaTeX Build
+# System works.
+
+INKSCAPE = @inkscape@
+EPSTOPDF = @epstopdf@
+
+svg_enabled  = @svg_enabled@
+svg_figs     = $(filter %.svg.pdf, $(figs))
+svg_prebuild = $(svg_figs)
+
+ifeq ($(svg_enabled),yes)
+$(svg_figs) : %.svg.pdf : %.svg
+	$(INKSCAPE) --without-gui --export-text-to-path \
+    --export-eps $*.svg.eps \
+    $< 2>&1 \
+    | sed '/^.*Pango-WARNING.*$$/d;/^.*Xlib:.*$$/d;/^$$/d'
+	$(EPSTOPDF) $*.svg.eps 
+endif
+
+junk += $(svg_figs) $(patsubst %.pdf, %.eps, $(svg_figs))
+
+#-------------------------------------------------------------------------
+# SVG Split Template
+#-------------------------------------------------------------------------
+# This function creates a rule which extracts layers from an SVG to
+# create a new SVG figure with just those layers visible.
+#
+# Arguments:
+#  $(1) : base name
+#  $(2) : layer list with each layer separated by a dash
+#
+
+define svg_split
+  junk += $(1)-$(2).svg
+  $(1)-$(2).svg : $(1).svg
+	$(top_dir)/svg/svg-split-layers.rb $(subst -, ,$(2)) $$<
+endef
+
+#-------------------------------------------------------------------------
+# SVG Splits
+#-------------------------------------------------------------------------
+# List of SVG splits using the svg_split function. You can include a PDF
+# for each split SVG like normal in your latex document. For example,
+# assume we have an SVG file named test with two layers named layer0 and
+# layer1. Then we can create two separate SVG files, one with just
+# layer0 and one with both layers like this:
+#
+#  $(eval $(call svg_split,test,layer0))
+#  $(eval $(call svg_split,test,layer0-layer1))
+#
+# Then we can include these in our document like this:
+#
+#  \includegraphics{test-layer0.svg.pdf}
+#  \includegraphics{test-layer0-layer1.svg.pdf}
+#

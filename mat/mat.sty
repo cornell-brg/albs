@@ -1,0 +1,15 @@
+%=========================================================================
+% Matlab Module Tex Fragment
+%=========================================================================
+% Since the generated pdf will be included with the graphicx package we
+% make sure that this package is included. We also need to tell the
+% graphicx package that .mat.pdf is a valid graphics format and that
+% these files behave just like normal pdf files. Please read the
+% documenation in 'albs-uguide.txt' for more details on how the
+% Automatic LaTeX Build System works.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mat}[2008/11/28 ver 0.1]
+
+\RequirePackage{graphicx}
+\DeclareGraphicsRule{.mat.pdf}{pdf}{.mat.pdf}{}
