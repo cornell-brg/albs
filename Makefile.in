@@ -230,10 +230,7 @@ dist_junk += config.status Makefile config.log
 # Distribution
 #-------------------------------------------------------------------------
 # The distribution tarball is named project-name.tar.gz and it includes
-# the src and scripts directories. You can use the distcheck target to
-# try untarring the distribution and then running configure, make, and
-# make distclean. A "directory is not empty" error means distclean is
-# not removing everything.
+# the src and scripts directories as well as all the build modules.
 
 dist_files = \
 	README \
@@ -249,19 +246,41 @@ dist_files = \
 	Makefile.in \
 	$(modules) \
 
+# If the version information is not in the configure script, then we
+# assume that we are in a working directory. We use the vcs-version.sh
+# script in the scripts directory to generate an appropriate version
+# string. Currently the way things are setup we have to run this script
+# everytime we type make - there might be a better way to do this.
+
+ifeq (@PACKAGE_VERSION@,?)
+	project_ver=$(shell $(scripts_dir)/vcs-version.sh $(src_dir))
+else
+	project_ver=@PACKAGE_VERSION@
+endif
+
 project_name_ver := $(project_name)-$(project_ver)
 project_tgz      := $(project_name_ver).tar.gz
-dist : $(project_tgz)
-$(project_tgz) :
+
+dist :
 	rm -rf $(project_name_ver)
 	mkdir $(project_name_ver)
-	svnversion $(top_dir) | tee $(project_name_ver)/.svnversion
-	tar --exclude=.svn -C $(top_dir) -cf - $(dist_files) \
+	tar -C $(top_dir) -cf - $(dist_files) \
 	  | tar -C $(project_name_ver) -xpf -
+	sed -i.bak -e 's/^\(Version :\).*/\1 $(project_ver)/' \
+	  $(project_name_ver)/README
+	sed -i.bak -e 's/\( proj_version,\).*/\1 [$(project_ver)])/' \
+	  $(project_name_ver)/configure.ac
+	cd $(project_name_ver) && autoconf && \
+	  rm -rf autom4te.cache configure.ac.bak README.bak
 	tar -czvf $(project_tgz) $(project_name_ver)
 	rm -rf $(project_name_ver)
 
-distcheck : $(project_tgz)
+# You can use the distcheck target to try untarring the distribution and
+# then running configure, make, make check, and make distclean. A
+# "directory is not empty" error means distclean is not removing
+# everything.
+
+distcheck : dist
 	rm -rf $(project_name_ver)
 	tar -xzvf $(project_tgz)
 	mkdir -p $(project_name_ver)/build
@@ -269,7 +288,7 @@ distcheck : $(project_tgz)
 	rm -d $(project_name_ver)/build
 	rm -rf $(project_name_ver)
 
-junk += $(project_tgz) $(project_name_ver)
+junk += $(project_name)-*.tar.gz
 
 .PHONY : dist distcheck
 
