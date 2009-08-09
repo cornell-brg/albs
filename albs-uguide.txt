@@ -17,11 +17,10 @@ general user reference.
  Table of Contents
   Part 1: Tutorial
    1.1. Building a Project
-   1.2. Creating a New Project
-   1.3. Adding LaTeX Source Files
-   1.4. Adding SVG Figures
-   1.5. Adding a New Build System Module
-   1.6. Prebuilding Module Output
+   1.2. Adding LaTeX Source Files
+   1.3. Adding SVG Figures
+   1.4. Adding a New Build System Module
+   1.5. Prebuilding Module Output
   Part 2: Reference
    2.1. Basic Autoconf Toolflow
    2.2. Basic Make Toolflow
@@ -33,33 +32,33 @@ general user reference.
 
 This part walks through using the Automatic LaTeX Build System to create
 a new document, add figures, and add a new build system module. You can
-follow through the tutorial yourself by typing in the commands marked
-with a '>' symbol at the shell prompt. Tasks to try on your own are
-denoted with (*).
+follow along through the tutorial yourself by typing in the commands
+marked with a '%' symbol at the shell prompt. Tasks to try on your own
+are denoted with (*). To cut and paste commands from this tutorial into
+your bash shell (and make sure bash ignores the '%' character) just use
+an alias to "undefine" the '%' character like this:
 
-Throughout this tutorial we will be working with the ALBS template. So
-the first thing we need to do is acquire this template either as a
-tarball or through subversion. Once we have the template we will place
-it into a directory called 'albs-tut'. To simplify the tutorial we
-define a '$PROJROOT' environment variable which contains the project's
-toplevel root directory, and then we will use this variable throughout
-the tutorial.
+ % alias %=""
 
- > PROJROOT=$PWD/albs-tut
+Before creating a new project we need to decide what to name the
+project, and thus the primary document. For this tutorial we will use
+the abbreviated name 'mcppbs-tut'. So the first step is to create a
+directory with the project name, and to simplify the rest of the
+tutorial we will also define a '$PROJROOT' environment variable which
+contains the absolute path to the project's toplevel root directory.
 
-If you have the template as a tarball then you might do this:
+ % mkdir albs-tut
+ % cd albs-tut
+ % PROJROOT=$PWD
 
- % tar -xzvf albs-0.01.tar.gz
- % mv albs-0.01 $PROJROOT
+To instantiate the build system, we need to first download the 'albs'
+template from the public git repository and then we will add some
+metadata about our project to 'configure.ac'
 
-If you want to access the template from a subversion repository you
-might do something like this (assuming the path to the repository is in
-the '$REPO' environment variable):
+ % TGZ=http://gitorious.org/cbatten-sw/albs/archive-tarball/master
+ % wget -O- $TGZ | tar xzf -
 
- > svn export $REPO/templates/albs $PROJROOT
-
-After acquiring the template, take a look at the files in the toplevel
-project directory.
+Take a look at the files in the toplevel project directory.
 
  - 'README'           : Project documentation
  - 'albs-uguide.txt'  : Build system user guide
@@ -82,24 +81,67 @@ subdirectory, all of the images to be included in the document should go
 in the 'images' subdirectory, and other file formats should go in the
 appropriate build system module subdirectory (to be discussed later).
 
+After acquiring the template, we need to update the metadata in
+'configure.ac' with the new project's name, maintainer's name, and a
+shorter abbreviated form of the project name. The abbreviated form
+should be all lowercase, use a dash as a separator, and usually is the
+same as the project directory name. We want to change the metadata in
+'configure.ac' so that it looks like this:
+
+ m4_define( proj_name,         [ALBS Tutorial])
+ m4_define( proj_maintainer,   [Christopher Batten])
+ m4_define( proj_abbreviation, [albs-tut])
+ m4_define( proj_version,      [0.0])
+
+For the tutorial we use sed to make the change, but you can also use
+your favorite text editor. Note that after we change 'configure.ac' we
+need to rerun the autoconf tools.
+
+ % cd $PROJROOT
+ % sed -i.bak \
+     -e 's/\( proj_name,\).*/\1         [ALBST Tutorial])/'    \
+     -e 's/\( proj_maintainer,\).*/\1   [Christopher Batten])/' \
+     -e 's/\( proj_abbreviation,\).*/\1 [albs-tut])/'         \
+     -e 's/\( proj_version,\).*/\1      [0.0])/' configure.ac
+ % autoconf 
+
+This might also be a good time to update the 'README' with information
+specific to the new project. You are encouraged to keep a pointer in the
+'README' to the documentation on the build system ('albs-uguide.txt') so
+that your end-users can learn how the build system works.
+
+The build system assumes that the default toplevel LaTeX file has the
+same name as your project, so we need to rename the 'albs.tex' and
+'albs.bib' files in the 'src' subdirectory.
+
+ % cd $PROJROOT/src
+ % mv albs.tex albs-tut.tex
+ % mv albs.bib albs-tut.bib
+
+Take a look at the toplevel 'albs-tut.tex' file. Since we changed the
+name of the bibliography we also need to change the corresponding
+'bibliography' line in 'albs-tut.tex'.
+
+ % cd $PROJROOT/src
+ % sed -i.bak -e 's/\(bibliography{\)albs/\1albs-tut/' albs-tut.tex
+
 --------------------------------------------------------------------------
 1.1. Building a Project
 --------------------------------------------------------------------------
 
-The first thing we will try is just building the ALBS template as is.
-The build system is structured so that we do not intermingle the
-generated files with the source files. This makes it much easier to
-manage larger projects. You should _always_ create a separate build
-directory in which to build the project. To do a clean build you just
-need to delete the build directory and start over. The following
-commands create a build directory, configure the project, and then build
-the project.
+The first thing we will try is just building the project. The build
+system is structured so that we do not intermingle the generated files
+with the source files. This makes it much easier to manage larger
+projects. You should _always_ create a separate build directory in which
+to build the project. To do a clean build you just need to delete the
+build directory and start over. The following commands create a build
+directory, configure the project, and then build the project.
 
- > cd $PROJROOT
- > mkdir build
- > cd build
- > ../configure
- > make
+ % cd $PROJROOT
+ % mkdir build
+ % cd build
+ % ../configure
+ % make
 
 Notice that we run the portable 'configure' shell script to customize
 the build system for the current platform. The 'configure' script
@@ -108,20 +150,20 @@ see that it is checking if 'pdflatex' and 'bibtex' are installed. The
 build system uses a few critical Ruby scripts, so we also check to see
 if Ruby is installed.
 
-Take a look at the generated document in 'albs.pdf'. Also look through
-the other files in the build directory. You should see the following
-files:
+Take a look at the generated document in 'albs-tut.pdf'. Also look
+through the other files in the build directory. You should see the
+following files:
 
  - 'Makefile'      : 'configure' generated makefile
  - 'config.log'    : Log from 'configure' script
  - 'config.status' : Cached version of the 'configure' script
  - 'svg.mk'        : Makefile fragment for SVG build system module
  - 'mat.mk'        : Makefile fragment for Matlab build system module
- - 'albs.d'        : Auto-generated dependency file
- - 'albs.log'      : Log file from running LaTeX
- - 'albs.out'      : Output from running LaTeX
- - 'albs.aux'      : Auxiliary file generated by LaTeX
- - 'albs.pdf'      : Final document PDF
+ - 'albs-tut.d'    : Auto-generated dependency file
+ - 'albs-tut.log'  : Log file from running LaTeX
+ - 'albs-tut.out'  : Output from running LaTeX
+ - 'albs-tut.aux'  : Auxiliary file generated by LaTeX
+ - 'albs-tut.pdf'  : Final document PDF
 
 The 'configure' script takes the 'Makefile.in' file in the project root
 directory and makes some substitutions for special variables denoted
@@ -134,139 +176,59 @@ that the build system can always find the source files. Also take a look
 at the final document PDF. We will talk more about the other files later
 in the tutorial.
 
-You should also find that 'albs.pdf' has been copied to the project root
-directory. The build system always copies the final PDF files to the
-project root directory so that they can be checked into subversion. This
-enables someone to checkout the project and quickly view the most recent
-version of the document without having to build it from scratch. It can
-also be useful when browsing a LaTeX project using an online repository
-client.
-
 To clean up the build directory we can use the 'clean' make target. Take
-a look at what is in the build directory before and after running 
-'make clean'. Afterwards you should just see the scripts generated by
-'configure'. 
+a look at what is in the build directory before and after running 'make
+clean'. Afterwards you should just see the scripts generated by
+'configure'.
 
- > cd $PROJROOT/build
- > make clean
-
-To remove everything so that the build directory is completely empty we
-use the 'distclean' make target. We also delete the generated 'albs.pdf'
-document in the toplevel because we are going to change the name of our
-project in the next section.
-
- > cd $PROJROOT/build
- > make distclean
- > rm -rf ../albs.pdf
+ % cd $PROJROOT/build
+ % make clean
 
 --------------------------------------------------------------------------
-1.2. Creating a New Project
---------------------------------------------------------------------------
-
-Before creating a new project we need to decide what to name the
-project. We should choose both a longer descriptive name (eg. ALBS
-Tutorial) as well as a short abbreviated name (eg. 'albs-tut'). We have
-already created an appropriately named project directory. To instantiate
-the template we also need to modify the toplevel 'configure.ac' script
-and some of the LaTeX source files.
-
-We first update the metadata in 'configure.ac' with the new project's
-name, version number, maintainer's name, and a shorter abbreviated form
-of the project name. The abbreviated form should be all lowercase and
-use a dash as a separator. We want to change the metadata in
-'configure.ac' so that it looks like this:
-
- m4_define( proj_name,         [ALBS Tutorial])
- m4_define( proj_version,      [0.1.0])
- m4_define( proj_maintainer,   [Christopher Batten])
- m4_define( proj_abbreviation, [albs-tut])
-
-For the tutorial we use sed to make the change, but you can also use
-your favorite text editor. 
-
- > cd $PROJROOT
- > sed -i.bak \
-    -e 's/\( proj_name,\).*/\1         [ALBS Tutorial])/'      \
-    -e 's/\( proj_version,\).*/\1      [0.1.0])/'              \
-    -e 's/\( proj_maintainer,\).*/\1   [Christopher Batten])/' \
-    -e 's/\( proj_abbreviation,\).*/\1 [albs-tut])/' configure.ac
-
-The 'configure.ac' file is used as input by the 'autoconf' tool when
-generating the portable 'configure' shell script. This shell script is
-what is actually executed to customize the build system for a given
-platform. Since we changed 'configure.ac' we need to rerun 'autoconf'
-which will then regenerate the 'configure' script.
-
- > cd $PROJROOT
- > autoconf
-
-We also need to change the names of the files in the 'src' directory. By
-default, the build system assumes that the toplevel LaTeX document file
-name is the same as the abbreviated project name. So for the tutorial we
-need to rename 'albs.tex' to 'albs-tut.tex' and 'albs.bib' to
-'albs-tut.bib'.
-
- > cd $PROJROOT/src
- > mv albs.tex albs-tut.tex
- > mv albs.bib albs-tut.bib
-
-Take a look at the toplevel 'albs-tut.tex' file. Since we changed the
-name of the bibliography we also need to change the corresponding
-'bibliography' line in 'albs-tut.tex'.
-
- > cd $PROJROOT/src
- > sed -i.bak -e 's/\(bibliography{\)albs/\1albs-tut/' albs-tut.tex
-
-This is all we need to do to instantiate the template. We can now go
-ahead and rebuild the project. 
-
- > cd $PROJROOT/build
- > ../configure
- > make
-
-Verify that the 'albs-tut.pdf' document was build correctly.
-
---------------------------------------------------------------------------
-1.3. Adding LaTeX Source Files
+1.2. Adding LaTeX Source Files
 --------------------------------------------------------------------------
 
 LaTeX source files should always be placed in the 'src' subdirectory.
 Let's add a new source file named 'secA.tex' which contains the first
 section in the document.
 
- > cd $PROJROOT/src
- > (cat <<END
-     \section{Section A}
-     \label{secA}
-     This document has multiple sections (see Section~\ref{secB}).
-   END
-   ) > secA.tex
+ % cd $PROJROOT/src
+ % cat > secA.tex \
+<<'END'
+
+ \section{Section A}
+ \label{secA}
+ This document has multiple sections (see Section~\ref{secB}).
+
+END
 
 We also add a second source file named 'secB.tex' which contains the
 second section. Notice that both files have cross-references to each
 other.
 
- > cd $PROJROOT/src
- > (cat <<END
-     \section{Section B}
-     \label{secB}
-     This document has multiple sections (see Section~\ref{secA}).
-   END
-   ) > secB.tex
+ % cd $PROJROOT/src
+ % cat > secB.tex \
+<<'END'
+
+ \section{Section B}
+ \label{secB}
+ This document has multiple sections (see Section~\ref{secA}).
+
+END
 
 Finally, we update the toplevel 'albs-tut.tex' file to include both
 sections.
 
- > cd $PROJROOT/src
- > sed -i.bak '/% Body/ a \
+ % cd $PROJROOT/src
+ % sed -i.bak '/% Body/ a \
      \\input{secA} \
      \\input{secB} ' albs-tut.tex
 
 After making these changes we can rebuild the project. Take notice of
 how many times the build system runs LaTeX.
 
- > cd $PROJROOT/build
- > make
+ % cd $PROJROOT/build
+ % make
 
 If you look closely when rebuilding the document, you will see that the
 build system runs LaTeX twice so that it can correctly resolve the
@@ -277,9 +239,9 @@ reference documentation later in this guide for more information).
 
 Now try touching the 'secA.tex' file and rerun make.
 
- > cd $PROJROOT/build
- > touch ../src/secA.tex
- > make
+ % cd $PROJROOT/build
+ % touch ../src/secA.tex
+ % make
 
 Notice that it only runs LaTeX once because none of the cross-references
 have changed. Also notice that the build system automatically determined
@@ -300,7 +262,7 @@ the reference in one of the sections, and verify that everything works
 correctly.
 
 --------------------------------------------------------------------------
-1.4. Adding SVG Figures
+1.3. Adding SVG Figures
 --------------------------------------------------------------------------
 
 By default, the build system supports automatically converting SVG
@@ -311,14 +273,16 @@ SVG files, but since SVG is just a plain text file format we can also
 create simple figures manually. The following SVG code creates two
 overlapping circles.
 
- > cd $PROJROOT/svg
- > (cat <<END
-     <svg>
-       <circle cx='0'  cy='0' r='40' style='fill: red'  />
-       <circle cx='30' cy='0' r='40' style='fill: blue' />
-     </svg>
-   END
-   ) > circles.svg
+ % cd $PROJROOT/svg
+ % cat > circles.svg \
+<<'END'
+
+ <svg>
+   <circle cx='0'  cy='0' r='40' style='fill: red'  />
+   <circle cx='30' cy='0' r='40' style='fill: blue' />
+ </svg>
+
+END
 
 The build system will only convert this SVG file if it is actually used
 by the LaTeX source. So we now use the 'includegraphics' macro to
@@ -329,14 +293,14 @@ dependency, and then the build system will automatically know it should
 create 'circles.svg.pdf' from 'circles.svg' using Inkscape. First, we
 include the circles figure in the one of the sections.
 
- > cd $PROJROOT/src
- > sed -i.bak '/\\label{secA}/ a \
+ % cd $PROJROOT/src
+ % sed -i.bak '/\\label{secA}/ a \
      \\includegraphics{circles.svg.pdf}' secA.tex
 
 Now we rebuild the project.
 
- > cd $PROJROOT/build
- > make 
+ % cd $PROJROOT/build
+ % make 
 
 If you look closely at the output you will see that the build system
 runs 'inkscape' from the command line to convert the SVG file to EPS.
@@ -351,7 +315,7 @@ converted to PDF. If you use the 'touch' command to update both images,
 then the build system will reconvert both of them.
 
 --------------------------------------------------------------------------
-1.5. Adding a New Build System Module
+1.4. Adding a New Build System Module
 --------------------------------------------------------------------------
 
 The build system's support for SVG files is an example of a build system
@@ -370,23 +334,25 @@ layout the graph. Instead we use the 'dot' command to layout the graph
 and generate the actual diagram. To see how this works, let's first
 create an example DOT file.
 
- > cd $PROJROOT/build
- > (cat <<END
-     digraph G 
-     {
-       A -> C;
-       B -> C;
-     }
-   END
-   ) > graph.dot
+ % cd $PROJROOT/build
+ % cat > graph.dot \
+<<'END'
+
+ digraph G 
+ {
+   A -> C;
+   B -> C;
+ }
+
+END
 
 This file specifies a simple graph with three nodes labelled 'A', 'B',
 and 'C'. There are two edges connecting 'A' to 'C' and 'B' to 'C'. We
 can now run the 'dot' command to layout this graph and generate a
 diagram in PDF format.
 
- > cd $PROJROOT/build
- > dot -Tpdf -o graph.dot.pdf graph.dot
+ % cd $PROJROOT/build
+ % dot -Tpdf -o graph.dot.pdf graph.dot
 
 The '-T' command line argument specifies the output format and the '-o'
 command line argument specifies the name of the output file. Take a look
@@ -397,16 +363,16 @@ can make it difficult to manage figure spacing from with LaTeX. We can
 use the 'pdfcrop' command (usually included with LaTeX distributions) to
 remove the margins.
 
- > cd $PROJROOT/build
- > pdfcrop graph.dot.pdf graph.dot.pdf
+ % cd $PROJROOT/build
+ % pdfcrop graph.dot.pdf graph.dot.pdf
 
 We use the same name for the input and output files so the
 'graph.dot.pdf' file is overwritten with the cropped version. Take
 another look at the resulting PDF file to verify that the margins have
 been removed. Let's delete these temporary files.
 
- > cd $PROJROOT/build
- > rm -rf graph.dot graph.dot.pdf
+ % cd $PROJROOT/build
+ % rm -rf graph.dot graph.dot.pdf
 
 We now want to improve our build system so it automatically handles the
 conversion from DOT files to PDF files. One approach is to just add some
@@ -419,8 +385,8 @@ subdirectory. The name of the module and the corresponding subdirectory
 should be short, all lowercase, and usually reflect the type of files
 that module handles. We name our new module 'dot'.
 
- > cd $PROJROOT
- > mkdir dot
+ % cd $PROJROOT
+ % mkdir dot
 
 Next we need to add an autoconf fragment ('dot.ac'), a makefile fragment
 ('dot.mk.in'), and a small LaTeX package ('dot.sty'). First the autoconf
@@ -429,20 +395,22 @@ tools required to do the conversion are available. In this case, this
 means checking to make sure both the 'dot' command and the 'pdfcrop'
 command are installed.
 
- > cd $PROJROOT/dot
- > (cat <<'END'
-     AC_CHECK_PROGS([dot],[dot],[no])
-     AC_CHECK_PROGS([pdfcrop],[pdfcrop],[no])
-     AS_IF([test "$dot" = "no" || test "$pdfcrop" = "no"],
-     [
-       AC_MSG_WARN([Could not find either dot or pdfcrop])
-       AC_MSG_WARN([You will be unable to convert DOT to PDF])
-       dot_enabled=no
-     ],[
-       dot_enabled=yes
-     ])
-   END
-   ) > dot.ac
+ % cd $PROJROOT/dot
+ % cat > dot.ac \
+<<'END'
+
+ AC_CHECK_PROGS([dot],[dot],[no])
+ AC_CHECK_PROGS([pdfcrop],[pdfcrop],[no])
+ AS_IF([test "$dot" = "no" || test "$pdfcrop" = "no"],
+ [
+   AC_MSG_WARN([Could not find either dot or pdfcrop])
+   AC_MSG_WARN([You will be unable to convert DOT to PDF])
+   dot_enabled=no
+ ],[
+   dot_enabled=yes
+ ])
+
+END
 
 The autoconf fragment is written in the m4 macro language. The
 'AC_CHECK_PROGS' macro will see if the given command is in the current
@@ -469,24 +437,26 @@ that this fragment has the '.in' extension indicating that it will be
 processed by the 'configure' script. Our makefile fragment needs to
 contain rules which specify how to create PDF files from DOT files.
 
- > cd $PROJROOT/dot
- > (cat <<'END'
-     DOT     = @dot@
-     PDFCROP = @pdfcrop@
+ % cd $PROJROOT/dot
+ % cat > dot.mk.in \
+<<'END'
 
-     dot_enabled  = @dot_enabled@
-     dot_figs     = $(filter %.dot.pdf, $(figs))
-     dot_prebuild = $(dot_figs)
+ DOT     = @dot@
+ PDFCROP = @pdfcrop@
 
-     ifeq ($(dot_enabled),yes)
-     $(dot_figs) : %.dot.pdf : %.dot
-     <TAB>$(DOT) -Tpdf $< -o $@
-     <TAB>$(PDFCROP) $*.dot.pdf $*.dot.pdf
-     endif
-   
-     junk += $(dot_figs)
-   END
-   ) > dot.mk.in
+ dot_enabled  = @dot_enabled@
+ dot_figs     = $(filter %.dot.pdf, $(figs))
+ dot_prebuild = $(dot_figs)
+
+ ifeq ($(dot_enabled),yes)
+ $(dot_figs) : %.dot.pdf : %.dot
+ <TAB>$(DOT) -Tpdf $< -o $@
+ <TAB>$(PDFCROP) $*.dot.pdf $*.dot.pdf
+ endif
+
+ junk += $(dot_figs)
+
+END
 
 First we set two make variables with the appropriate 'dot' and 'pdfcrop'
 commands. Then we create a list of all the figures in the project which
@@ -498,19 +468,22 @@ test if '@dot_enabled@' equals 'yes'. So if the 'configure' script could
 not find the required commands, the makefile will not include this rule
 at all. Finally, we update the running 'junk' variable with the
 generated PDF files so that the 'clean' make target will correctly
-delete them.
+delete them. Note that you will need to replace '<TAB>' with a real tab
+character in order for this make fragment to actually work.
 
 The final piece of the build system module is a small LaTeX package
 which calls any necessary LaTeX macros required by this module.
 
- > cd $PROJROOT/dot
- > (cat <<END
-     \NeedsTeXFormat{LaTeX2e}
-     \ProvidesPackage{dot}[2008/10/09 ver 0.1]
-     \RequirePackage{graphicx}
-     \DeclareGraphicsRule{.dot.pdf}{pdf}{.dot.pdf}{}
-   END
-   ) > dot.sty
+ % cd $PROJROOT/dot
+ % cat > dot.sty \
+<<'END'
+
+ \NeedsTeXFormat{LaTeX2e}
+ \ProvidesPackage{dot}[2008/10/09 ver 0.1]
+ \RequirePackage{graphicx}
+ \DeclareGraphicsRule{.dot.pdf}{pdf}{.dot.pdf}{}
+
+END
 
 The first two lines are standard in all LaTeX packages. We use the
 'RequirePackage' macro to make sure that the 'graphicx' package is
@@ -523,41 +496,43 @@ use the new module. We do this by adding the module to the
 'ALBS_MODULES' macro in the toplevel 'configure.ac' and rerunning
 autoconf.
 
- > cd $PROJROOT
- > sed -i.bak 's/\(ALBS_MODULES(\[svg,mat\)/\1,dot/' configure.ac
- > autoconf
+ % cd $PROJROOT
+ % sed -i.bak 's/\(ALBS_MODULES(\[svg,mat\)/\1,dot/' configure.ac
+ % autoconf
 
 We are now ready to create a DOT file and include it in our LaTeX
 document. We will use the same graph as before, except that now we place
 the DOT file in the 'dot' subdirectory. All input files should be placed
 in the appropriate module subdirectory.
 
- > cd $PROJROOT/dot
- > (cat <<END
-     digraph G 
-     {
-       A -> C;
-       B -> C;
-     }
-   END
-   ) > graph.dot
+ % cd $PROJROOT/dot
+ % cat > graph.dot \
+<<'END'
+
+ digraph G 
+ {
+   A -> C;
+   B -> C;
+ }
+
+END
 
 We need to add a 'usepackge' macro call to the toplevel LaTeX file.
 
- > cd $PROJROOT/src
- > sed -i.bak '/\\usepackage{svg}/ a \
+ % cd $PROJROOT/src
+ % sed -i.bak '/\\usepackage{svg}/ a \
      \\usepackage{dot}' albs-tut.tex
 
 We include the generated PDF file in the second section.
 
- > cd $PROJROOT/src
- > sed -i.bak '/\\label{secB}/ a \
+ % cd $PROJROOT/src
+ % sed -i.bak '/\\label{secB}/ a \
      \\includegraphics{graph.dot.pdf}' secB.tex
 
 Finally, we can rebuild the project.
 
- > cd $PROJROOT/build
- > make
+ % cd $PROJROOT/build
+ % make
 
 If you look at the output during the build process you will first see
 that the build system reruns configure since the script has been changed
@@ -569,7 +544,7 @@ Also try modifying one of the source DOT files and verify that the final
 document is updated appropriately.
 
 --------------------------------------------------------------------------
-1.6. Prebuilding Module Output
+1.5. Prebuilding Module Output
 --------------------------------------------------------------------------
 
 Ideally we would always generate all the intermediate files (eg. the PDF
@@ -587,8 +562,8 @@ way for managing these prebuilt files.
 The first step is to actually do the prebuild. We do this with the
 'prebuild' make target.
 
- > cd $PROJROOT/build
- > make prebuild
+ % cd $PROJROOT/build
+ % make prebuild
 
 You should see that the generated 'circles.dot.pdf' and 'graph.dot.pdf'
 files are copied into a newly created 'prebuild' subdirectory of the
@@ -596,9 +571,9 @@ toplevel directory. We could now check in the prebuild directory. To see
 how we can use these prebuilt files, we will reconfigure our project
 without SVG and DOT support.
 
- > cd $PROJROOT/build
- > make distclean
- > ../configure --without-svg --without-dot
+ % cd $PROJROOT/build
+ % make distclean
+ % ../configure --without-svg --without-dot
 
 If you look at the output from the 'configure' script you will see that
 it skips over checking for 'inkscape', 'epstopdf', 'dot', and 'pdfcrop'.
@@ -606,8 +581,8 @@ This has the same effect as if those tools were not installed. If we now
 try and build the project you can see that the build system will copy
 the prebuilt files from the prebuild directory.
 
- > cd $PROJROOT/build
- > make
+ % cd $PROJROOT/build
+ % make
 
 If someone forgets to actually prebuild a file which you cannot build
 yourself, then you will see a make error like this:
@@ -615,9 +590,15 @@ yourself, then you will see a make error like this:
  make: *** No rule to make target `../prebuild/circles.svg.pdf', ...
 
 The fact that the target file is in the 'prebuild' directory is a clue
-that the file was not checked in. You can prebuild the files for just
+that the file is not provided - possibly someone forgot to run
+'prebuild' and check in the results. You can prebuild the files for just
 one module by using a target like 'prebuild-svg' and you can clean all
 of the prebuilt files with the 'clean-prebuild' target.
+
+We are now done with the tutorial, so we can remove the tutorial's
+working directory.
+
+ % rm -rf $PROJROOT
 
 --------------------------------------------------------------------------
 2. Reference
@@ -674,19 +655,15 @@ generated we can use 'make' to build the project. To regenerate the
 'configure' script users can just execute the following command in the
 toplevel project directory.
 
- % autoconf
-
-See the GNU Autoconf documentation
-('http://www.gnu.org/software/autoconf') for more details on using these
-tools.
+ > autoconf
 
 Given the basic GNU Autoconf toolflow, the following commands will
 create a new build directory and configure the build system (assuming we
 start in the toplevel project directory).
 
- % mkdir build
- % cd build
- % ../configure
+ > mkdir build
+ > cd build
+ > ../configure
 
 Note that most of the time we don't actually need to rerun 'autoconf';
 we just execute the portable 'configure' shell script to do the
@@ -700,7 +677,6 @@ name. They then need to rerun 'autoconf'. Here is an example of what
 this metadata looks like in 'configure.ac':
 
  m4_define( proj_name,         [Example LaTeX Document])
- m4_define( proj_version,      [0.1.0])
  m4_define( proj_maintainer,   [Christopher Batten])
  m4_define( proj_abbreviation, [exld])
 
@@ -708,6 +684,25 @@ The project abbreviation name should be the same as the name of the
 toplevel LaTeX file and it should use lowercase letters as well as
 dashes. This is just a very simplified description of the autoconf
 toolflow.
+
+The version metadata deserves special mention. Usually we are working on
+a project which is checked into some kind of version control system
+(VCS). In this case we don't really want to hard-code a version number
+into the 'configure.ac' file since it will quickly be out of date with
+respect to the VCS. So instead we usually mark the version as '?' in the
+'configure.ac' file and just use the standard VCS files to track
+revisions. When we make a distribution tarball though, the source code
+is exported from the VCS and we will loose version information. So the
+build system includes a script called 'vcs-version.sh' in the 'scripts'
+subdirectory which creates a version string suitable from the VCS. We
+can then use this string in the distribution. The makefile's 'dist'
+target will execute 'vcs-version.sh' and substitute the version string
+into the tarball name, the README, and the 'configure.ac' script so that
+users of the tarball will know what version the source code is from.
+
+This is just a very simplified description of the autoconf toolflow. See
+the GNU Autoconf documentation ('http://www.gnu.org/software/autoconf')
+for more details on using these tools.
 
 --------------------------------------------------------------------------
 2.2. Basic Make Toolflow
@@ -737,10 +732,10 @@ user will not need to make any changes to this toplevel 'Makefile'. So
 the following commands will configure and build the project (assuming we
 start in the root directory of the project).
 
- % mkdir build
- % cd build
- % ../configure
- % make
+ > mkdir build
+ > cd build
+ > ../configure
+ > make
 
 Note that we always build the project in a separate build directory to
 keep the generated content separate from the original source content.
@@ -754,7 +749,7 @@ default make target is to build 'foo.pdf' from 'src/foo.tex'. We can
 also specify a desired target to build on the 'make' command line. For
 example, to build the document 'foo.pdf' we use:
 
- % make foo.pdf
+ > make foo.pdf
 
 To efficiently build LaTeX projects, it is important to track all of the
 dependencies between the various input files. The build system includes
