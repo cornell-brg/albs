@@ -49,24 +49,17 @@ set -e
 # Command line parsing
 #-------------------------------------------------------------------------
 
-verbose=no
-while getopts "hv" OPTION; do
-  case $OPTION in
-    v) verbose=yes ;;
-    h|?)
-      echo ""
-      sed -n '3p' $0 | sed -e 's/#//'
-      sed -n '5,/^$/p' $0 | sed -e 's/#//'
-      exit 1
-      ;;
-  esac
-done
+if ( test "$1" = "-h" ); then
+  echo ""
+  sed -n '3p' $0 | sed -e 's/#//'
+  sed -n '5,/^$/p' $0 | sed -e 's/#//'
+  exit 1
+fi
 
 # Source directory command line option
 
 src_dir="."
-if ( test -n "$1" )
-then
+if ( test -n "$1" ); then
 	src_dir="$1"
 fi
 
@@ -86,7 +79,7 @@ elif ( cd $src_dir; \
        git rev-parse --is-inside-work-tree &> /dev/null ); then
   git_dir=`cd ${src_dir}; git rev-parse --git-dir`
   git_dir=`cd ${src_dir}; cd ${git_dir}; pwd`
-	GIT="git --git-dir=${git_dir}"
+ 	GIT="git --git-dir=${git_dir}"
 else
   echo "?"
   exit 1;
@@ -95,7 +88,6 @@ fi
 #-------------------------------------------------------------------------
 # Create the version string
 #-------------------------------------------------------------------------
-
 # See if we can do a describe based on a tag and if not use a default
 # release number of 0.0 so that we always get canonical version number
 
@@ -110,8 +102,7 @@ fi
 
 # Add a dirty suffix if working directory is dirty
 
-if !( cd ${src_dir}; \
-      ${GIT} status | grep -q "(working directory clean)" ); then
+if !( ${GIT} diff --quiet ); then
   ver_str="${ver_str}-dirty"
 fi
 

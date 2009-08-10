@@ -51,7 +51,6 @@ default : all
 .PHONY : default
 
 project_name := @PACKAGE_TARNAME@
-project_ver  := @PACKAGE_VERSION@
 top_dir      := @srcdir@
 src_dir      := @srcdir@/src
 scripts_dir  := $(top_dir)/scripts
@@ -60,6 +59,18 @@ prebuild_dir := $(top_dir)/prebuild
 modules      := @modules@
 VPATH        := $(src_dir) $(images_dir) \
                    $(addprefix $(top_dir)/, $(modules))
+
+# If the version information is not in the configure script, then we
+# assume that we are in a working directory. We use the vcs-version.sh
+# script in the scripts directory to generate an appropriate version
+# string. Currently the way things are setup we have to run this script
+# everytime we run make so the script needs to be as fast as possible.
+
+ifeq (@PACKAGE_VERSION@,?)
+	project_ver:=$(shell $(scripts_dir)/vcs-version.sh $(src_dir))
+else
+  project_ver:=@PACKAGE_VERSION@
+endif
 
 # Installation directories and programs
 
@@ -233,6 +244,7 @@ dist_junk += config.status Makefile config.log
 # the src and scripts directories as well as all the build modules.
 
 dist_files = \
+	$(modules) \
 	README \
 	COPYING \
 	albs-uguide.txt \
@@ -244,36 +256,26 @@ dist_files = \
 	aclocal.m4 \
 	configure \
 	Makefile.in \
-	$(modules) \
 
-# If the version information is not in the configure script, then we
-# assume that we are in a working directory. We use the vcs-version.sh
-# script in the scripts directory to generate an appropriate version
-# string. Currently the way things are setup we have to run this script
-# everytime we type make - there might be a better way to do this.
+dist_dir := $(project_name)-$(project_ver)
+dist_tgz := $(project_name)-$(project_ver).tar.gz
 
-ifeq (@PACKAGE_VERSION@,?)
-	project_ver=$(shell $(scripts_dir)/vcs-version.sh $(src_dir))
-else
-	project_ver=@PACKAGE_VERSION@
-endif
-
-project_name_ver := $(project_name)-$(project_ver)
-project_tgz      := $(project_name_ver).tar.gz
+# Notice that when we make the distribution we rewrite the configure.ac
+# script with the current version and we rerun autoconf in the new
+# source directory so that the distribution will have the proper version
+# information. We also rewrite the "Version : " line in the README.
 
 dist :
-	rm -rf $(project_name_ver)
-	mkdir $(project_name_ver)
-	tar -C $(top_dir) -cf - $(dist_files) \
-	  | tar -C $(project_name_ver) -xpf -
-	sed -i.bak -e 's/^\(Version :\).*/\1 $(project_ver)/' \
-	  $(project_name_ver)/README
-	sed -i.bak -e 's/\( proj_version,\).*/\1 [$(project_ver)])/' \
-	  $(project_name_ver)/configure.ac
-	cd $(project_name_ver) && autoconf && \
+	rm -rf $(dist_dir)
+	mkdir $(dist_dir)
+	tar -C $(top_dir) -cf - $(dist_files) | tar -C $(dist_dir) -xpf -
+	sed -i.bak 's/^\(Version :\).*/\1 $(project_ver)/' $(dist_dir)/README
+	sed -i.bak 's/\( proj_version,\).*/\1 [$(project_ver)])/' $(dist_dir)/configure.ac
+	cd $(dist_dir) && \
+    autoconf && \
 	  rm -rf autom4te.cache configure.ac.bak README.bak
-	tar -czvf $(project_tgz) $(project_name_ver)
-	rm -rf $(project_name_ver)
+	tar -czvf $(dist_tgz) $(dist_dir)
+	rm -rf $(dist_dir)
 
 # You can use the distcheck target to try untarring the distribution and
 # then running configure, make, make check, and make distclean. A
@@ -281,12 +283,11 @@ dist :
 # everything.
 
 distcheck : dist
-	rm -rf $(project_name_ver)
-	tar -xzvf $(project_tgz)
-	mkdir -p $(project_name_ver)/build
-	cd $(project_name_ver)/build; ../configure; make; make distclean
-	rm -d $(project_name_ver)/build
-	rm -rf $(project_name_ver)
+	rm -rf $(dist_dir)
+	tar -xzvf $(dist_tgz)
+	mkdir -p $(dist_dir)/build
+	cd $(dist_dir)/build; ../configure; make; make distclean
+	rm -rf $(dist_dir)
 
 junk += $(project_name)-*.tar.gz
 
