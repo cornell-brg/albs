@@ -1,15 +1,17 @@
 ==========================================================================
 Automatic LaTeX Build System Template
 ==========================================================================
-Author : Christopher Batten
-Date   : October 9, 2008
+Author  : Christopher Batten
+Date    : October 9, 2008
+Version : (under version control)
 
 This is a template for the Automatic LaTeX Build System. Please refer to
 'albs-uguide.txt' for more information on the build system. Writers
 should eventually replace this 'README' file with information on their
 new project if they are going to generally distribute the LaTeX source
 code. It is recommended that the new 'README' file keep a pointer to
-'albs-uguide.txt'.
+'albs-uguide.txt'. You may also want to keep the version information
+around so that you know what version of the build system you are using.
 
 --------------------------------------------------------------------------
 Template Instantiation
