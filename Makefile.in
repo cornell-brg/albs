@@ -80,7 +80,7 @@ install_docs_dir := $(DESTDIR)/doc
 
 install_docs = $(default_doc_pdfs)
 
-MKINSTALLDIRS := $(scripts_dir)/mkinstalldirs.sh
+MKINSTALLDIRS := $(scripts_dir)/mk-install-dirs.sh
 INSTALL       := @INSTALL@
 INSTALL_DOC   := $(INSTALL) -m 444
 
