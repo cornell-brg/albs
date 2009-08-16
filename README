@@ -1,9 +1,9 @@
 ==========================================================================
 Automatic LaTeX Build System Template
 ==========================================================================
-Author  : Christopher Batten
-Date    : October 9, 2008
-Version : (under version control)
+# Author  : Christopher Batten
+# Date    : October 9, 2008
+# Version : (under version control)
 
 This is a template for the Automatic LaTeX Build System. Please refer to
 'albs-uguide.txt' for more information on the build system. Writers

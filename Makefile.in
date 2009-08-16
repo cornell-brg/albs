@@ -269,7 +269,7 @@ dist :
 	rm -rf $(dist_dir)
 	mkdir $(dist_dir)
 	tar -C $(top_dir) -cf - $(dist_files) | tar -C $(dist_dir) -xpf -
-	sed -i.bak 's/^\(Version :\).*/\1 $(project_ver)/' $(dist_dir)/README
+	sed -i.bak 's/^\(# Version :\).*/\1 $(project_ver)/' $(dist_dir)/README
 	sed -i.bak 's/\( proj_version,\).*/\1 [$(project_ver)])/' $(dist_dir)/configure.ac
 	cd $(dist_dir) && \
     autoconf && \
