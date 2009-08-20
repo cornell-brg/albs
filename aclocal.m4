@@ -111,7 +111,7 @@ AC_DEFUN([ALBS_MODULES],
     # For each module include the appropriate autoconf fragment
 
     AS_IF([test    "$ALBS_MODULE_SHVAR_WITH" = "yes" \
-	            -a "$with_modules" = "yes" ],
+              -a "$with_modules" = "yes" ],
     [
       AC_MSG_NOTICE([configuring module : ALBS_MODULE_NORM])
       m4_include(ALBS_MODULE_NORM[]/ALBS_MODULE_NORM[].ac) 
@@ -120,11 +120,11 @@ AC_DEFUN([ALBS_MODULES],
       ALBS_MODULE_SHVAR_EN="no"
     ])
 
-	# Tell autoconf about the module's .mk.in file
+  # Tell autoconf about the module's .mk.in file
 
     AC_CONFIG_FILES(ALBS_MODULE_NORM[].mk:ALBS_MODULE_NORM[]/ALBS_MODULE_NORM[].mk.in)
 
-	# Substitute the module_enable make variable
+  # Substitute the module_enable make variable
 
     AC_SUBST(ALBS_MODULE_SHVAR_EN)
 
