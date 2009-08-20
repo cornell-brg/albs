@@ -75,14 +75,22 @@ endif
 # Installation directories and programs
 
 prefix  := @prefix@
-DESTDIR ?= $(prefix)
-install_docs_dir := $(DESTDIR)/doc
+enable_stow  := @enable_stow@
 
+ifeq ($(enable_stow),yes)
+  stow_pkg_dir := $(prefix)/pkgs
+  DESTDIR ?= $(stow_pkg_dir)/$(project_name)-$(project_ver)
+else
+  DESTDIR ?= $(prefix)
+endif
+
+install_docs_dir := $(DESTDIR)/doc
 install_docs = $(default_doc_pdfs)
 
 MKINSTALLDIRS := $(scripts_dir)/mk-install-dirs.sh
 INSTALL       := @INSTALL@
 INSTALL_DOC   := $(INSTALL) -m 444
+STOW          := @stow@
 
 # LaTeX programs
 
@@ -209,6 +217,12 @@ install-docs : $(install_docs)
 	done
 
 install : install-docs
+ifeq ($(enable_stow),yes)
+	$(MKINSTALLDIRS) $(stow_pkg_dir)
+	cd $(stow_pkg_dir) && \
+    $(STOW) --delete $(project_name)-* && \
+    $(STOW) $(project_name)-$(project_ver)
+endif
 
 .PHONY : install
 

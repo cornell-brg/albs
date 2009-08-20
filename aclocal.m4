@@ -9,13 +9,53 @@
 # information about the author, date, and copyright.
 
 #-------------------------------------------------------------------------
+# ALBS_STOW_INSTALL
+#-------------------------------------------------------------------------
+# This macro will add an --enable-stow command line option to the
+# configure script. When enabled, this macro will first check to see if
+# the stow program is available and if so it will set the $stow shell
+# variable to the binary name and the $enable_stow shell variable to
+# "yes". These variables are used in the MCPPBS makefile to
+# conditionally use stow for installation. This macro will also check to
+# see if the $STOW_PREFIX environment variable is set, and if so it will
+# change the prefix to this environment variable (assuming --prefix was
+# not set on the command line). This allows a user to specify once were
+# all packages should be installed.
+
+AC_DEFUN([ALBS_STOW_INSTALL],
+[
+  AC_PROG_INSTALL
+   
+  AC_ARG_VAR([STOW_PREFIX],[Prefix for stow-based installs])
+  AC_ARG_ENABLE(stow,
+    AS_HELP_STRING(--enable-stow,[Enable stow-based install]),
+      [enable_stow="yes"],[enable_stow="no"])
+   
+  AS_IF([ test ${enable_stow} = "yes" ],
+  [
+    AC_CHECK_PROGS([stow],[stow],[no])  
+    AS_IF([ test ${stow} = "no" ],
+    [
+      AC_MSG_ERROR([Cannot use --enable-stow since stow is not available])
+    ])
+   
+    AS_IF([ test "${prefix}" = "NONE" && test -n "${STOW_PREFIX}" ],
+    [
+      prefix="${STOW_PREFIX}"
+      AC_MSG_NOTICE([Using \$STOW_PREFIX from environment])
+      AC_MSG_NOTICE([prefix=${prefix}])
+    ])
+   
+  ])
+
+  AC_SUBST([enable_stow])
+])
+
+#-------------------------------------------------------------------------
 # ALBS_PROG_PDFLATEX
 #-------------------------------------------------------------------------
 # Checks to make sure that pdflatex is in users path otherwise the
 # configuration fails.
-#
-# Author : Christopher Batten
-# Date   : October 9, 2008
 
 AC_DEFUN([ALBS_PROG_PDFLATEX],
 [
@@ -34,9 +74,6 @@ AC_DEFUN([ALBS_PROG_PDFLATEX],
 # going to use a bibliography, but since pdflatex almost always comes
 # with bibtex we stop if we cannot find bibtex since it means 
 # something is probably setup wrong.
-#
-# Author : Christopher Batten
-# Date   : October 9, 2008
 
 AC_DEFUN([ALBS_PROG_BIBTEX],
 [
@@ -53,9 +90,6 @@ AC_DEFUN([ALBS_PROG_BIBTEX],
 # Checks to make sure that ruby is in users path otherwise the
 # configuration fails. We use ruby to scan files, process latex
 # dependencies, and to actually control running LaTeX/BibTeX.
-#
-# Author : Christopher Batten
-# Date   : October 9, 2008
 
 AC_DEFUN([ALBS_PROG_RUBY],
 [
@@ -71,9 +105,6 @@ AC_DEFUN([ALBS_PROG_RUBY],
 #-------------------------------------------------------------------------
 # Used to specify a list of modules to use for this document. The list
 # can include whitespace and newlines for readability.
-#
-# Author : Christopher Batten
-# Date   : October 9, 2008
 
 AC_DEFUN([ALBS_MODULES],
 [

@@ -36,7 +36,8 @@ AC_CONFIG_SRCDIR([src/]AC_PACKAGE_TARNAME[.tex])
 AC_CONFIG_AUX_DIR([scripts])
 AC_CANONICAL_BUILD
 
-ALBS_INIT
+# Stow-based installation
+ALBS_STOW_INSTALL
 
 #-------------------------------------------------------------------------
 # Checks for programs
@@ -45,8 +46,6 @@ ALBS_INIT
 ALBS_PROG_PDFLATEX
 ALBS_PROG_BIBTEX
 ALBS_PROG_RUBY
-
-AC_PROG_INSTALL
 
 #-------------------------------------------------------------------------
 # Build System Modules
