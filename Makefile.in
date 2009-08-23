@@ -67,7 +67,7 @@ VPATH        := $(src_dir) $(images_dir) \
 # everytime we run make so the script needs to be as fast as possible.
 
 ifeq (@PACKAGE_VERSION@,?)
-	project_ver:=$(shell $(scripts_dir)/vcs-version.sh $(src_dir))
+  project_ver:=$(shell $(scripts_dir)/vcs-version.sh $(src_dir))
 else
   project_ver:=@PACKAGE_VERSION@
 endif
@@ -167,8 +167,8 @@ modules_include := -I . $(addprefix -I $(top_dir)/, $(modules))
 
 $(doc_pdfs) : %.pdf : %.tex
 	$(RUNLATEX) --latex-prog $(PDFLATEX) --bibtex-prog $(BIBTEX) \
-      -I $(src_dir) -I $(images_dir) \
-      $(modules_include) -- -halt-on-error $<
+    -I $(src_dir) -I $(images_dir) \
+    $(modules_include) -- -halt-on-error $<
 
 junk += $(doc_pdfs)
 junk += $(patsubst %.pdf, %.out, $(doc_pdfs))
@@ -212,9 +212,9 @@ clean-prebuild :
 install-docs : $(install_docs)
 	$(MKINSTALLDIRS) $(install_docs_dir)
 	for file in $(install_docs); \
-	do \
-	  $(INSTALL_DOC) $$file $(install_docs_dir); \
-	done
+  do \
+    $(INSTALL_DOC) $$file $(install_docs_dir); \
+  done
 
 install : install-docs
 ifeq ($(enable_stow),yes)
@@ -231,10 +231,10 @@ endif
 #-------------------------------------------------------------------------
 
 configure_prereq = \
-	$(top_dir)/configure.ac \
-	$(top_dir)/aclocal.m4 \
-	$(join $(addprefix $(top_dir)/, $(modules)), \
-	       $(patsubst  %, /%.ac, $(modules)))
+  $(top_dir)/configure.ac \
+  $(top_dir)/aclocal.m4 \
+  $(join $(addprefix $(top_dir)/, $(modules)), \
+         $(patsubst  %, /%.ac, $(modules)))
 
 $(top_dir)/configure : $(configure_prereq)
 	cd $(top_dir) && autoconf
@@ -243,10 +243,10 @@ config.status : $(top_dir)/configure
 	./config.status --recheck
 
 modules_mk_in = \
-	$(join $(addprefix $(top_dir)/, $(modules)), \
-	       $(patsubst  %, /%.mk.in, $(modules)))
+  $(join $(addprefix $(top_dir)/, $(modules)), \
+         $(patsubst  %, /%.mk.in, $(modules)))
 
-Makefile : 	$(top_dir)/Makefile.in $(modules_mk_in) config.status
+Makefile : $(top_dir)/Makefile.in $(modules_mk_in) config.status
 	./config.status
 
 dist_junk += config.status Makefile config.log
@@ -258,18 +258,18 @@ dist_junk += config.status Makefile config.log
 # the src and scripts directories as well as all the build modules.
 
 dist_files = \
-	$(modules) \
-	README \
-	COPYING \
-	albs-uguide.txt \
-	src \
-	prebuild \
-	scripts \
-	images \
-	configure.ac \
-	aclocal.m4 \
-	configure \
-	Makefile.in \
+  $(modules) \
+  README \
+  COPYING \
+  albs-uguide.txt \
+  src \
+  prebuild \
+  scripts \
+  images \
+  configure.ac \
+  aclocal.m4 \
+  configure \
+  Makefile.in \
 
 dist_dir := $(project_name)-$(project_ver)
 dist_tgz := $(project_name)-$(project_ver).tar.gz
@@ -287,7 +287,7 @@ dist :
 	sed -i.bak 's/\( proj_version,\).*/\1 [$(project_ver)])/' $(dist_dir)/configure.ac
 	cd $(dist_dir) && \
     autoconf && \
-	  rm -rf autom4te.cache configure.ac.bak README.bak
+    rm -rf autom4te.cache configure.ac.bak README.bak
 	tar -czvf $(dist_tgz) $(dist_dir)
 	rm -rf $(dist_dir)
 

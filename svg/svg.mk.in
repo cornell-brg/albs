@@ -43,9 +43,11 @@ junk += $(svg_figs) $(patsubst %.pdf, %.eps, $(svg_figs))
 #
 
 define svg_split
-  junk += $(1)-$(2).svg
-  $(1)-$(2).svg : $(1).svg
+
+junk += $(1)-$(2).svg
+$(1)-$(2).svg : $(1).svg
 	$(top_dir)/svg/svg-split-layers.rb $(subst -, ,$(2)) $$<
+
 endef
 
 #-------------------------------------------------------------------------
