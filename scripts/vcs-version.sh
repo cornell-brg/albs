@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #=========================================================================
 # vcs-version.sh [options] [src-dir]
 #=========================================================================
@@ -60,7 +60,7 @@ fi
 
 src_dir="."
 if ( test -n "$1" ); then
-	src_dir="$1"
+  src_dir="$1"
 fi
 
 #-------------------------------------------------------------------------
@@ -73,17 +73,13 @@ fi
 # from configure). If the user does not specify a source directory use
 # the current directory.
 
-if ( git rev-parse --is-inside-work-tree &> /dev/null ); then
-  GIT="git"
-elif ( cd $src_dir; \
-       git rev-parse --is-inside-work-tree &> /dev/null ); then
-  git_dir=`cd ${src_dir}; git rev-parse --git-dir`
-  git_dir=`cd ${src_dir}; cd ${git_dir}; pwd`
- 	GIT="git --git-dir=${git_dir}"
-else
+if !( git rev-parse --is-inside-work-tree &> /dev/null ); then
   echo "?"
   exit 1;
 fi
+
+top_dir=`git rev-parse --show-cdup`
+cd ${top_dir}
 
 #-------------------------------------------------------------------------
 # Create the version string
@@ -91,19 +87,24 @@ fi
 # See if we can do a describe based on a tag and if not use a default
 # release number of 0.0 so that we always get canonical version number
 
-if ( ${GIT} describe --tags --match "rel-*" &> /dev/null ); then
-  ver_str=`${GIT} describe --tags --match "rel-*" | sed 's/rel-//'`
+if ( git describe --tags --match "rel-*" &> /dev/null ); then
+  ver_str=`git describe --tags --match "rel-*" | sed 's/rel-//'`
 else
   ver_num="0.0"
-  ver_commits=`${GIT} rev-list --all | wc -l | tr -d " "`
-  ver_sha=`${GIT} describe --tags --match "rel-*" --always`
+  ver_commits=`git rev-list --all | wc -l | tr -d " "`
+  ver_sha=`git describe --tags --match "rel-*" --always`
   ver_str="${ver_num}-${ver_commits}-g${ver_sha}"
 fi
 
 # Add a dirty suffix if working directory is dirty
 
-if !( ${GIT} diff --quiet ); then
+if !( git diff --quiet ); then
   ver_str="${ver_str}-dirty"
+else
+  untracked=`git ls-files --directory --exclude-standard --others -t`
+  if ( test -n "${untracked}" ); then
+    ver_str="${ver_str}-dirty"
+  fi  
 fi
 
 # Output the final version string
