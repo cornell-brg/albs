@@ -315,6 +315,16 @@ all : $(default_doc_pdfs)
 .PHONY : all
 
 #-------------------------------------------------------------------------
+# Makefile debugging
+#-------------------------------------------------------------------------
+# This handy rule will display the contents of any make variable by
+# using the target debug-<varname>. So for example, make debug-junk will
+# display the contents of the junk variable.
+
+debug-% :
+	@echo $* = $($*)
+
+#-------------------------------------------------------------------------
 # Clean up junk
 #-------------------------------------------------------------------------
 
