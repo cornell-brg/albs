@@ -9,7 +9,7 @@
 # information about the author, date, and copyright.
 
 #-------------------------------------------------------------------------
-# ALBS_STOW_INSTALL
+# ALBS_PROG_INSTALL
 #-------------------------------------------------------------------------
 # This macro will add an --enable-stow command line option to the
 # configure script. When enabled, this macro will first check to see if
@@ -22,7 +22,7 @@
 # not set on the command line). This allows a user to specify once were
 # all packages should be installed.
 
-AC_DEFUN([ALBS_STOW_INSTALL],
+AC_DEFUN([ALBS_PROG_INSTALL],
 [
   AC_PROG_INSTALL
    
