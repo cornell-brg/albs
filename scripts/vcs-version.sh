@@ -79,7 +79,7 @@ if !( git rev-parse --is-inside-work-tree &> /dev/null ); then
 fi
 
 top_dir=`git rev-parse --show-cdup`
-cd ${top_dir}
+cd ./${top_dir}
 
 #-------------------------------------------------------------------------
 # Create the version string
