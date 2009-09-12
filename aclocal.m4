@@ -31,10 +31,10 @@ AC_DEFUN([ALBS_PROG_INSTALL],
     AS_HELP_STRING(--enable-stow,[Enable stow-based install]),
       [enable_stow="yes"],[enable_stow="no"])
    
-  AS_IF([ test ${enable_stow} = "yes" ],
+  AS_IF([ test "${enable_stow}" = "yes" ],
   [
     AC_CHECK_PROGS([stow],[stow],[no])  
-    AS_IF([ test ${stow} = "no" ],
+    AS_IF([ test "${stow}" = "no" ],
     [
       AC_MSG_ERROR([Cannot use --enable-stow since stow is not available])
     ])
