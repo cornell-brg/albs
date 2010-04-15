@@ -26,11 +26,9 @@
 #
 # Author : Christopher Batten
 # Date   : August 11, 2008
-# 
+#
 
 require 'optparse'
-require 'rdoc/usage'
-require 'stringio'
 
 # Enable ruby warnings (this avoid problems with "ruby -w")
 $VERBOSE = true
@@ -40,10 +38,11 @@ $VERBOSE = true
 #-------------------------------------------------------------------------
 
 def usage()
-  $stdout = StringIO::new
-  RDoc::usage_no_exit
-  STDOUT.puts($stdout.string.gsub(/\A=+\n(.*)\n\n=+/,"\n\\1\n"))
-  exit(1)
+  puts ""
+  File::open($0).each do |line|
+    exit(1) if ( !(line =~ /^\#/) )
+    puts line.gsub(/^\#/,"") if (($. == 3) || ($. > 4))
+  end
 end
 
 $opts = {}
@@ -64,7 +63,7 @@ def parse_cmdline()
   end.parse!
 
   # Get the tex input source file name
-  $opts[:tex_full_name] = $ARGV.last() or throw OptionParser::InvalidOption
+  $opts[:tex_full_name] = ARGV.last() or throw OptionParser::InvalidOption
 
 rescue
   usage()
@@ -86,7 +85,7 @@ def main()
   if ( ENV['TEXINPUTS'] )
    texinputs = ENV['TEXINPUTS'].gsub(/^\.:/,"").gsub(/:$/,"")
   end
-  
+
   bibinputs = ""
   if ( ENV['BIBINPUTS'] )
    bibinputs = ENV['BIBINPUTS'].gsub(/^\.:/,"").gsub(/:$/,"")
@@ -169,7 +168,7 @@ def main()
     for bib in aux_bibdata
       bib_file_name = bib + ".bib"
 
-      # Search the input dirs for the bibdata file 
+      # Search the input dirs for the bibdata file
       for dir in $opts[:input_dirs]
         bib_full_name = "#{dir}/#{bib_file_name}"
         if ( File::exists?(bib_full_name) )
@@ -205,12 +204,12 @@ def main()
 
   # Run BibTeX if we need to
 
-  if ( need_bbl && !bbl_exists || bbl_outdated ) 
+  if ( need_bbl && !bbl_exists || bbl_outdated )
 
     puts("*** Run BibTeX ***")
     exit($?.exitstatus) if !system(bibtex_cmd)
     unresolved_xref = true
-    
+
     File::open(latex_bbl,"a") do |file|
       file.puts("% Extra data included by run-latex.rb")
       file.puts("%  bibstyle = #{aux_bibstyle}")
@@ -242,3 +241,4 @@ def main()
 
 end
 main()
+

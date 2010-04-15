@@ -3,7 +3,7 @@
 # mk-latex-deps.rb [options] texfile.tex
 #=========================================================================
 #
-#  -v --[no-]verbose  Verbose mode 
+#  -v --[no-]verbose  Verbose mode
 #  -h --help          Display this message
 #
 # This script scans the given texfile.tex file to generate a make
@@ -28,11 +28,9 @@
 #
 # Author : Christopher Batten
 # Date   : August 11, 2008
-# 
+#
 
 require 'optparse'
-require 'rdoc/usage'
-require 'stringio'
 
 # Enable ruby warnings (this avoid problems with "ruby -w")
 $VERBOSE = true
@@ -42,10 +40,11 @@ $VERBOSE = true
 #-------------------------------------------------------------------------
 
 def usage()
-  $stdout = StringIO::new
-  RDoc::usage_no_exit
-  STDOUT.puts($stdout.string.gsub(/\A=+\n(.*)\n\n=+/,"\n\\1\n"))
-  exit(1)
+  puts ""
+  File::open($0).each do |line|
+    exit(1) if ( !(line =~ /^\#/) )
+    puts line.gsub(/^\#/,"") if (($. == 3) || ($. > 4))
+  end
 end
 
 $opts = {}
@@ -55,7 +54,7 @@ def parse_cmdline()
     opts.on("-h", "--help")         { usage() }
     opts.on("-v", "--[no-]verbose") { |v| $opts[:verbose] = v }
   end.parse!
-  $opts[:tex_full_name] = $ARGV[0] or throw OptionParser::InvalidOption
+  $opts[:tex_full_name] = ARGV[0] or throw OptionParser::InvalidOption
 
   # full_name = path_name/file_name
   # file_name = base_name.file_ext
@@ -76,7 +75,7 @@ def write_header( file, char, text )
   file.puts( "#" + char*72 )
   file.puts( "# #{text}" )
   file.puts( "#" + char*72 )
-end 
+end
 
 #-------------------------------------------------------------------------
 # SimplePrereq
@@ -118,7 +117,7 @@ class SimplePrereq
     @prereq_for_dep_file = prereq_for_dep_file
   end
 
-  # Check to see if this line contains a prereq 
+  # Check to see if this line contains a prereq
 
   def check( line )
     prereq_full_names = []
@@ -135,7 +134,7 @@ class SimplePrereq
             prereq_full_names.push(prereq_full_name)
           end
 
-          # Add prereq to internal list 
+          # Add prereq to internal list
           if ( prereq_exists || !@depend_only_if_exists )
             @prereq_file_names.push(prereq_file_name)
             @prereq_file_names.uniq!
@@ -168,7 +167,7 @@ class SimplePrereq
     end
     if ( @prereq_for_dep_file )
       dep_file.puts( "doc_#{bname}_dep_prereqs += $(doc_#{bname}_#{@name})" )
-    end      
+    end
     dep_file.puts( "doc_#{bname}_prereqs += $(doc_#{bname}_#{@name})" )
     dep_file.puts( "" )
   end
