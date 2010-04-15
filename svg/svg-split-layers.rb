@@ -4,18 +4,16 @@
 #=========================================================================
 #
 #  -h --help          Display this message
-#  -v --[no-]verbose  Verbose mode 
+#  -v --[no-]verbose  Verbose mode
 #
 # Extract given layers into a new SVG file called
 # svgfile-layer1-layer2.svg
 #
 # Author : Christopher Batten
 # Date   : August 17, 2008
-# 
+#
 
 require 'optparse'
-require 'rdoc/usage'
-require 'stringio'
 
 # Enable ruby warnings (this avoid problems with "ruby -w")
 $VERBOSE = true
@@ -25,10 +23,11 @@ $VERBOSE = true
 #-------------------------------------------------------------------------
 
 def usage()
-  $stdout = StringIO::new
-  RDoc::usage_no_exit
-  STDOUT.puts($stdout.string.gsub(/\A=+\n(.*)\n\n=+/,"\n\\1\n"))
-  exit(1)
+  puts ""
+  File::open($0).each do |line|
+    exit(1) if ( !(line =~ /^\#/) )
+    puts line.gsub(/^\#/,"") if (($. == 3) || ($. > 4))
+  end
 end
 
 $opts = {}
@@ -41,8 +40,8 @@ def parse_cmdline()
     opts.on("-h", "--help")         { usage() }
   end.parse!
 
-  $opts[:svg_in_full_name] = $ARGV.pop()
-  $opts[:layer_names]      = $ARGV
+  $opts[:svg_in_full_name] = ARGV.pop()
+  $opts[:layer_names]      = ARGV
 
 rescue
   usage()
@@ -56,12 +55,12 @@ def main()
   parse_cmdline()
 
   # Output file name
-  
+
   svg_in_base_name    = File::basename($opts[:svg_in_full_name],".svg")
   svg_out_layer_names = $opts[:layer_names].join("-")
   svg_out_file_name   = "#{svg_in_base_name}-#{svg_out_layer_names}.svg"
 
-  # Collect svg header 
+  # Collect svg header
 
   group_opened   = false
   group_is_layer = false
@@ -76,18 +75,18 @@ def main()
       key = $1
       val = $2
 
-      if ( key == "inkscape:label" ) 
+      if ( key == "inkscape:label" )
         group_name = val
       end
 
-      if ((key == "inkscape:groupmode") && (val == "layer")) 
+      if ((key == "inkscape:groupmode") && (val == "layer"))
         group_is_layer = true
       end
 
       if ( key != "style" )
         if ( group_is_layer && (line =~ /(.*)>$/) )
           svg_out_file.puts($1)
-        else 
+        else
           svg_out_file.puts(line)
         end
       else
@@ -112,7 +111,7 @@ def main()
     end
 
     if ( line =~ /^\s*<g\s*$/ )
-      group_opened   = true 
+      group_opened   = true
       group_is_layer = false
       group_id       = ""
       group_style    = ""
