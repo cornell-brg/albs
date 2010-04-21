@@ -1,26 +1,26 @@
 %=========================================================================
-% CBX Article Class
+% CBX Article Class (IEEE Computer Society Format)
 %=========================================================================
 % This class file formats a paper according to the IEEE Computer Society
 % Guidelines for 8.5 x 11 proceedings. You should use \conference,
 % \title, \author, and \affiliation in your front matter and use
-% \cbxbib right before you use \bibliography{}. The relevant guidelines
-% are listed below. Note that I don't try to implement centered captions
-% nor positioning the table captions above the tables since these just
-% don't seem to make sense for captions which are more than just a
-% title. Although this class can be used for IEEE Computer Society
-% publications I also have code below which breaks the guidelines but
-% makes it look better in my opinion.
+% \bibliographystyle{abbrv} right before you use \bibliography{}. The
+% relevant guidelines are listed below. Note that I don't try to
+% implement centered captions nor positioning the table captions above
+% the tables since these just don't seem to make sense for captions which
+% are more than just a title. Although this class can be used for IEEE
+% Computer Society publications I also have code below which breaks the
+% guidelines but makes it look better in my opinion.
 %
 % Class Options
 %  - appearsin  : add appears in header
-%  - submitted  : add submitted & do not dist. header, draft watermark 
+%  - submitted  : add submitted & do not dist. header, draft watermark
 %  - draftcopy  : add draft copy & do not dist. header, draft watermark
 %  - blind      : remove author and affiliation information
 %  - pagenum    : add a page number to every page
 %
-% Author : Christopher Batten 
-% Date : February 3, 2009
+% Author : Christopher Batten
+% Date   : February 3, 2009
 %
 
 %-------------------------------------------------------------------------
@@ -60,7 +60,7 @@
 % one blank line before, and one after.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{cbxarticle}[2009/02/04 ver 0.1]
+\ProvidesClass{cbxarticle-ieee}[2009/02/04 ver 0.1]
 \LoadClass[10pt,twocolumn]{article}
 
 %-------------------------------------------------------------------------
@@ -97,12 +97,15 @@
 % comparable to the main text Times font size. I also load packages
 % which I pretty much always use (eg. graphicx, textcomp, booktabs, etc)
 
-\RequirePackage{geometry}
-\RequirePackage{mathptmx}
-\RequirePackage[scaled=0.92]{helvet}
-\RequirePackage{caption}
-\RequirePackage{subfig}
+\RequirePackage{geometry}     % Page layout
 
+\RequirePackage[T1]{fontenc}  % Make sure we use T1 font encoding
+\RequirePackage{mathptmx}     % Use times for serif font
+\RequirePackage[scaled=0.92]{helvet} % Use helvetica for sans serif font
+\RequirePackage{courier}      % Use courier for fixed width font
+
+\RequirePackage{caption}      % Flexibly configure captions
+\RequirePackage{subfig}       % -> we should move to subcaption soon
 \RequirePackage{graphicx}     % To include graphics
 \RequirePackage{dblfloatfix}  % Fixes some issues with dbl col floats
 \RequirePackage{textcomp}     % For non-math characters (eg. mu)
@@ -135,7 +138,7 @@
 % Caption Fontsizes
 %-------------------------------------------------------------------------
 % Set the caption font to be sans-serif,bold and the sub-figure caption
-% font to be just sans-serif. 
+% font to be just sans-serif.
 %
 % \captionsetup{font={sf,bf},skip=6pt}
 % \captionsetup[subfloat]{font={sf},skip=6pt}
@@ -259,19 +262,6 @@
 }
 
 \renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\hspace{0.5em}}
-\renewcommand{\@seccntformat}[2]{\csname the#1\endcsname.\hspace{0.5em}}
-
-%-------------------------------------------------------------------------
-% Bibliography
-%-------------------------------------------------------------------------
-% Make sure the final page is balanced.
-
-\newcommand{\cbxbib}
-{%
-  \renewcommand{\baselinestretch}{0.95}
-  \balance
-  \bibliographystyle{cbx}
-}
 
 %-------------------------------------------------------------------------
 % Float spacings
@@ -286,6 +276,29 @@
 \setlength{\dbltextfloatsep}{1\bsk plus 0.2\bsk minus 0.2\bsk}
 \setlength{\floatsep}{1\bsk plus 0.2\bsk minus 0.2\bsk}
 \setlength{\textfloatsep}{1\bsk plus 0.2\bsk minus 0.2\bsk}
+
+%-------------------------------------------------------------------------
+% Bibliography
+%-------------------------------------------------------------------------
+% Make sure the final page is balanced and change inter-item spacing.
+
+\let\cbxarticle@oldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]
+{%
+  \balance
+  \cbxarticle@oldthebibliography{#1}
+  \setlength{\itemsep}{0.7ex}
+  \vspace{1ex}
+}
+
+%-------------------------------------------------------------------------
+% Misc setup
+%-------------------------------------------------------------------------
+
+% Help prevent widows and orphans
+
+\widowpenalty=1000
+\clubpenalty=1000
 
 %-------------------------------------------------------------------------
 % Process class options
@@ -311,7 +324,7 @@
 
 % Submitted
 
-\ifthenelse{      \equal{\cbxarticle@appearsin}{false} 
+\ifthenelse{      \equal{\cbxarticle@appearsin}{false}
              \AND \equal{\cbxarticle@submitted}{true}  }
 {%
   \RequirePackage[firstpage]{draftwatermark}
@@ -329,8 +342,8 @@
 
 % Draft Copy
 
-\ifthenelse{      \equal{\cbxarticle@appearsin}{false} 
-             \AND \equal{\cbxarticle@submitted}{false} 
+\ifthenelse{      \equal{\cbxarticle@appearsin}{false}
+             \AND \equal{\cbxarticle@submitted}{false}
              \AND \equal{\cbxarticle@draftcopy}{true}  }
 {%
   \RequirePackage[firstpage]{draftwatermark}
@@ -358,7 +371,7 @@
 %-------------------------------------------------------------------------
 
 \fancypagestyle{firstpagestyle}
-{%  
+{%
   \fancyhead{}
   \fancyfoot{}
   \fancyhead[C]{\cbxarticle@firstpageheader}
@@ -399,7 +412,7 @@
   }
 }{%
   \end{list}
-} 
+}
 
 \newenvironment{cbxindent}[2]
 {%
@@ -423,3 +436,4 @@
 \newcommand{\texttilde}{{\char'176}}
 \newcommand{\tw}{\textwidth}
 \newcommand{\cw}{\columnwidth}
+
