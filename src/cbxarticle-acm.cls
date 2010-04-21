@@ -14,8 +14,8 @@
 %  - appearsin : add appears in header
 %  - submitted : add submitted & do not dist. header, draft watermark
 %  - draftcopy : add draft copy & do not dist. header, draft watermark
-%  - blind : remove author and affiliation information
-%  - pagenum : add a page number to every page
+%  - blind     : remove author and affiliation information
+%  - pagenum   : add a page number to every page
 %
 % Author : Christopher Batten
 % Date   : April 4, 2010
