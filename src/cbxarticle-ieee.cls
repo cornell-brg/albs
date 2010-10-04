@@ -64,7 +64,7 @@
 \LoadClass[10pt,twocolumn]{article}
 
 %-------------------------------------------------------------------------
-% Options
+% Class Options
 %-------------------------------------------------------------------------
 % These are the options which you can pass when you call \documentclass.
 %
@@ -97,13 +97,12 @@
 % comparable to the main text Times font size. I also load packages
 % which I pretty much always use (eg. graphicx, textcomp, booktabs, etc)
 
-\RequirePackage{geometry}     % Page layout
-
 \RequirePackage[T1]{fontenc}  % Make sure we use T1 font encoding
 \RequirePackage{mathptmx}     % Use times for serif font
 \RequirePackage[scaled=0.92]{helvet} % Use helvetica for sans serif font
 \RequirePackage{courier}      % Use courier for fixed width font
 
+\RequirePackage{geometry}     % Page layout
 \RequirePackage{caption}      % Flexibly configure captions
 \RequirePackage{subfig}       % -> we should move to subcaption soon
 \RequirePackage{graphicx}     % To include graphics
