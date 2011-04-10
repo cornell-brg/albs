@@ -7,7 +7,7 @@
 #  -v --[no-]verbose  Verbose mode
 #
 # Extract given layers into a new SVG file called
-# svgfile-layer1-layer2.svg
+# svgfile_layer1_layer2.svg
 #
 # Author : Christopher Batten
 # Date   : August 17, 2008
@@ -57,8 +57,8 @@ def main()
   # Output file name
 
   svg_in_base_name    = File::basename($opts[:svg_in_full_name],".svg")
-  svg_out_layer_names = $opts[:layer_names].join("-")
-  svg_out_file_name   = "#{svg_in_base_name}-#{svg_out_layer_names}.svg"
+  svg_out_layer_names = $opts[:layer_names].join("_")
+  svg_out_file_name   = "#{svg_in_base_name}_#{svg_out_layer_names}.svg"
 
   # Collect svg header
 

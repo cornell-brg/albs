@@ -11,18 +11,24 @@
 \ProvidesClass{cbxslides}[2008/08/17 ver 0.1]
 
 %-------------------------------------------------------------------------
-% Options
+% Class Options
 %-------------------------------------------------------------------------
 
-\gdef\cbxslides@handout{}
-\DeclareOption{handout}{\gdef\cbxslides@handout{,handout}}
+\gdef\cbx@handoutopt{}
+
+\DeclareOption{handout}
+{%
+  \gdef\cbx@handout{handout}%
+  \gdef\cbx@handoutopt{,handout}%
+}
+
 \ProcessOptions
 
 %-------------------------------------------------------------------------
 % Base Class
 %-------------------------------------------------------------------------
 
-\LoadClass[mathsans,hyperref={draft}\cbxslides@handout]{beamer}
+\LoadClass[t,mathsans,hyperref={draft}\cbx@handoutopt]{beamer}
 
 %-------------------------------------------------------------------------
 % Packages
@@ -30,8 +36,9 @@
 
 \RequirePackage{eulervm}
 \RequirePackage[scaled]{helvet}
-\RequirePackage{tikz}         
+\RequirePackage{tikz}
 
+\RequirePackage{svg}          % Automatically handle svg files
 \RequirePackage{graphicx}     % To include graphics
 \RequirePackage{dblfloatfix}  % Fixes some issues with dbl col floats
 \RequirePackage{textcomp}     % For non-math characters (eg. mu)
@@ -39,49 +46,67 @@
 \RequirePackage{balance}      % Balance last columns
 \RequirePackage{fancyhdr}     % For headers and footers
 \RequirePackage{booktabs}     % Very nice table formatting
-
+\RequirePackage{datetime}     % Allow date/time revision numbers
 \RequirePackage{calc}         % Basic math operations
 \RequirePackage{xifthen}      % Conditional code
+\RequirePackage{array}        % Better table handling
+\RequirePackage{multirow}     % Table cell stretch across multiple rows
+\RequirePackage{varwidth}     % Variable width minipages
+\RequirePackage{relsize}      % Relative font sizes
 
 %-------------------------------------------------------------------------
-% \cbxslides@setfontsize{pts} Macro
+% Document Parameters
+%-------------------------------------------------------------------------
+
+\gdef\cbx@title{}
+\gdef\cbx@author{}
+\gdef\cbx@affiliation{}
+\gdef\cbx@abbrvinst{}
+
+\gdef\cbx@name{}
+\gdef\cbx@address{}
+\gdef\cbx@email{}
+\gdef\cbx@web{}
+
+\renewcommand{\title}[1]{\gdef\cbx@title{#1}}
+\renewcommand{\author}[1]{\gdef\cbx@author{#1}}
+\newcommand{\affiliation}[1]{\gdef\cbx@affiliation{#1}}
+\newcommand{\abbrvinst}[1]{\gdef\cbx@abbrvinst{#1}}
+
+\newcommand{\name}[1]{\gdef\cbx@name{#1}}
+\newcommand{\address}[1]{\gdef\cbx@address{#1}}
+\newcommand{\email}[1]{\gdef\cbx@email{#1}}
+\newcommand{\web}[1]{\gdef\cbx@web{#1}}
+
+\newcommand{\headerwidth}[1] {\gdef\cbx@headerwidth{#1}}
+\newcommand{\finalslide}[1]  {\gdef\cbx@finalslide{#1}}
+
+%-------------------------------------------------------------------------
+% Misc Setup
+%-------------------------------------------------------------------------
+
+% Setup date/time formats suitable for revision numbers
+
+\newdateformat{revdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\newtimeformat{revtime}{\twodigit{\THEHOUR}-\twodigit{\THEMINUTE}}
+
+% By default included graphics should be less than textwidth x textheight
+
+%\setkeys{Gin}{width=\textwidth,height=2.75in,keepaspectratio}
+
+%-------------------------------------------------------------------------
+% \cbx@setfontsize{pts} Macro
 %-------------------------------------------------------------------------
 % We explicitly set the font sizes in points so that we know exactly how
 % big each font. Notice we always calculate the the line spacing to be
 % 1.2 times the font size.
 
-\newlength{\cbxslides@templen}
-\newcommand{\cbxslides@setfontsize}[1]
+\newlength{\cbx@templen}
+\newcommand{\cbx@setfontsize}[1]
 {%
-  \setlength{\cbxslides@templen}{#1 * \real{1.2}}%
-  \fontsize{#1}{\the\cbxslides@templen}\selectfont%
+  \setlength{\cbx@templen}{#1 * \real{1.2}}%
+  \fontsize{#1}{\the\cbx@templen}\selectfont%
 }
-
-%-------------------------------------------------------------------------
-% Variables
-%-------------------------------------------------------------------------
-
-\gdef\cbxslides@title{}
-\gdef\cbxslides@conference{}
-\gdef\cbxslides@author{}
-\gdef\cbxslides@affiliation{}
-\gdef\cbxslides@abbrvinst{}
-
-\gdef\cbxslides@name{}
-\gdef\cbxslides@address{}
-\gdef\cbxslides@email{}
-\gdef\cbxslides@web{}
-
-\renewcommand{\title}[1]{\gdef\cbxslides@title{#1}}
-\newcommand{\conference}[1]{\gdef\cbxslides@conference{#1}}
-\renewcommand{\author}[1]{\gdef\cbxslides@author{#1}}
-\newcommand{\affiliation}[1]{\gdef\cbxslides@affiliation{#1}}
-\newcommand{\abbrvinst}[1]{\gdef\cbxslides@abbrvinst{#1}}
-
-\newcommand{\name}[1]{\gdef\cbxslides@name{#1}}
-\newcommand{\address}[1]{\gdef\cbxslides@address{#1}}
-\newcommand{\email}[1]{\gdef\cbxslides@email{#1}}
-\newcommand{\web}[1]{\gdef\cbxslides@web{#1}}
 
 %-------------------------------------------------------------------------
 % Beamer Colors
@@ -108,29 +133,51 @@
 \definecolor{cbxredB}      {RGB}{223, 167, 159}
 \definecolor{cbxredC}      {RGB}{176,  24,  24}
 \definecolor{cbxredD}      {RGB}{ 98,   9,   9}
+\definecolor{cbxblueitem}  {RGB}{ 40, 100, 150}
 
 \colorlet{cbxschemeA}{cbxblueA}
 \colorlet{cbxschemeB}{cbxblueB}
 \colorlet{cbxschemeC}{cbxblueC}
 \colorlet{cbxschemeD}{cbxblueD}
 
-\setbeamercolor{palette primary}{use=structure,fg=black,bg=structure.fg!20!white}
-\setbeamercolor{palette secondary}{use=structure,fg=black,bg=structure.fg!25!white}
-\setbeamercolor{palette tertiary}{use=structure,fg=black,bg=structure.fg!30!white}
-\setbeamercolor{palette quaternary}{use=structure,fg=black,bg=structure.fg!35!white}
+\setbeamercolor{palette primary}
+{%
+  use=structure,
+  fg=black,
+  bg=structure.fg!20!white
+}
+
+\setbeamercolor{palette secondary}
+{%
+  use=structure,
+  fg=black,
+  bg=structure.fg!25!white
+}
+
+\setbeamercolor{palette tertiary}
+{%
+  use=structure,
+  fg=black,
+  bg=structure.fg!30!white
+}
+
+\setbeamercolor{palette quaternary}
+{%
+  use=structure,
+  fg=black,
+  bg=structure.fg!35!white
+}
 
 \setbeamercolor{structure}{fg=black}
-
 \setbeamercolor{cbxheadline}{fg=cbxschemeD,bg=cbxschemeA}
 \setbeamercolor{cbxfootline}{fg=cbxschemeD,bg=cbxschemeA}
-
 \setbeamercolor*{titlelike}{bg=white,fg=black}
-
 \setbeamercolor*{separation line}{}
 \setbeamercolor*{fine separation line}{}
-
 \setbeamercolor{section in head/foot}{palette quaternary}
 \setbeamercolor{frametitle}{bg=white,fg=black}
+\setbeamercolor{itemize item}{fg=cbxblueD}
+\setbeamercolor{itemize subitem}{fg=cbxblueD}
 
 \mode
 <all>
@@ -254,14 +301,23 @@
 
 \mode<presentation>
 
-\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}{$\triangleright$}
 \setbeamertemplate{navigation symbols}{}
 
 \setbeamersize{text margin left=0.2in,text margin right=0.2in}
 
-%\setbeamertemplate{table of contents shaded}[default][50]
-
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\fboxsep}{0pt}
+
+\setlength{\smallskipamount}{0.08in}
+\setlength{\medskipamount}{0.24in}
+\setlength{\bigskipamount}{0.72in}
+
+\setlength{\abovedisplayshortskip}{0pt}
+\setlength{\belowdisplayshortskip}{0pt}
+\setlength{\abovedisplayskip}{0pt}
+\setlength{\belowdisplayskip}{0pt}
 
 \mode
 <all>
@@ -274,14 +330,16 @@
 
 % Format for current and non-current section names in the header
 \usesectionheadtemplate
-  {\hfill{\color{cbxschemeD}\textbf{\insertsectionhead}}}         % Current section
-  {\hfill{\color{cbxschemeD!40!bg}\insertsectionhead}}  % Non-current section
+  % Current section
+  {\hfill{\color{cbxschemeD}\insertsectionhead}}
+  % Non-current section
+  {\hfill{\color{cbxschemeD!40!bg}\insertsectionhead}}
 
 \setbeamertemplate{headline}
 {%
   \begin{beamercolorbox}
     [wd=\paperwidth,ht=2.5ex,dp=1.2ex]{cbxheadline}%
-    \centerline{\insertsectionnavigationhorizontal{0.8\paperwidth}{}{}}%
+    \centerline{\insertsectionnavigationhorizontal{\cbx@headerwidth}{}{}}%
   \end{beamercolorbox}%
   {\color{cbxschemeD}\rule{\paperwidth}{0.25pt}}
 }
@@ -310,11 +368,11 @@
   \vskip2ex
   \begin{centering}
     \vspace{0.2in}
-    {\cbxslides@setfontsize{16pt}\textbf{\cbxslides@title}}\par%
+    {\cbx@setfontsize{16pt}\textbf{\cbx@title}\par}%
     \vspace{0.1in}
-    {\cbxslides@setfontsize{14pt}\cbxslides@author}\par%
+    {\cbx@setfontsize{14pt}\cbx@author\par}%
     \vspace{0.4in}
-    {\cbxslides@setfontsize{11pt}\cbxslides@affiliation}\par%
+    {\cbx@setfontsize{11pt}\cbx@affiliation\par}%
     \vspace{0.2in}
   \end{centering}
   \vskip0pt plus 1filll
@@ -337,13 +395,13 @@
 \mode<presentation>
 
 \setbeamertemplate{frametitle}
-{
+{%
   \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
   \@tempdima=\textwidth%
   \advance\@tempdima by\beamer@leftmargin%
   \advance\@tempdima by\beamer@rightmargin%
   \begin{beamercolorbox}[sep=0.3cm,left,wd=\the\@tempdima]{frametitle}
-    \centering
+    \centering%
     \usebeamerfont{frametitle}%
     \vbox{}\vskip-1ex%
     \if@tempswa\else\csname beamer@fteleft\endcsname\fi%
@@ -352,13 +410,13 @@
       \ifx\insertframesubtitle\@empty%
       \else%
       {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle\strut\par}%
-      \fi
+      \fi%
     }%
     \vskip-1.5ex%
     \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
-    \rule{0.95\paperwidth}{0.5pt}
+    \rule{0.95\paperwidth}{0.5pt}%
   \end{beamercolorbox}%
-  \vspace{-0.1in}
+  \vspace*{-0.07in}%
 }
 
 \mode
@@ -376,7 +434,7 @@
   \begin{beamercolorbox}
     [wd=\paperwidth,ht=2.3ex,dp=1.4ex,
      leftskip=.15cm,rightskip=.15cm]{cbxfootline}
-    \parbox{1in}{\cbxslides@abbrvinst} \hfill \cbxslides@name \hfill \parbox{1in}{\hfill\insertframenumber~/~\ref{finalslide}}
+    \parbox{1in}{\cbx@abbrvinst} \hfill \cbx@name \hfill \parbox{1in}{\hfill\insertframenumber~/~\cbx@finalslide}
   \end{beamercolorbox}%
   \vskip0pt%
 }
@@ -392,60 +450,417 @@
 {%
   \RequirePackage{pgfpages}
   \pgfpagesuselayout{resize to}[letterpaper,landscape,border shrink=0.25in]
-  \pgfpageslogicalpageoptions{1}{border code=\pgfstroke} 
+  \pgfpageslogicalpageoptions{1}{border code=\pgfstroke}
+
+%  \pgfpagesphysicalpageoptions
+%  {%
+%    logical pages=6,%
+%    physical height=11in,%
+%    physical width=8.5in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{1}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.265\pgfphysicalwidth}{.795\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{2}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.735\pgfphysicalwidth}{.795\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{3}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.265\pgfphysicalwidth}{.5\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{4}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.735\pgfphysicalwidth}{.5\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{5}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.265\pgfphysicalwidth}{.205\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
+%
+%  \pgfpageslogicalpageoptions{6}
+%  {%
+%    resized width=.47\pgfphysicalwidth,%
+%    resized height=0.33\pgfphysicalheight,%
+%    center=\pgfpoint{.735\pgfphysicalwidth}{.205\pgfphysicalheight},%
+%    border code=\pgfstroke,%
+%    border shrink=0.1in,%
+%  }
 }
+
+\def\h#1{| handout:#1}
+
+% \ifthenelse{ \equal{\cbx@handout}{partialhandout} }
+% {%
+%   \def\p#1{| handout:#1}
+%   \def\H#1{| handout:0}
+%   \def\h#1{| handout:#1}
+% }{%
+%   \def\p#1{| handout:0}
+%   \def\H#1{| handout:#1}
+%   \def\h#1{| handout:#1}
+% }
 
 % Use this macro inside overlay specifications to indicate that the
 % corresponding object should only be shown on certain handout pages.
 % The following will include the second graphic as the first page of the
 % handout and the third graphic as the second page.
 %
-%  \includegraphics<1\h0>{figure-0.pdf}
-%  \includegraphics<2\h1>{figure-1.pdf}
-%  \includegraphics<3\h2>{figure-2.pdf}
+%  \cbxfig<1\h0>{figure-0.pdf}
+%  \cbxfig<2\h1>{figure-1.pdf}
+%  \cbxfig<3\h2>{figure-2.pdf}
+%
+%  - \p : only on partial handout
+%  - \H : only on full handout
+%  - \h : on both partial and full handout
+
+%-------------------------------------------------------------------------
+% Compact formatting
+%-------------------------------------------------------------------------
+
+\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand{\BF}[1]{\textbf{#1}}
+\newcommand{\IT}[1]{\textit{#1}}
+\newcommand{\RM}[1]{\textrm{#1}}
+
+%-------------------------------------------------------------------------
+% Table row formatting
+%-------------------------------------------------------------------------
+
+\newcolumntype{+}
+{%
+  >{\global\let\currentrowstyle\relax}%
+}
+
+\newcolumntype{^}
+{%
+  >{\currentrowstyle}%
+}
+
+\newcommand{\rs}
+{%
+  \gdef\currentrowstyle{\lastrowstyle}%
+  \lastrowstyle\ignorespaces%
+}
+
+\newcommand{\rowstyle}[1]
+{%
+  \gdef\lastrowstyle{#1}%
+  \gdef\currentrowstyle{#1}%
+  #1\ignorespaces%
+}
+
+%-------------------------------------------------------------------------
+% Blocks
+%-------------------------------------------------------------------------
+
+\newenvironment{cbxblock}[1][\tw]
+{%
+  \begin{minipage}{#1}\centering%
+}{%
+  \end{minipage}%
+}
+
+\newenvironment{cbxblk}[2][\tw]
+{%
+  \begin{cbxblock}[#1]%
+    #2%
+  \end{cbxblock}%
+}
+
+\newsavebox{\cbx@cbxblockpbox}
+\newenvironment{cbxblockp}[1][0.8\tw]
+{%
+  \medskip%
+  \begin{lrbox}{\cbx@cbxblockpbox}%
+  \begin{minipage}{#1}\centering%
+}{%
+  \end{minipage}%
+  \end{lrbox}%
+  \setlength{\fboxrule}{1pt}%
+  \setlength{\fboxsep}{0.07in}%
+  \centerline{\fcolorbox{cbxredC}{white}{\usebox{\cbx@cbxblockpbox}}}%
+  \setlength{\fboxsep}{0in}%
+}
+
+%-------------------------------------------------------------------------
+% Lists
+%-------------------------------------------------------------------------
+% This is inspired by the outlines package by Charles Pecheur except my
+% version only allows two levels of nesting and formats each level
+% differently. Supports the following optional specifier:
+%
+%  - tt, t : tight outer list,  tight inner list
+%  - lt    : looser outer list, tight inner list
+%  - tl    : tight outer list,  loose inner list
+%  - ll, l : loose outer list,  loose inner list
 %
 
-\def\h#1{| handout:#1}
+\gdef\cbx@outerfontsize{\normalsize}
+\gdef\cbx@innerfontsize{\small}
+
+\newcommand{\cbxlistfontsize}[2]
+{%
+  \gdef\cbx@outerfontsize{#1}%
+  \gdef\cbx@innerfontsize{#2}%
+}
+
+\newcommand{\cbxlistfontsizereset}
+{%
+  \cbxlistfontsize{\normalsize}{\small}%
+}
+
+\newenvironment{cbxlistbase}[4][\textbullet]
+{%
+  \begin{list}{#1}%
+  {%
+    \setlength{\leftmargin}{#2}%
+    \setlength{\rightmargin}{#3}%
+    \setlength{\topsep}{0pt}%
+    \setlength{\parsep}{0pt}%
+    \setlength{\listparindent}{0pt}%
+    \setlength{\itemsep}{#4}%
+    \raggedright%
+  }%
+}{%
+  \end{list}%
+}
+
+\newenvironment{cbxlistouter}[1][0.7em]
+{%
+  \cbx@outerfontsize%
+  \begin{cbxlistbase}
+    [{\color{cbxblueitem}%
+      \raisebox{0.3ex}{$\blacktriangleright$}}]{1.2em}{0em}{#1}%
+}{%
+  \end{cbxlistbase}%
+  \cbx@outerfontsize%
+}
+
+\newenvironment{cbxlistoutertight}[1][0.1em]
+{%
+  \cbx@outerfontsize%
+  \begin{cbxlistbase}
+    [{\color{cbxblueitem}%
+      \raisebox{0.3ex}{$\blacktriangleright$}}]{1.2em}{0em}{#1}%
+}{%
+  \end{cbxlistbase}%
+  \cbx@outerfontsize%
+}
+
+\newenvironment{cbxlistinner}[1][0.5em]
+{%
+  \cbx@innerfontsize%
+  \begin{cbxlistbase}
+    [{\color{cbxblueitem}%
+      $\triangleright$}]{1em}{0em}{#1}%
+}{%
+  \end{cbxlistbase}%
+  \cbx@outerfontsize%
+}
+
+\newenvironment{cbxlistinnertight}[1][0.1em]
+{%
+  \cbx@innerfontsize%
+  \begin{cbxlistbase}
+    [{\color{cbxblueitem}%
+      $\triangleright$}]{1em}{0em}{#1}%
+}{%
+  \end{cbxlistbase}%
+  \cbx@outerfontsize%
+}
+
+% The outer and inner list styles
+
+\newcommand{\cbxlist@inci}{}
+\newcommand{\cbxlist@deci}{}
+\newcommand{\cbxlist@incii}{}
+\newcommand{\cbxlist@decii}{}
+
+% \cbxlist@toz .. \cbxlist@toiiii "transition" to indentation level 0..4 by opening
+% or closing nested list levels as needed. They are dynamically modified
+% according to the current level.
+
+\newcommand{\cbxlist@toz}{}
+\newcommand{\cbxlist@toi}{}
+\newcommand{\cbxlist@toii}{}
+
+% \cbxlist@commands{C0}{C1}{C2}{C3}{C4} set the level transition commands
+% above to C0..C4
+
+\newcommand{\cbxlist@commands}[3]
+{%
+  \renewcommand{\cbxlist@toz}{#1}%
+  \renewcommand{\cbxlist@toi}{#2}%
+  \renewcommand{\cbxlist@toii}{#3}%
+}
+
+% \cbxlist@exit resets transition commands. Not mandatory, just cleaner
+
+\newcommand{\cbxlist@exit}
+{%
+  \cbxlist@commands{}{}{}{}{}%
+}
+
+% \cbxlist@z .. \cbxlist@iiii update all transitions for level 0..4
+
+\newcommand{\cbxlist@z}
+{%
+  \cbxlist@commands{}{\cbxlist@inci}{\cbxlist@inci\cbxlist@incii}%
+}
+
+\newcommand{\cbxlist@i}
+{%
+  \cbxlist@commands{\cbxlist@deci}{}{\cbxlist@incii}%
+}
+
+\newcommand{\cbxlist@ii}
+{%
+  \cbxlist@commands{\cbxlist@decii\cbxlist@deci}{\cbxlist@decii}{}%
+}
+
+\newcommand{\0}{\cbxlist@toz\cbxlist@z}
+\newcommand{\1}{\cbxlist@toi\cbxlist@i\item}
+\newcommand{\2}{\cbxlist@toii\cbxlist@ii\item}
+
+\newenvironment{cbxlist}[1][lt]
+{%
+  % For some reason I need this to avoid weird extra space
+  \begin{varwidth}{\tw}%
+  \cbxlist@z%
+  \ifthenelse{ \equal{#1}{l} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistouter}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistouter}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.5em}\begin{cbxlistinner}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinner}}%
+  }{}%
+  \ifthenelse{ \equal{#1}{ll} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistouter}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistouter}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.5em}\begin{cbxlistinner}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinner}}%
+  }{}%
+  \ifthenelse{ \equal{#1}{lt} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistouter}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistouter}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.2em}\begin{cbxlistinnertight}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinnertight}}%
+  }{}%
+  \ifthenelse{ \equal{#1}{tl} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.1em}\begin{cbxlistinner}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinner}}%
+  }{}%
+  \ifthenelse{ \equal{#1}{tt} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.1em}\begin{cbxlistinnertight}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinnertight}}%
+  }{}%
+  \ifthenelse{ \equal{#1}{t} }%
+  {%
+    \renewcommand{\cbxlist@inci}{\begin{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@deci}{\end{cbxlistoutertight}}%
+    \renewcommand{\cbxlist@incii}{\vspace{0.1em}\begin{cbxlistinnertight}}%
+    \renewcommand{\cbxlist@decii}{\end{cbxlistinnertight}}%
+  }{}%
+}{%
+  \cbxlist@toz\cbxlist@exit%
+  \renewcommand{\cbxlist@inci}{}%
+  \renewcommand{\cbxlist@deci}{}%
+  \renewcommand{\cbxlist@incii}{}%
+  \renewcommand{\cbxlist@decii}{}%
+  \end{varwidth}\par%
+}
+
+%-------------------------------------------------------------------------
+% Float right
+%-------------------------------------------------------------------------
+
+\newlength{\cbx@floatrightboxheight}
+\newsavebox{\cbx@floatrightbox}
+\newcommand{\cbxfloatright}[1]
+{%
+  \savebox{\cbx@floatrightbox}{#1}%
+  \settoheight{\cbx@floatrightboxheight}%
+              {\usebox{\cbx@floatrightbox}}
+  \hfill\usebox{\cbx@floatrightbox}%
+  \vspace{-\cbx@floatrightboxheight}%
+}
+
+%-------------------------------------------------------------------------
+% Columns
+%-------------------------------------------------------------------------
+
+\newenvironment{cbxcols}
+{%
+  \vspace*{-0.1in}%
+  \begin{columns}[T]%
+}{%
+  \end{columns}%
+}
+
+\newcommand{\cbxcol}[2]
+{%
+  \begin{column}{#1}%
+    #2%
+  \end{column}%
+}
+
+%-------------------------------------------------------------------------
+% cbxfig
+%-------------------------------------------------------------------------
+
+\newcommand<>{\cbxfig}[2][\tw]{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}
+\newcommand<>{\cbxfigb}[2][\tw]{\fbox{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}}
+\newcommand<>{\cbxfigc}[2][\tw]{{\centering\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}\par}}
+\newcommand<>{\cbxfigbc}[2][\tw]{{\centering\fbox{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}}}
 
 %-------------------------------------------------------------------------
 % Useful Macros
 %-------------------------------------------------------------------------
 
-\newenvironment{cbxlist}[4][\textbullet]
-{%
-  \begin{list}{#1}
-  {%
-    \setlength{\leftmargin}{#2}
-    \setlength{\rightmargin}{#3}
-    \setlength{\topsep}{0pt}
-    \setlength{\parsep}{0pt}
-    \setlength{\listparindent}{0pt}
-    \setlength{\itemsep}{#4}
-  }
-}{%
-  \end{list}
-} 
-
-\newenvironment{cbxindent}[2]
-{%
-  \begin{list}{}
-  {
-    \setlength{\leftmargin}{#1}
-    \setlength{\rightmargin}{#2}
-    \item
-  }
-}{%
-  \end{list}
-}
-
-\newcommand{\annotate}[1]{{\color{red}\bfseries [ #1 ]}}
-\newcommand{\fixme}[1]{{\color{red}\bfseries [ FIXME: #1 ]}}
-\newcommand{\wunits}[2]{\mbox{#1\,#2}}
+\newcommand{\textred}[1]{{\color{cbxredC}#1}}
+\newcommand{\wu}[2]{\mbox{#1\,#2}}
+\newcommand{\tmu}{\textmu{}}
 \newcommand{\um}{\mbox{\textmu m}}
 \newcommand{\X}{$\times$}
 \newcommand{\x}{\thinspace$\times$\thinspace}
 \newcommand{\by}{$\times$}
 \newcommand{\tw}{\textwidth}
 \newcommand{\cw}{\columnwidth}
-
+\newcommand{\rarrow}{$\rightarrow$}
+\newcommand{\larrow}{$\leftarrow$}
 

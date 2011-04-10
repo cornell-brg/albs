@@ -20,50 +20,43 @@ svg_enabled  = @svg_enabled@
 svg_figs     = $(filter %.svg.pdf, $(figs))
 svg_prebuild = $(svg_figs)
 
+svg_basic_figs = $(filter-out %-split.svg.pdf, $(svg_figs))
+
 ifeq ($(svg_enabled),yes)
-$(svg_figs) : %.svg.pdf : %.svg
+$(svg_basic_figs) : %.svg.pdf : %.svg
 	$(INKSCAPE) --without-gui --export-text-to-path \
     --export-eps $*.svg.eps \
     $< 2>&1 \
     | sed '/^.*Pango-WARNING.*$$/d;/^.*Xlib:.*$$/d;/^$$/d'
-	$(EPSTOPDF) $*.svg.eps 
+	$(EPSTOPDF) $*.svg.eps
 endif
 
-junk += $(svg_figs) $(patsubst %.pdf, %.eps, $(svg_figs))
+junk += $(svg_basic_figs) $(patsubst %.pdf, %.eps, $(svg_basic_figs))
 
 #-------------------------------------------------------------------------
-# SVG Split Template
+# SVG Splitting
 #-------------------------------------------------------------------------
-# This function creates a rule which extracts layers from an SVG to
-# create a new SVG figure with just those layers visible.
-#
-# Arguments:
-#  $(1) : base name
-#  $(2) : layer list with each layer separated by a dash
-#
 
-define svg_split
+svg_split_figs = $(filter %-split.svg.pdf, $(svg_figs))
+svg_split_svg  = $(patsubst %.svg.pdf, %.svg, $(svg_split_figs))
 
-junk += $(1)-$(2).svg
-$(1)-$(2).svg : $(1).svg
-	$(top_dir)/svg/svg-split-layers.rb $(subst -, ,$(2)) $$<
-
+define svg_split_template
+ifeq ($(svg_enabled),yes)
+$(1)-split.svg.pdf : $(2).svg
+	$(top_dir)/svg/svg-split-layers.rb $(3) $$< && mv $(1).svg $(1)-split.svg
+	$(INKSCAPE) --without-gui --export-text-to-path \
+    --export-eps $(1)-split.svg.eps \
+    $(1)-split.svg 2>&1 \
+    | sed '/^.*Pango-WARNING.*$$$$/d;/^.*Xlib:.*$$$$/d;/^$$$$/d'
+	$(EPSTOPDF) $(1)-split.svg.eps
+endif
 endef
 
-#-------------------------------------------------------------------------
-# SVG Splits
-#-------------------------------------------------------------------------
-# List of SVG splits using the svg_split function. You can include a PDF
-# for each split SVG like normal in your latex document. For example,
-# assume we have an SVG file named test with two layers named layer0 and
-# layer1. Then we can create two separate SVG files, one with just
-# layer0 and one with both layers like this:
-#
-#  $(eval $(call svg_split,test,layer0))
-#  $(eval $(call svg_split,test,layer0-layer1))
-#
-# Then we can include these in our document like this:
-#
-#  \includegraphics{test-layer0.svg.pdf}
-#  \includegraphics{test-layer0-layer1.svg.pdf}
-#
+$(foreach file,$(patsubst %-split.svg, %, $(svg_split_svg)), \
+  $(eval $(call svg_split_template,$(file), \
+    $(firstword $(subst _, ,$(file))), \
+    $(filter-out $(firstword $(subst _, ,$(file))), $(subst _, ,$(file))))))
+
+junk += $(svg_split_svg) $(svg_split_figs) \
+  $(patsubst %.pdf, %.eps, $(svg_split_figs))
+

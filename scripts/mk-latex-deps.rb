@@ -228,13 +228,29 @@ def main()
   include_tex.set_prereq_for_dep_file(true)
   prereq_types.push(include_tex)
 
-  # \includegraphics{graphic}
+  # \includegraphics{graphic} and \cbxfig{graphic}
 
   include_graphic = SimplePrereq::new("include_graphics")
   include_graphic.add_make_var( "figs" )
   include_graphic.add_reg_expr( /^[^%]*\\includegraphics\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\includegraphics\[.*\]\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\includegraphics<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfig\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfig\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfig<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfig<.*>\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigb\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigb\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigb<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigb<.*>\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigc\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigc\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigc<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigc<.*>\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc<.*>\{([^}]+)\}/ )
   prereq_types.push(include_graphic)
 
   # \bibliography{bib1,bib2,...}
