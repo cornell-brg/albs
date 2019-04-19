@@ -127,7 +127,7 @@ class SimplePrereq
 
           prereq_file_name = prereq.strip + @file_ext
           prereq_full_name = $opts[:tex_path_name]+"/"+prereq_file_name
-          prereq_exists    = File::exists?(prereq_full_name)
+          prereq_exists    = File::exist?(prereq_full_name)
 
           # Add prereq to list of full names we will return
           if ( prereq_exists )
@@ -192,6 +192,8 @@ def main()
 
   # \documentclass{class}
 
+  # Commenting this out for now, because this doesn't work for acmart.cls
+
   documentclass = SimplePrereq::new("documentclasses")
   documentclass.add_reg_expr( /^[^%]*\\documentclass\{([^}]+)\}/ )
   documentclass.add_reg_expr( /^[^%]*\\documentclass\[.*\]\{([^}]+)\}/ )
@@ -247,6 +249,12 @@ def main()
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigc\[.*\]\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigc<.*>\[.*\]\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigc<.*>\{([^}]+)\}/ )
+
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigcx\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigcx\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigcx<.*>\[.*\]\{([^}]+)\}/ )
+  include_graphic.add_reg_expr( /^[^%]*\\cbxfigcx<.*>\{([^}]+)\}/ )
+
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc\[.*\]\{([^}]+)\}/ )
   include_graphic.add_reg_expr( /^[^%]*\\cbxfigbc<.*>\[.*\]\{([^}]+)\}/ )
@@ -269,7 +277,6 @@ def main()
     prereq_full_name = prereq_full_names.shift()
 
     # For each line in prereq file see if it includes any other prereqs
-
     IO.foreach(prereq_full_name) do |line|
       for prereq_type in prereq_types
         prereq_full_names.push(prereq_type.check(line))

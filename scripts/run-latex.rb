@@ -51,7 +51,7 @@ def parse_cmdline()
   # Defaults
   $opts[:latex_prog]  = "latex"
   $opts[:bibtex_prog] = "bibtex"
-  $opts[:input_dirs]  = ["."]
+  $opts[:input_dirs]  = []
 
   # Parse the command line
   OptionParser.new do |opts|
@@ -83,17 +83,19 @@ def main()
 
   texinputs = ""
   if ( ENV['TEXINPUTS'] )
-   texinputs = ENV['TEXINPUTS'].gsub(/^\.:/,"").gsub(/:$/,"")
+    texinputs = ENV['TEXINPUTS'].gsub(/:$/,"")
   end
 
   bibinputs = ""
   if ( ENV['BIBINPUTS'] )
-   bibinputs = ENV['BIBINPUTS'].gsub(/^\.:/,"").gsub(/:$/,"")
+   bibinputs = ENV['BIBINPUTS'].gsub(/:$/,"")
+   bibinputs = ENV['BIBINPUTS']
   end
 
   bstinputs = ""
   if ( ENV['BSTINPUTS'] )
-   bstinputs = ENV['BSTINPUTS'].gsub(/^\.:/,"").gsub(/:$/,"")
+   bstinputs = ENV['BSTINPUTS'].gsub(/:$/,"")
+   bstinputs = ENV['BSTINPUTS']
   end
 
   # General variables
@@ -105,29 +107,38 @@ def main()
   latex_bc    = "#{latex_bname}.bc"
 
   input_dirs  = $opts[:input_dirs].join(":")
-
   latex_prog  = $opts[:latex_prog]
   latex_args  = ARGV.join(" ")
   latex_cmd   = "env TEXINPUTS=\"#{input_dirs}:#{texinputs}:\" " \
                 "#{latex_prog} #{latex_args} | tee #{latex_out}"
 
+  bibtex_out  = "#{latex_bname}-bibtex.out"
+
   bibtex_prog = $opts[:bibtex_prog]
   bibtex_cmd  = "env BSTINPUTS=\"#{input_dirs}:#{bstinputs}:\" " \
                 "    BIBINPUTS=\"#{input_dirs}:#{bibinputs}:\" " \
-                "#{bibtex_prog} #{latex_bname}"
+                "#{bibtex_prog} #{latex_bname} | tee #{bibtex_out}"
 
   # --- Run LaTeX --------------------------------------------------------
 
   puts("*** Run LaTeX ***")
   system(latex_cmd)
+  puts(latex_cmd)
 
   # Scan output fatal errors and unresolved cross-references
 
   unresolved_xref = false
+  labels_multidef = false
+  label_undef     = false
+  citation_undef  = false
+
   IO.foreach(latex_out) do |line|
     case line
-      when /Fatal error occurred/          then exit(1)
-      when /Rerun to get cross-references/ then unresolved_xref = true
+      when /Fatal error occurred/                  then exit(1)
+      when /Rerun to get cross-references/         then unresolved_xref = true
+      when /There were multiply-defined labels/    then labels_multidef = true
+      when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
+      when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
     end
   end
 
@@ -146,18 +157,19 @@ def main()
         when /^\\@input\{(.*)\}$/   then aux_files.push($1)
         when /^\\bibstyle\{(.*)\}$/ then aux_bibstyle = $1
         when /^\\bibdata\{(.*)\}$/  then aux_bibdata  = $1.split(",")
-        when /^\\citation\{(.*)\}$/ then aux_citations.push($1)
+        when /^\\citation\{(.*)\}$/ then aux_citations.concat($1.split(","))
       end
     end
 
   end
   aux_files.uniq!
   aux_citations.uniq!
+  aux_citations.sort!
 
   # --- Run BibTeX -------------------------------------------------------
 
   need_bbl   = !aux_bibdata.empty? && !aux_citations.empty?
-  bbl_exists = File::exists?(latex_bbl)
+  bbl_exists = File::exist?(latex_bbl)
 
   # Determine if bibs are newer than bbl
 
@@ -171,7 +183,7 @@ def main()
       # Search the input dirs for the bibdata file
       for dir in $opts[:input_dirs]
         bib_full_name = "#{dir}/#{bib_file_name}"
-        if ( File::exists?(bib_full_name) )
+        if ( File::exist?(bib_full_name) )
           bbl_outdated |= (File::mtime(bib_full_name) > File::mtime(latex_bbl))
         end
       end
@@ -196,6 +208,8 @@ def main()
       end
     end
 
+    bc_bibitems.sort!
+
     bbl_outdated |= ( aux_bibstyle  != bc_bibstyle )
     bbl_outdated |= ( aux_bibdata   != bc_bibdata  )
     bbl_outdated |= ( aux_citations != bc_bibitems )
@@ -216,6 +230,36 @@ def main()
       file.puts("%  bibdata  = #{aux_bibdata.join(",")}")
     end
 
+    # Scan output for warnings and treat as errors
+
+    IO.foreach(bibtex_out) do |line|
+      case line
+        when /Warning--I didn't find a database entry for/ then dummy = true
+        # when /Warning/ then exit(1)
+      end
+    end
+
+    # If we ran BibTeX we need to rerun LaTeX an extra time in _addition_
+    # to running again to resolve unresolved cross-references.
+
+    puts("*** Rerun LaTeX (due to running BibTeX) ***")
+    system(latex_cmd)
+
+    # Scan output fatal errors
+
+    labels_multidef = false
+    label_undef     = false
+    citation_undef  = false
+
+    IO.foreach(latex_out) do |line|
+      case line
+        when /Fatal error occurred/                  then exit(1)
+        when /There were multiply-defined labels/    then labels_multidef = true
+        when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
+        when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
+      end
+    end
+
   end
 
   # --- Rerun LaTeX ------------------------------------------------------
@@ -230,14 +274,45 @@ def main()
     # Scan output fatal errors and unresolved cross-references
 
     unresolved_xref = false
+    labels_multidef = false
+    label_undef     = false
+    citation_undef  = false
+
     IO.foreach(latex_out) do |line|
       case line
-        when /Fatal error occurred/          then exit(1)
-        when /Rerun to get cross-references/ then unresolved_xref = true
+        when /Fatal error occurred/                  then exit(1)
+        when /Rerun to get cross-references/         then unresolved_xref = true
+        when /There were multiply-defined labels/    then labels_multidef = true
+        when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
+        when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
       end
     end
 
   end
+
+  # --- Print Summary ----------------------------------------------------
+
+  puts("")
+
+  if ( labels_multidef )
+    puts(" [ FAILED ] Check for multiply-defined labels")
+  else
+    puts(" [ passed ] Check for multiply-defined labels")
+  end
+
+  if ( label_undef )
+    puts(" [ FAILED ] Check for undefined references")
+  else
+    puts(" [ passed ] Check for undefined references")
+  end
+
+  if ( citation_undef )
+    puts(" [ FAILED ] Check for undefined citations")
+  else
+    puts(" [ passed ] Check for undefined citations")
+  end
+
+  puts("")
 
 end
 main()

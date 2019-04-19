@@ -1,0 +1,188 @@
+%=========================================================================
+% CBX LaTeX Utilities
+%=========================================================================
+% Includes stuff that is usually in cbxarticle so that we can use
+% standard class files like acmart.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cbxutils}[2017/04/14 ver 0.1]
+
+\usepackage{calc}         % Basic math operations
+\usepackage{booktabs}     % Very nice table formatting
+\usepackage{fancyvrb}     % Pretty code formatting
+\usepackage{array}
+\usepackage{afterpage}
+\usepackage{multirow}
+\usepackage{balance}
+\usepackage{lipsum}
+
+\renewcommand{\baselinestretch}{0.98}
+
+%-------------------------------------------------------------------------
+% Float spacings
+%-------------------------------------------------------------------------
+
+\renewcommand{\dbltopfraction}{0.99}
+\renewcommand{\topfraction}{0.99}
+\renewcommand{\dblfloatpagefraction}{0.99}
+\renewcommand{\floatpagefraction}{0.99}
+
+\newcommand{\bsk}{\baselineskip}
+\setlength{\dbltextfloatsep}{1\bsk plus 0.2\bsk minus 0.2\bsk}
+\setlength{\floatsep}{0.5\bsk plus 0.2\bsk minus 0.2\bsk}
+\setlength{\textfloatsep}{0.5\bsk plus 0.2\bsk minus 0.2\bsk}
+
+%-------------------------------------------------------------------------
+% \cbxarticle@setfontsize{pts} Macro
+%-------------------------------------------------------------------------
+% We explicitly set the font sizes in points so that we know exactly how
+% big each font. Subsection headers are supposed to be 11pt, but there
+% is no equivalent built-in LaTeX font size which corresponds to 11pt
+% (normalsize is 10pt and large is 12pt). Notice we always calculate the
+% the line spacing to be 1.2 times the font size.
+
+\newlength{\cbxarticle@Templen}
+\newcommand{\cbxsetfontsize}[1]
+{%
+  \setlength{\cbxarticle@Templen}{#1 * \real{1.19}}%
+  \fontsize{#1}{\the\cbxarticle@Templen}\selectfont%
+}
+
+%-------------------------------------------------------------------------
+% Caption package
+%-------------------------------------------------------------------------
+
+\newcommand{\cbxcaptionsize}{\small}
+
+\captionsetup{belowskip=6pt}
+
+%-------------------------------------------------------------------------
+% Assembly block formatting
+%-------------------------------------------------------------------------
+
+\renewcommand{\FancyVerbFormatLine}[1]
+{%
+  \parbox{1.5ex}{\raggedleft\theFancyVerbLine} #1%
+}
+
+%-------------------------------------------------------------------------
+% Useful macros
+%-------------------------------------------------------------------------
+
+\newcommand{\pnote}[1]{}%
+
+\newenvironment{cbxlist}[4][\textbullet]
+{%
+  \begin{list}{#1}
+  {%
+    \setlength{\leftmargin}{#2}
+    \setlength{\rightmargin}{#3}
+    \setlength{\topsep}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\listparindent}{0pt}
+    \setlength{\itemsep}{#4}
+  }
+}{%
+  \end{list}
+}
+
+\newenvironment{cbxindent}[2]
+{%
+  \begin{list}{}
+  {
+    \setlength{\leftmargin}{#1}
+    \setlength{\rightmargin}{#2}
+    \item
+  }
+}{%
+  \end{list}
+}
+
+\newcommand{\wu}[2]{\mbox{#1\,#2}}
+\newcommand{\um}{\mbox{\textmu m}}
+\newcommand{\X}{$\times$}
+\newcommand{\x}{\thinspace$\times$\thinspace}
+\newcommand{\by}{$\times$}
+\newcommand{\tw}{\textwidth}
+\newcommand{\cw}{\columnwidth}
+
+\newcommand{\uthreads}{\mbox{\textmu threads}}
+\newcommand{\uthread}{\mbox{\textmu thread}}
+\newcommand{\utask}{\mbox{\textmu task}}
+\newcommand{\utasks}{\mbox{\textmu tasks}}
+\newcommand{\uwarp}{\mbox{\textmu warp}}
+\newcommand{\uwarps}{\mbox{\textmu warps}}
+\newcommand{\uchime}{\mbox{\textmu chime}}
+\newcommand{\uchimes}{\mbox{\textmu chimes}}
+\newcommand{\ugroup}{\mbox{\textmu group}}
+\newcommand{\ugroups}{\mbox{\textmu groups}}
+
+\newcommand{\uThreads}{\mbox{\textmu Threads}}
+\newcommand{\uThread}{\mbox{\textmu Thread}}
+\newcommand{\uTask}{\mbox{\textmu Task}}
+\newcommand{\uTasks}{\mbox{\textmu Tasks}}
+\newcommand{\uWarp}{\mbox{\textmu Warp}}
+\newcommand{\uGroup}{\mbox{\textmu Group}}
+
+\newcommand{\uT}{\mbox{\textmu T}}
+
+\newcommand{\range}[1]{$\langle #1 \rangle$}
+
+%-------------------------------------------------------------------------
+% Compact formatting
+%-------------------------------------------------------------------------
+
+\newcommand{\fixme}[1]{\textcolor{red}{\{{\scriptsize#1}\}}}
+
+\newenvironment{fixmeblock}
+{%
+  \vspace{-0.1in}
+  \noindent\rule[-0.75em]{\cw}{0.7pt}
+  \begin{list}{}
+  {%
+    \setlength{\leftmargin}{0.5em}
+    \setlength{\rightmargin}{0.5em}
+    \setlength{\topsep}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\listparindent}{0pt}
+    \setlength{\itemsep}{0pt}
+  }
+  \scriptsize\color{red}
+  \item
+}{%
+  \end{list}
+  \noindent\rule[0.4em]{\cw}{0.7pt}
+  \vspace{-0.1in}
+}
+
+\newcommand{\OBS}[1]{#1}
+\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand{\BF}[1]{\textbf{#1}}
+\newcommand{\IT}[1]{\textit{#1}}
+\newcommand{\RM}[1]{\textrm{#1}}
+\newcommand{\mmsq}{mm\tsup{2}}
+\newcommand{\umsq}{\textmu{}m\tsup{2}}
+
+\newcommand{\tsup}[1]{\textsuperscript{#1}}
+\newcommand{\tsub}[1]{\textsubcript{#1}}
+
+\renewcommand{\paragraph}[1]
+{%
+  \textbf{#1} --%
+}
+
+%-------------------------------------------------------------------------
+% midparagraphcolumbreak
+%-------------------------------------------------------------------------
+% Useful for final camera ready tweaking
+
+\newcommand{\midparagraphcolumnbreak}
+{%
+  {{\parfillskip0pt\par}}\noindent
+}
+
+\newcommand{\vspacefill}
+{%
+  \vspace*{\fill}
+}
+

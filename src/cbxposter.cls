@@ -18,15 +18,18 @@
 \RequirePackage{type1cm}
 \RequirePackage{eulervm}
 \RequirePackage[scaled]{helvet}
-\RequirePackage{tikz}         
+\RequirePackage{tikz}
 
 \RequirePackage{graphicx}     % To include graphics
+\RequirePackage{grffile}      % To include graphics
 \RequirePackage{dblfloatfix}  % Fixes some issues with dbl col floats
 \RequirePackage{textcomp}     % For non-math characters (eg. mu)
 \RequirePackage{cite}         % Sort cite lists [1,2,3]
 \RequirePackage{balance}      % Balance last columns
+\RequirePackage{fancyvrb}     % Pretty code formatting
 \RequirePackage{fancyhdr}     % For headers and footers
 \RequirePackage{booktabs}     % Very nice table formatting
+\RequirePackage{lipsum}       % Lorem Ipsum?
 
 \RequirePackage{calc}         % Basic math operations
 \RequirePackage{xifthen}      % Conditional code
@@ -63,9 +66,9 @@
 
 \geometry
 {%
-  paperwidth=44in,
-  paperheight=35.24in,
-  hmargin=1cm,
+  paperwidth=46.5in,
+  paperheight=35in,
+  hmargin=0.32in,
   vmargin=0in,
   headsep=0in,
   head=0in,
@@ -77,7 +80,7 @@
 %-------------------------------------------------------------------------
 
 \def\fontscale{2}
- 
+
 \newlength{\cbxposter@templenA}
 \newlength{\cbxposter@templenB}
 \newcommand{\setscaledfont}[2]
@@ -85,8 +88,16 @@
   \setlength{\cbxposter@templenA}{#1 * \real{#2}}%
   \setlength{\cbxposter@templenB}{#1 * \real{#2} * \real{1.2}}%
   \fontsize{\cbxposter@templenA}{\the\cbxposter@templenB}\selectfont%
-}  
- 
+}
+
+\newcommand{\setscaledfontx}[3]
+{%
+  \setlength{\cbxposter@templenA}{#1 * \real{#2}}%
+  \setlength{\cbxposter@templenB}{#1 * \real{#2} * \real{#3}}%
+  \fontsize{\cbxposter@templenA}{\the\cbxposter@templenB}\selectfont%
+}
+
+% Smaller font sizes
 \renewcommand*{\tiny}{\setscaledfont{5pt}{\fontscale}}
 \renewcommand*{\scriptsize}{\setscaledfont{7pt}{\fontscale}}
 \renewcommand*{\footnotesize}{\setscaledfont{8pt}{\fontscale}}
@@ -97,7 +108,19 @@
 \renewcommand*{\LARGE}{\setscaledfont{17.28pt}{\fontscale}}
 \renewcommand*{\huge}{\setscaledfont{20.74pt}{\fontscale}}
 \renewcommand*{\Huge}{\setscaledfont{24.88pt}{\fontscale}}
- 
+
+% Larger font sizes
+% \renewcommand*{\tiny}{\setscaledfont{7pt}{\fontscale}}
+% \renewcommand*{\scriptsize}{\setscaledfont{8pt}{\fontscale}}
+% \renewcommand*{\footnotesize}{\setscaledfont{9pt}{\fontscale}}
+% \renewcommand*{\small}{\setscaledfont{10pt}{\fontscale}}
+% \renewcommand*{\normalsize}{\setscaledfont{11pt}{\fontscale}}
+% \renewcommand*{\large}{\setscaledfont{13pt}{\fontscale}}
+% \renewcommand*{\Large}{\setscaledfont{14.40pt}{\fontscale}}
+% \renewcommand*{\LARGE}{\setscaledfont{18.28pt}{\fontscale}}
+% \renewcommand*{\huge}{\setscaledfont{20.74pt}{\fontscale}}
+% \renewcommand*{\Huge}{\setscaledfont{24.88pt}{\fontscale}}
+
 % set the normalfont (default)
 \renewcommand*{\normalfont}{\normalsize}
 
@@ -178,7 +201,7 @@
 %  \begin{beamercolorbox}[sep=1.5ex]{block title}%
 %      {\addtocounter{blockcounter}{1}%
 %        \begin{tikzpicture}[remember picture,overlay]
-%          \draw[line width=3pt] (0.6,0.3) circle (0.65) 
+%          \draw[line width=3pt] (0.6,0.3) circle (0.65)
 %                      node {\bf\large \textsf{\theblockcounter}};
 %        \end{tikzpicture}%
 %        \centerline{\bf\LARGE \textsf{\insertblocktitle\vphantom{y}}}}%
@@ -198,11 +221,11 @@
   \begin{beamercolorbox}[sep=1.5ex]{block title}%
       {\addtocounter{blockcounter}{1}%
         \begin{tikzpicture}[remember picture,overlay]
-          \draw[fill=cbxschemeA,color=cbxschemeA] 
+          \draw[fill=cbxschemeA,color=cbxschemeA]
             (-0.6,-0.8) rectangle (1.5,1.4);
-          \draw[fill=cbxschemeA,color=cbxschemeA] 
+          \draw[fill=cbxschemeA,color=cbxschemeA]
             (1.47,-0.8) arc (-45:45:1.55);
-          \draw[color=cbxschemeD] 
+          \draw[color=cbxschemeD]
             (0.5,0.35) node {\bf\Huge \textsf{\theblockcounter}};
         \end{tikzpicture}%
         \centerline{\bf\LARGE \textsf{\insertblocktitle\vphantom{y}}}}%
@@ -229,19 +252,27 @@
 
 \mode<presentation>
 
-\setbeamertemplate{headline}{  
+\setbeamertemplate{headline}{
   \leavevmode
 
   \begin{beamercolorbox}[wd=\paperwidth]{headline}
-    \vspace{0.5in}
- 
-    \begin{minipage}[c]{0.46\textwidth}
-    \hspace{1in}\usebeamercolor{title in headline}{\color{fg}\textbf{\setscaledfont{40pt}{\fontscale}{\cbxposter@title}}}
+    \vspace{0.7in}
+
+    \hspace{1in}
+    \begin{minipage}[c]{0.55\textwidth}
+    \usebeamercolor{title in headline}{\color{fg}\setscaledfontx{44pt}{\fontscale}{1.1}\textbf{\cbxposter@title}\par}
     \end{minipage}\hfill%
-    \begin{minipage}[c]{0.5\textwidth}\centering
-      \usebeamercolor{author in headline}{\color{fg}\LARGE{\textsf{\cbxposter@authors}}\\[0.15in]}
-      \usebeamercolor{institute in headline}{\color{fg}\LARGE{\textsf{\cbxposter@inst}}}
+    \begin{minipage}[c]{0.36\textwidth}\centering
+      \usebeamercolor{author in headline}{\color{fg}\Huge\textsf{\cbxposter@authors}\par}
+
+      \vspace{0.2in}
+
+      \usebeamercolor{institute in headline}{\color{fg}\huge\textsf{\cbxposter@inst}\par}
     \end{minipage}\hfill
+%    \begin{minipage}[c]{0.05\textwidth}
+%      \setlength{\fboxrule}{2.5pt}
+%      \fcolorbox{cbxschemeD}{white}{\includegraphics[width=\textwidth]{qrcode.svg.pdf}}
+%    \end{minipage}\hspace{1in}\mbox{}
     \vspace{0.5in}
   \end{beamercolorbox}
 
@@ -262,17 +293,14 @@
   \begin{beamercolorbox}[wd=\paperwidth]{upper separation line foot}
     \rule{0pt}{2.5pt}
   \end{beamercolorbox}
-  
-  \begin{beamercolorbox}[leftskip=1cm,rightskip=1cm]{footline}%    
+
+  \begin{beamercolorbox}[leftskip=1cm,rightskip=1cm]{footline}%
     \vspace{0.5ex}
     \begin{center}
-      \cbxposter@name
-      \quad --- \quad
-      \cbxposter@address
-      \quad --- \quad
-      \cbxposter@email
-      \quad --- \quad
-      \cbxposter@web
+      \BF{Contact Author:}
+      \cbxposter@name,
+      \cbxposter@address,
+      \url{\cbxposter@email}
     \end{center}
     \vspace{0.5ex}
   \end{beamercolorbox}
@@ -284,20 +312,29 @@
 % Misc
 %-------------------------------------------------------------------------
 
-\newcommand{\cbxsection}[1]{%
+\newcommand{\cbxsection}[1]{{
   \centering
-  \vspace{0.3in}
+  \vspace{0.25in}
   {\color{cbxschemeD}%
-  {\bf \LARGE #1\par}
+  {\bf \Large #1\par}
   \vspace{-0.05in}
-  \rule{0.9\textwidth}{2.5pt}\\[0.2in]}
+  \rule{0.9\textwidth}{2.5pt}\\[0.3in]}
+}}
+
+%-------------------------------------------------------------------------
+% Assembly block formatting
+%-------------------------------------------------------------------------
+
+\renewcommand{\FancyVerbFormatLine}[1]
+{%
+  \parbox{1.5ex}{\raggedleft\theFancyVerbLine} #1%
 }
 
 %-------------------------------------------------------------------------
 % Useful macros
 %-------------------------------------------------------------------------
 
-\newenvironment{cbxlist}[4][\textbullet]
+\newenvironment{cbxlist}[4][$\triangleright$]
 {%
   \begin{list}{#1}
   {%
@@ -311,7 +348,7 @@
   }
 }{%
   \end{list}
-} 
+}
 
 \newenvironment{cbxindent}[2]
 {%
@@ -335,6 +372,29 @@
 \newcommand{\by}{$\times$}
 \newcommand{\tw}{\textwidth}
 \newcommand{\cw}{\columnwidth}
+\newcommand{\wu}[2]{\mbox{#1\,#2}}
 
+\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand{\BF}[1]{\textbf{#1}}
+\newcommand{\IT}[1]{\textit{#1}}
+\newcommand{\RM}[1]{\textrm{#1}}
+\newcommand{\mmsq}{mm\tsup{2}}
+\newcommand{\umsq}{\textmu{}m\tsup{2}}
 
+\newcommand{\tsup}[1]{\textsuperscript{#1}}
+\newcommand{\tsub}[1]{\textsubcript{#1}}
+
+% shreesha: added a new command that controls the font of verbatim blocks
+\newcommand{\verbatimfont}[1]{\renewcommand{\verbatim@font}{\ttfamily#1}}
+
+\RequirePackage{pgfpages}
+\pgfpagesuselayout{resize to}%
+[%
+  physical paper width=\paperwidth,%
+  physical paper height=\paperheight,%
+%  physical paper width=40.5in,%
+%  physical paper height=29.8in,%
+  border shrink=0.25in%
+]
+\pgfpageslogicalpageoptions{1}{border code={\pgfsetlinewidth{5pt}\pgfstroke}}
 

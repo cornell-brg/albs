@@ -70,7 +70,7 @@ Take a look at the files in the toplevel project directory.
  - 'src'              : Subdirectory for LaTeX source files
  - 'images'           : Subdirectory for various image files
  - 'svg'              : Subdirectory for SVG build system module
- - 'mat'              : Subdirectory for Matlab build system module
+ - 'py'               : Subdirectory for Python build system module
 
 The build system uses the GNU Autoconf tools to configure the system for
 the current build platform, and the GNU Make tools to manage the actual
@@ -158,7 +158,7 @@ following files:
  - 'config.log'    : Log from 'configure' script
  - 'config.status' : Cached version of the 'configure' script
  - 'svg.mk'        : Makefile fragment for SVG build system module
- - 'mat.mk'        : Makefile fragment for Matlab build system module
+ - 'py.mk'         : Makefile fragment for Python build system module
  - 'albs-tut.d'    : Auto-generated dependency file
  - 'albs-tut.log'  : Log file from running LaTeX
  - 'albs-tut.out'  : Output from running LaTeX
@@ -830,7 +830,7 @@ other kinds of input. For example, we might use the Inkscape drawing
 program to create figures which we want to include in our document.
 Inkscape generates 'svg' files so we will need to convert these into
 'pdf' files for use with LaTeX. Similarly, we might want to include
-Graphviz 'dot' files, Matlab plots, or XFig 'fig' files in our document.
+Graphviz 'dot' files, Python plots, or XFig 'fig' files in our document.
 All of these file formats need to be converted into something which
 LaTeX can handle (usually PDF). Ideally, we want to add Autoconf checks
 to see if the required conversion tools are installed and Makefile rules
@@ -859,18 +859,18 @@ actually do the conversion in the makefile fragment. The LaTeX package
 can help setup the LaTeX environment for use with the module.
 
 Currently there are two modules included with the basic ALBS template.
-The 'svg' module manages converting SVG figures to PDF and the 'mat'
-module manages creating Matlab plots by running matlab scripts
-automatically. For the 'svg' module, simply create your SVG file 
-(eg. 'figure.svg') and place it in the 'svg' subdirectory and then use
-the 'includegraphics{figure.svg.pdf}' macro. The build system will
-automatically run 'inkscape' and 'epstopdf' to generate a PDF file. You
-can also use the 'scripts/svg-split-layers.rb' script to create multiple
-PDFs from the same SVG file with different layers in each PDF. This is
-particularly useful for Beamer presentations. Consult the 'svg.mk.in'
-make fragment for more information. For the 'mat' module, create a
-matlab script which generates the desired plot as a pdf 
-(eg. 'plot_foo.m') and then use the 'includegraphics' to include
-'plot-foo.mat.pdf' macro. The build system will automatically run the
-'plot_foo.m' script and also take care of embedding the fonts in the
-resulting PDF file.
+The 'svg' module manages converting SVG figures to PDF and the 'py'
+module manages creating plots by running Python scripts automatically.
+For the 'svg' module, simply create your SVG file (eg. 'figure.svg') and
+place it in the 'svg' subdirectory and then use the
+'includegraphics{figure.svg.pdf}' macro. The build system will
+automatically run 'inkscape' to generate a PDF file. You can also use the
+'scripts/svg-split-layers.rb' script to create multiple PDFs from the
+same SVG file with different layers in each PDF. This is particularly
+useful for Beamer presentations. Consult the 'svg.mk.in' make fragment
+for more information. For the 'py' module, create a Python script which
+generates the desired plot as a pdf (eg. 'plot-foo.py') and then use the
+'includegraphics' macro to include 'plot-foo.py.pdf'. The build system
+will automatically run the 'plot-foo.py' script and also take care of
+cropping and embedding the fonts for the resulting PDF file.
+

@@ -9,6 +9,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cbxslides}[2008/08/17 ver 0.1]
+\pdfminorversion=4
 
 %-------------------------------------------------------------------------
 % Class Options
@@ -53,12 +54,15 @@
 \RequirePackage{multirow}     % Table cell stretch across multiple rows
 \RequirePackage{varwidth}     % Variable width minipages
 \RequirePackage{relsize}      % Relative font sizes
+\RequirePackage{fancyvrb}     % Pretty code formatting
+\RequirePackage{listings}
 
 %-------------------------------------------------------------------------
 % Document Parameters
 %-------------------------------------------------------------------------
 
 \gdef\cbx@title{}
+\gdef\cbx@subtitle{}
 \gdef\cbx@author{}
 \gdef\cbx@affiliation{}
 \gdef\cbx@abbrvinst{}
@@ -69,6 +73,7 @@
 \gdef\cbx@web{}
 
 \renewcommand{\title}[1]{\gdef\cbx@title{#1}}
+\renewcommand{\subtitle}[1]{\gdef\cbx@subtitle{#1}}
 \renewcommand{\author}[1]{\gdef\cbx@author{#1}}
 \newcommand{\affiliation}[1]{\gdef\cbx@affiliation{#1}}
 \newcommand{\abbrvinst}[1]{\gdef\cbx@abbrvinst{#1}}
@@ -102,7 +107,7 @@
 % 1.2 times the font size.
 
 \newlength{\cbx@templen}
-\newcommand{\cbx@setfontsize}[1]
+\newcommand{\cbxsetfontsize}[1]
 {%
   \setlength{\cbx@templen}{#1 * \real{1.2}}%
   \fontsize{#1}{\the\cbx@templen}\selectfont%
@@ -174,10 +179,15 @@
 \setbeamercolor*{titlelike}{bg=white,fg=black}
 \setbeamercolor*{separation line}{}
 \setbeamercolor*{fine separation line}{}
-\setbeamercolor{section in head/foot}{palette quaternary}
+%\setbeamercolor{section in head/foot}{palette quaternary}
 \setbeamercolor{frametitle}{bg=white,fg=black}
 \setbeamercolor{itemize item}{fg=cbxblueD}
 \setbeamercolor{itemize subitem}{fg=cbxblueD}
+
+\setbeamertemplate{subsection in toc}%
+{%
+  \vspace*{0.03in}\hspace*{0.1in}\inserttocsubsection\par%
+}
 
 \mode
 <all>
@@ -222,7 +232,7 @@
 \setbeamerfont{section in sidebar}{size=\tiny}
 \setbeamerfont{section number projected}{size=\small,parent={section in toc,projected text}}
 
-\setbeamerfont{subsection in toc}{}
+\setbeamerfont{subsection in toc}{size=\large}
 \setbeamerfont{subsection in toc shaded}{parent=subsection in toc}
 \setbeamerfont{subsection in head/foot}{}
 \setbeamerfont{subsection in sidebar}{}
@@ -331,7 +341,7 @@
 % Format for current and non-current section names in the header
 \usesectionheadtemplate
   % Current section
-  {\hfill{\color{cbxschemeD}\insertsectionhead}}
+  {\hfill{\color{cbxschemeD}\textbf{\textbullet~\insertsectionhead}~\textbullet}}
   % Non-current section
   {\hfill{\color{cbxschemeD!40!bg}\insertsectionhead}}
 
@@ -367,12 +377,14 @@
   \normalsize
   \vskip2ex
   \begin{centering}
-    \vspace{0.2in}
-    {\cbx@setfontsize{16pt}\textbf{\cbx@title}\par}%
+%    \vspace{0.1in}
+%    {\cbxsetfontsize{14pt}\cbx@subtitle\par}%
     \vspace{0.1in}
-    {\cbx@setfontsize{14pt}\cbx@author\par}%
-    \vspace{0.4in}
-    {\cbx@setfontsize{11pt}\cbx@affiliation\par}%
+    {\cbxsetfontsize{16pt}\textbf{\cbx@title}\par}%
+    \vspace{0.2in}
+    {\cbxsetfontsize{14pt}\cbx@author\par}%
+    \vspace{0.2in}
+    {\cbxsetfontsize{11pt}\cbx@affiliation\par}%
     \vspace{0.2in}
   \end{centering}
   \vskip0pt plus 1filll
@@ -416,7 +428,7 @@
     \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
     \rule{0.95\paperwidth}{0.5pt}%
   \end{beamercolorbox}%
-  \vspace*{-0.07in}%
+  \vspace*{-0.1in}%
 }
 
 \mode
@@ -435,6 +447,7 @@
     [wd=\paperwidth,ht=2.3ex,dp=1.4ex,
      leftskip=.15cm,rightskip=.15cm]{cbxfootline}
     \parbox{1in}{\cbx@abbrvinst} \hfill \cbx@name \hfill \parbox{1in}{\hfill\insertframenumber~/~\cbx@finalslide}
+    %\parbox{1in}{\cbx@abbrvinst} \hfill \cbx@name \hfill \parbox{1in}{\hfill??~/~??}
   \end{beamercolorbox}%
   \vskip0pt%
 }
@@ -843,16 +856,28 @@
 % cbxfig
 %-------------------------------------------------------------------------
 
-\newcommand<>{\cbxfig}[2][\tw]{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}
-\newcommand<>{\cbxfigb}[2][\tw]{\fbox{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}}
-\newcommand<>{\cbxfigc}[2][\tw]{{\centering\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}\par}}
-\newcommand<>{\cbxfigbc}[2][\tw]{{\centering\fbox{\includegraphics#3[width=#1,height=2.75in,keepaspectratio]{#2}}}}
+\newcommand<>{\cbxfig}[2][\tw]{\includegraphics#3[width=#1,height=2.85in,keepaspectratio]{#2}}
+\newcommand<>{\cbxfigb}[2][\tw]{\fbox{\includegraphics#3[width=#1,height=2.85in,keepaspectratio]{#2}}}
+\newcommand<>{\cbxfigc}[2][\tw]{{\centering\includegraphics#3[width=#1,height=2.85in,keepaspectratio]{#2}\par}}
+\newcommand<>{\cbxfigcx}[2][\tw]{{\centering\includegraphics#3[width=#1,height=3.25in,keepaspectratio]{#2}\par}}
+\newcommand<>{\cbxfigbc}[2][\tw]{{\centering\fbox{\includegraphics#3[width=#1,height=2.85in,keepaspectratio]{#2}}}}
+
+%-------------------------------------------------------------------------
+% Code block formatting
+%-------------------------------------------------------------------------
+
+%\renewcommand{\FancyVerbFormatLine}[1]
+%{%
+%  \parbox{2.5ex}{\raggedleft\theFancyVerbLine} #1%
+%}
 
 %-------------------------------------------------------------------------
 % Useful Macros
 %-------------------------------------------------------------------------
 
-\newcommand{\textred}[1]{{\color{cbxredC}#1}}
+\newcommand{\RD}[1]{{\color{cbxredC}#1}}
+\newcommand{\RDA}[1]{{\color{cbxblueC}#1}}
+\newcommand{\RDB}[1]{{\color{cbxgreenC}#1}}
 \newcommand{\wu}[2]{\mbox{#1\,#2}}
 \newcommand{\tmu}{\textmu{}}
 \newcommand{\um}{\mbox{\textmu m}}

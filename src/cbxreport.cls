@@ -14,7 +14,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cbxdoc}[2010/09/06 ver 0.1]
-\LoadClass[11pt]{article}
+\LoadClass[10pt]{article}
 
 %-------------------------------------------------------------------------
 % Packages
@@ -35,11 +35,15 @@
 \RequirePackage{xcolor}       % Colored text
 \RequirePackage{datetime}     % Date/time formatting
 \RequirePackage{url}          % Format URLs
+\RequirePackage{fancyvrb}     % Pretty code formatting
+\RequirePackage{array}        % More table options
+\RequirePackage{tikz}
+\RequirePackage{titlesec}
+\RequirePackage{rotating}
+\RequirePackage{lipsum}       % Lorem Ipsum?
 
 \RequirePackage{calc}         % Basic math operations
 \RequirePackage{xifthen}      % Conditional code
-
-\RequirePackage{cbxcommon}    % Common macros across all class files
 
 %-------------------------------------------------------------------------
 % Document Parameters
@@ -59,6 +63,22 @@
 \newdateformat{revdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
 \newtimeformat{revtime}{\twodigit{\THEHOUR}-\twodigit{\THEMINUTE}}
 
+% Paragraph setup
+
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+% Float spacing
+
+\setlength{\floatsep}{0.3in}
+\renewcommand{\floatpagefraction}{0.9}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\setcounter{totalnumber}{50}
+\setcounter{topnumber}{50}
+\setcounter{bottomnumber}{50}
+
 %-------------------------------------------------------------------------
 % Page Layout
 %-------------------------------------------------------------------------
@@ -68,6 +88,7 @@
 \geometry
 {%
   margin=1.2in,
+%  hmargin=1.1in,
   headheight=15pt,
 }
 
@@ -145,7 +166,7 @@
   %
   \ifthenelse{ \NOT\isundefined{\cbx@author} }%
   {%
-    \vspace{0.15in}%
+    \vspace{0.1in}%
     {\large\cbx@author\par}%
   }{}%
   %
@@ -168,9 +189,76 @@
 %-------------------------------------------------------------------------
 % Section Formatting
 %-------------------------------------------------------------------------
-% Put the period after the section number.
 
-\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\hspace{0.5em}}
+\titleformat{\section}
+  {\normalfont\bfseries\large}
+  {\thesection.}
+  {1.5ex}{}{}
+
+\titlespacing{\section}{0pt}{*2}{*1}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries}
+  {\thesection.\Alph{subsection}}
+  {1.5ex}{}{}
+
+\titlespacing{\subsection}{0pt}{*2}{*1}
+\renewcommand{\thesubsection}{\thesection.\Alph{subsection}}
+
+%-------------------------------------------------------------------------
+% Caption Setup
+%-------------------------------------------------------------------------
+
+\captionsetup{labelfont={bf}}
+\newcommand{\captionreset}
+{%
+  \captionsetup{labelfont={bf}}
+}
+
+%-------------------------------------------------------------------------
+% Compact formatting
+%-------------------------------------------------------------------------
+
+\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand{\BF}[1]{\textbf{#1}}
+\newcommand{\IT}[1]{\textit{#1}}
+\newcommand{\RM}[1]{\textrm{#1}}
+
+%-------------------------------------------------------------------------
+% Table row formatting
+%-------------------------------------------------------------------------
+
+\newcolumntype{+}
+{%
+  >{\global\let\currentrowstyle\relax}%
+}
+
+\newcolumntype{^}
+{%
+  >{\currentrowstyle}%
+}
+
+\newcommand{\rs}
+{%
+  \gdef\currentrowstyle{\lastrowstyle}%
+  \lastrowstyle\ignorespaces%
+}
+
+\newcommand{\rowstyle}[1]
+{%
+  \gdef\lastrowstyle{#1}%
+  \gdef\currentrowstyle{#1}%
+  #1\ignorespaces%
+}
+
+%-------------------------------------------------------------------------
+% Code block formatting
+%-------------------------------------------------------------------------
+
+\renewcommand{\FancyVerbFormatLine}[1]
+{%
+  \parbox{2.5ex}{\raggedleft\theFancyVerbLine} #1%
+}
 
 %-------------------------------------------------------------------------
 % Lists
@@ -203,4 +291,7 @@
 \newcommand{\by}{$\times$}
 \newcommand{\tw}{\textwidth}
 \newcommand{\cw}{\columnwidth}
+
+\widowpenalty10000
+\clubpenalty10000
 

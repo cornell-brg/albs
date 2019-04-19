@@ -12,7 +12,7 @@
 
 m4_define( proj_name,         [Automatic LaTeX Build System])
 m4_define( proj_maintainer,   [Christopher Batten])
-m4_define( proj_abbreviation, [albs])
+m4_define( proj_abbreviation, [paper-albs])
 
 #-------------------------------------------------------------------------
 # Project version information
@@ -49,7 +49,7 @@ ALBS_PROG_RUBY
 # ALBS build system module list
 #-------------------------------------------------------------------------
 
-ALBS_MODULES([svg,mat])
+ALBS_MODULES([svg,py])
 
 #-------------------------------------------------------------------------
 # Output
@@ -57,3 +57,4 @@ ALBS_MODULES([svg,mat])
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
+

@@ -11,14 +11,14 @@
 % seem to be required by the ISCA guidelines.
 %
 % Class Options
-%  - appearsin : add appears in header
-%  - submitted : add submitted & do not dist. header, draft watermark
-%  - draftcopy : add draft copy & do not dist. header, draft watermark
-%  - blind     : remove author and affiliation information
-%  - pagenum   : add a page number to every page
+%  - appearsin  : add appears in header
+%  - submitted  : add submitted & do not dist. header, draft watermark
+%  - draftcopy  : add draft copy & do not dist. header, draft watermark
+%  - submission : remove author information, confidential header, page num
+%  - pagenum    : add a page number to every page
 %
 % Author : Christopher Batten
-% Date   : April 4, 2010
+% Date : November 26, 2018
 %
 
 %-------------------------------------------------------------------------
@@ -79,18 +79,18 @@
 % 11-point italic with initial letters capitalized.
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{cbxarticle-acm}[2010/04/04 ver 0.1]
-\LoadClass[twocolumn,9pt]{extarticle}
+\ProvidesClass{cbxarticle}[2012/06/02 ver 0.1]
+\LoadClass[twocolumn,10pt]{article}
 
 %-------------------------------------------------------------------------
 % Options
 %-------------------------------------------------------------------------
 % These are the options which you can pass when you call \documentclass.
 %
-%  - appearsin  : appears in header
-%  - submitted  : submitted & do not distribute header, draft watermark
-%  - draftcopy  : draft copy & do not distribute header, draft watermark
-%  - blind      : remove author and affiliation information
+%  - appearsin  : add appears in header
+%  - submitted  : add submitted & do not dist. header, draft watermark
+%  - draftcopy  : add draft copy & do not dist. header, draft watermark
+%  - submission : remove author information, confidential header, page num
 %  - pagenum    : add a page number to every page
 %
 
@@ -98,38 +98,35 @@
 \gdef\cbxarticle@appearsin{false}
 \gdef\cbxarticle@submitted{false}
 \gdef\cbxarticle@pagenum{false}
-\gdef\cbxarticle@blind{false}
+\gdef\cbxarticle@submission{false}
 
 \DeclareOption{appearsin}{\gdef\cbxarticle@appearsin{true}}
 \DeclareOption{submitted}{\gdef\cbxarticle@submitted{true}}
 \DeclareOption{draftcopy}{\gdef\cbxarticle@draftcopy{true}}
 \DeclareOption{pagenum}{\gdef\cbxarticle@pagenum{true}}
-\DeclareOption{blind}{\gdef\cbxarticle@blind{true}}
+\DeclareOption{submission}{\gdef\cbxarticle@submission{true}}
 \ProcessOptions
 
 %-------------------------------------------------------------------------
 % Packages
 %-------------------------------------------------------------------------
-% We use the mathptmx package to load the Times and Helvetica fonts.
-% Normally the main text font size is set as an option when we load the
-% article class, but since we need 9pt we need to use a special class
-% called extarticle. We used scaled helvetica so that the caption font
-% size is comparable to the main text Times font size -- well actually I
-% want to use scaled helvetica but then the font sizes don't match
-% exactly what the editors want. I also load packages which I pretty much
-% always use (eg. graphicx, textcomp, booktabs, etc)
+% We use the mathptmx package to load the Times and Helvetica fonts. The
+% main text font size is set as an option when we load the article
+% class. We used scaled helvetica so that the caption font size is
+% comparable to the main text Times font size. I also load packages
+% which I pretty much always use (eg. graphicx, textcomp, booktabs, etc)
 
 \RequirePackage{geometry}     % Page layout
 
 \RequirePackage[T1]{fontenc}  % Make sure we use T1 font encoding
 \RequirePackage{mathptmx}     % Use times for serif font
-%\RequirePackage[scaled=0.92]{helvet}
 \RequirePackage{helvet}       % Use helvetica for sans serif font
-\RequirePackage{courier}      % Use courier for fixed width font
+%\RequirePackage{courier}     % Use courier for fixed width font
 
-\RequirePackage{caption}      % Flexibly configure captions
-\RequirePackage{subfig}       % -> we should move to subcaption soon
+\RequirePackage{caption}      % updated version of caption
+\RequirePackage{subcaption}   %  ... which includes the subcaption pkg
 \RequirePackage{graphicx}     % To include graphics
+\RequirePackage{fancyvrb}     % Pretty code formatting
 \RequirePackage{dblfloatfix}  % Fixes some issues with dbl col floats
 \RequirePackage{textcomp}     % For non-math characters (eg. mu)
 \RequirePackage{cite}         % Sort cite lists [1,2,3]
@@ -137,12 +134,38 @@
 \RequirePackage{fancyhdr}     % For headers and footers
 \RequirePackage{booktabs}     % Very nice table formatting
 \RequirePackage{xcolor}       % Colored text
+\RequirePackage{afterpage}    % Add code after this page
+\RequirePackage{array}        % Extra table formatting
+\RequirePackage{comment}      % For adding comment blocks
+\RequirePackage{lipsum}       % Lorem Ipsum?
 
 \RequirePackage{calc}         % Basic math operations
 \RequirePackage{xifthen}      % Conditional code
 
 \RequirePackage{indentfirst}  % Indent first paragraph for this style
 \RequirePackage{setspace}     % Slightly tighter spacing
+
+%-------------------------------------------------------------------------
+% linespacing
+%-------------------------------------------------------------------------
+
+% \renewcommand{\baselinestretch}{0.95}
+
+%-------------------------------------------------------------------------
+% specialcomment
+%-------------------------------------------------------------------------
+
+\specialcomment{acknowledgments}
+{%
+  \section*{Acknowledgments}
+}{%
+}
+
+\ifthenelse{ \equal{\cbxarticle@submission}{true} }
+{%
+  \excludecomment{acknowledgments}%
+}{%
+}
 
 %-------------------------------------------------------------------------
 % \cbxarticle@setfontsize{pts} Macro
@@ -152,9 +175,9 @@
 % 1.2 times the font size.
 
 \newlength{\cbxarticle@Templen}
-\newcommand{\cbxarticle@setfontsize}[1]
+\newcommand{\cbxsetfontsize}[1]
 {%
-  \setlength{\cbxarticle@Templen}{#1 * \real{1.2}}%
+  \setlength{\cbxarticle@Templen}{#1 * \real{1.19}}%
   \fontsize{#1}{\the\cbxarticle@Templen}\selectfont%
 }
 
@@ -165,19 +188,50 @@
 % caption is supposed to be bold but this looks ridiculous for longer
 % captions.
 
-\DeclareCaptionFont{slightlysmaller}{\cbxarticle@setfontsize{9pt}}
-\captionsetup{font={slightlysmaller},labelfont={bf},skip=6pt}
-\captionsetup[subfloat]{font={slightlysmaller},labelfont={},skip=6pt}
-\newcommand{\cbxcaptionsize}{\cbxarticle@setfontsize{9pt}}
+\DeclareCaptionFont{capfont}{\cbxsetfontsize{9pt}}
+\newcommand{\cbxcaptionsize}{\cbxsetfontsize{9pt}}
 
-% Sometimes we want to manually create subfigure labels. For example we
-% might have three subfigures but they are really subplots in a single
-% pdf. We can use the following macro to create the subfigure captions.
-% It takes two arguments: the first is the width of the subfigure
-% caption and the second is the subfigure text. Put your label in the
-% subfigure text.
+% Main caption setup
 
-\newcommand{\cbxsubfigcaption}[2]{\subfloat[#2]{\rule{#1}{0pt}}}
+\captionsetup
+{%
+  font={capfont},%
+  labelfont={bf},%
+  skip=10pt%
+}
+
+% Subcaption setup
+
+\captionsetup[sub]
+{%
+  font={capfont},%
+  labelfont={},%
+  skip=8pt,%
+  justification=centering,%
+  labelformat=simple%
+}
+
+% Parens
+
+\DeclareCaptionSubType{figure}
+\renewcommand{\thesubfigure}{(\alph{subfigure})}
+
+\DeclareCaptionSubType{table}
+\renewcommand{\thesubtable}{(\alph{subtable})}
+
+\newcommand{\subrefs}[3]
+{%
+  \mbox{\ref{#1}\subref{#1-#2}--\subref{#1-#3}}%
+}
+
+%-------------------------------------------------------------------------
+% Assembly block formatting
+%-------------------------------------------------------------------------
+
+\renewcommand{\FancyVerbFormatLine}[1]
+{%
+  \parbox{1.5ex}{\raggedleft\theFancyVerbLine} #1%
+}
 
 %-------------------------------------------------------------------------
 % Page layout
@@ -187,12 +241,15 @@
 
 \geometry
 {%
-  headsep=0.15in,
-  headheight=26pt,
+  paperheight=11in,
+  headsep=20pt,
+  headheight=15pt,
+  tmargin=1in,         % should be 1in
+  bmargin=1in,         % should be 1in
+  columnsep=0.25in,    % should be 0.25in
+  paperwidth=8.5in,
   hmargin=0.75in,
-  tmargin=0.75in,
-  bmargin=1in,
-  columnsep=0.33in
+  marginparwidth=0in,
 }
 
 %-------------------------------------------------------------------------
@@ -203,6 +260,18 @@
 % the exact inter title, author, affiliation spacing is supposed to be,
 % but this looks pretty good. Note that we need the extra \email{} macro
 % because ACM requires the email addresses to be larger.
+
+\gdef\cbxarticle@papernum{}%
+\newcommand{\papernum}[1]
+{%
+  \gdef\cbxarticle@papernum{#1}%
+}
+
+\gdef\cbxarticle@confabbr{}%
+\newcommand{\confabbr}[1]
+{%
+  \gdef\cbxarticle@confabbr{#1}%
+}
 
 \gdef\cbxarticle@conference{}%
 \newcommand{\conference}[1]
@@ -216,23 +285,21 @@
   \gdef\cbxarticle@affiliation{#1}%
 }
 
-\newcommand{\email}[1]
-{%
-  {\cbxarticle@setfontsize{12pt}#1\par}%
-}
-
 \renewcommand{\@maketitle}
 {%
-  \vspace*{0.5em}%
+  \vspace*{1em}%
   \centering%
-  {\cbxarticle@setfontsize{18pt}\textsf{\textbf{\@title}}\par}
-  \ifthenelse{ \equal{\cbxarticle@blind}{false} }
+  {\cbxsetfontsize{18pt}\textsf{\textbf{\@title}}\par}
+  \ifthenelse{ \equal{\cbxarticle@submission}{false} }
   {%
-    \vspace{14pt}%
-    {\cbxarticle@setfontsize{12pt}\textsf{\@author}\par}\vspace{12pt}
-    {\cbxarticle@setfontsize{10pt}\textsf{\cbxarticle@affiliation}\par}
+    \vspace{12pt}%
+    %\vspace{16pt}%
+    {\cbxsetfontsize{12pt}\textsf{\@author}\par}%
+    \vspace{8pt}%
+    %\vspace{14pt}
+    {\cbxsetfontsize{10pt}\textsf{\cbxarticle@affiliation}\par}
   }{}
-  \vspace{18pt}
+  \vspace{20pt}
 }
 
 %-------------------------------------------------------------------------
@@ -307,17 +374,17 @@
 \renewcommand{\section}
 {%
   \@startsection{section}{1}{\z@}%
-                {-10\p@ \@plus -4\p@ \@minus -2\p@}%
+                {-10\p@ \@plus -6\p@ \@minus -4\p@}%
                 {4\p@}%
-                {\baselineskip 14pt\cbxarticle@setfontsize{12pt}\bf\MakeUppercase}%
+                {\baselineskip 14pt\cbxsetfontsize{12pt}\bf\MakeUppercase}%
 }
 
 \renewcommand{\subsection}
 {%
   \@startsection{subsection}{2}{\z@}%
-                {-8\p@ \@plus -2\p@ \@minus -\p@}%
+                {-8\p@ \@plus -4\p@ \@minus -2\p@}%
                 {4\p@}%
-                {\cbxarticle@setfontsize{12pt}\bf}%
+                {\cbxsetfontsize{12pt}\bf}%
 }
 
 \renewcommand*{\@seccntformat}[1]
@@ -343,18 +410,25 @@
 }
 
 %-------------------------------------------------------------------------
+% Widow/Orphans
+%-------------------------------------------------------------------------
+
+\widowpenalty10000
+\clubpenalty10000
+
+%-------------------------------------------------------------------------
 % Float spacings
 %-------------------------------------------------------------------------
 
-\renewcommand{\dbltopfraction}{0.9}
-\renewcommand{\topfraction}{0.9}
-\renewcommand{\dblfloatpagefraction}{0.7}
-\renewcommand{\floatpagefraction}{0.7}
+\renewcommand{\dbltopfraction}{0.99}
+\renewcommand{\topfraction}{0.99}
+\renewcommand{\dblfloatpagefraction}{0.99}
+\renewcommand{\floatpagefraction}{0.99}
 
 \newcommand{\bsk}{\baselineskip}
-\setlength{\dbltextfloatsep}{1.5\bsk plus 0.3\bsk minus 0.3\bsk}
-\setlength{\floatsep}{1.5\bsk plus 0.3\bsk minus 0.3\bsk}
-\setlength{\textfloatsep}{1.5\bsk plus 0.3\bsk minus 0.3\bsk}
+\setlength{\dbltextfloatsep}{1.4\bsk plus 0.4\bsk minus 0.4\bsk}
+\setlength{\floatsep}{1.4\bsk plus 0.4\bsk minus 0.4\bsk}
+\setlength{\textfloatsep}{1.4\bsk plus 0.4\bsk minus 0.4\bsk}
 
 %-------------------------------------------------------------------------
 % Copyright box
@@ -403,10 +477,11 @@
 {%
   \begin{figure}[b]
     % This roughly compensates for the floatsep, leaving exactly 1.5"
-    % \vspace{-\baselineskip}
+    %\vspace{-\baselineskip}
     % \setlength{\fboxsep}{0pt}
     % \fbox{%
-    \begin{minipage}[b][1in][b]{\cw}\cbxarticle@setfontsize{8pt}
+    % used to be 1in tall but just too close to text --cbatten
+    \begin{minipage}[b][1in][b]{\cw}\cbxsetfontsize{8pt}
     Permission to make digital or hard copies of all or part of this work
     for personal or classroom use is granted without fee provided that
     copies are not made or distributed for profit or commercial advantage
@@ -417,7 +492,7 @@
     \textit{\cbxarticle@copyrightconf{}},
     \cbxarticle@copyrightconfdateloc\par
     Copyright \cbxarticle@copyrightyear{} ACM
-    \cbxarticle@copyrightdata{} ...\$10.00\par
+    \cbxarticle@copyrightdata{} ... \$15.00\par
     \end{minipage}%
     % }
   \end{figure}
@@ -432,11 +507,12 @@
 \let\cbxarticle@oldthebibliography\thebibliography
 \renewcommand{\thebibliography}[1]
 {%
-  \balance
-  \cbxarticle@oldthebibliography{#1}
-  \setlength{\itemsep}{0.7ex}
-  \raggedright
-  \vspace{1ex}
+  \balance%
+  \raggedright%
+  \cbxarticle@oldthebibliography{#1}%
+  \setlength{\itemsep}{-0.2ex}%
+  \cbxsetfontsize{8pt}%
+  \vspace{1ex}%
 }
 
 %-------------------------------------------------------------------------
@@ -445,15 +521,10 @@
 
 \setlength{\parindent}{9pt}%
 
-% Help prevent widows and orphans
-
-\widowpenalty=1000
-\clubpenalty=1000
-
 % The ACM guidelines have obnoxiously tight line spacing (9pt font with
 % 10pt spacing). I just tighten it up a bit.
 
-\spacing{0.99}
+\spacing{0.98}
 
 %-------------------------------------------------------------------------
 % Process class options
@@ -466,13 +537,26 @@
 \newcommand{\cbxarticle@mainpageheader}{}
 \newcommand{\cbxarticle@footer}{}
 
+% Submission
+
+\ifthenelse{ \equal{\cbxarticle@submission}{true} }
+{%
+  \renewcommand{\cbxarticle@firstpageheader}
+  {%
+    \vspace{-0.1in}%
+    \cbxarticle@confabbr{} Submission \#\cbxarticle@papernum{} \\
+    Confidential Draft: DO NOT DISTRIBUTE
+  }
+  \renewcommand{\cbxarticle@footer}{\thepage}%
+}{}
+
 % Appears
 
 \ifthenelse{ \equal{\cbxarticle@appearsin}{true} }
 {%
   \renewcommand{\cbxarticle@firstpageheader}
   {%
-    \vspace{0.1in}\itshape%
+    \vspace*{-0.1in}\itshape%
     Appears in the Proceedings of the \cbxarticle@conference%
   }
 }{}
@@ -486,7 +570,7 @@
   \SetWatermarkLightness{0.9}
   \renewcommand{\cbxarticle@firstpageheader}
   {%
-    \itshape --- Please Do Not Redistribute --- \\
+    \vspace*{-0.15in}\itshape --- Please Do Not Redistribute --- \\
     Submitted to the \cbxarticle@conference%
   }
   \renewcommand{\cbxarticle@mainpageheader}
@@ -516,7 +600,8 @@
 
 % Page Numbers
 
-\ifthenelse{ \equal{\cbxarticle@pagenum}{true} }
+\ifthenelse{     \equal{\cbxarticle@pagenum}{true}
+             \OR \equal{\cbxarticle@submission}{true} }
 {%
   \renewcommand{\cbxarticle@footer}{\thepage}%
 }
@@ -529,16 +614,16 @@
 {%
   \fancyhead{}
   \fancyfoot{}
-  \fancyhead[C]{\cbxarticle@setfontsize{10pt}\cbxarticle@firstpageheader}
-  \fancyfoot[C]{\cbxarticle@setfontsize{10pt}\cbxarticle@footer}
+  \fancyhead[C]{\cbxarticle@firstpageheader}
+  \fancyfoot[C]{\cbxarticle@footer}
 }
 
 \fancypagestyle{mainpagestyle}
 {%
   \fancyhead{}
   \fancyfoot{}
-  \fancyhead[C]{\cbxarticle@setfontsize{10pt}\cbxarticle@mainpageheader}
-  \fancyfoot[C]{\cbxarticle@setfontsize{10pt}\cbxarticle@footer}
+  \fancyhead[C]{\cbxarticle@mainpageheader}
+  \fancyfoot[C]{\cbxarticle@footer}
 }
 
 \let\cbxarticle@oldmaketitle\maketitle
@@ -581,14 +666,53 @@
   \end{list}
 }
 
-\newcommand{\annotate}[1]{{\color{red}\bfseries [ #1 ]}}
-\newcommand{\fixme}[1]{{\color{red}\bfseries [ FIXME: #1 ]}}
-\newcommand{\wunits}[2]{\mbox{#1\,#2}}
+\newcommand{\fixme}[1]{{\color{red}\footnotesize [ FIXME: #1 ]}}
+\newcommand{\wu}[2]{\mbox{#1\,#2}}
 \newcommand{\um}{\mbox{\textmu m}}
 \newcommand{\X}{$\times$}
 \newcommand{\x}{\thinspace$\times$\thinspace}
 \newcommand{\by}{$\times$}
-\newcommand{\texttilde}{{\char'176}}
 \newcommand{\tw}{\textwidth}
 \newcommand{\cw}{\columnwidth}
+
+\newcommand{\mmsq}{mm\tsup{2}}
+\newcommand{\umsq}{\textmu{}m\tsup{2}}
+
+\newcommand{\tsup}[1]{\textsuperscript{#1}}
+\newcommand{\tsub}[1]{\textsubcript{#1}}
+
+\renewcommand{\paragraph}[1]
+{%
+  \smallskip\textbf{#1} --%
+}
+
+%-------------------------------------------------------------------------
+% Compact formatting
+%-------------------------------------------------------------------------
+
+\newcommand{\TT}[1]{\texttt{#1}}
+\newcommand{\BF}[1]{\textbf{#1}}
+\newcommand{\IT}[1]{\textit{#1}}
+\newcommand{\RM}[1]{\textrm{#1}}
+
+\definecolor{cbxgreenA}    {RGB}{230, 248, 219}
+\definecolor{cbxgreenB}    {RGB}{190, 227, 169}
+\definecolor{cbxgreenC}    {RGB}{ 88, 171,  30}
+\definecolor{cbxgreenD}    {RGB}{ 42,  76,  19}
+\definecolor{cbxbluegreen} {RGB}{ 19,  76,  51}
+\definecolor{cbxblueA}     {RGB}{223, 238, 255}
+\definecolor{cbxblueB}     {RGB}{183, 206, 233}
+\definecolor{cbxblueC}     {RGB}{ 69, 136, 214}
+\definecolor{cbxblueD}     {RGB}{ 20,  50,  85}
+\definecolor{cbxbrownA}    {RGB}{247, 243, 204}
+\definecolor{cbxbrownB}    {RGB}{213, 205, 124}
+\definecolor{cbxbrownC}    {RGB}{143, 132,  19}
+\definecolor{cbxbrownD}    {RGB}{ 84,  67,   0}
+\definecolor{cbxredA}      {RGB}{254, 217, 217}
+\definecolor{cbxredB}      {RGB}{223, 167, 159}
+\definecolor{cbxredC}      {RGB}{176,  24,  24}
+\definecolor{cbxredD}      {RGB}{ 98,   9,   9}
+\definecolor{cbxblueitem}  {RGB}{ 40, 100, 150}
+\definecolor{dmlgrayBG}    {RGB}{240, 240, 240}
+\definecolor{dmlgrayTXT}   {RGB}{ 54,  54,  54}
 

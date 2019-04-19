@@ -1,34 +1,33 @@
 #=========================================================================
 # SVG Module Makefile Fragment
 #=========================================================================
-# Currently we directly use inkscape and epstopdf in the makefile to
-# convert svg to pdf. Eventually we might want to modify the
-# configuration scripts and makefile so that we can support other
-# platforms which might use a different process for svg to pdf
-# conversion (ie rsvg-convert), but for now this is the simplest
-# approach. Note that if either inkscape or epstopdf are not available
-# then we do not define a svg to pdf conversion rule - so if you try to
-# build a document which needs this conversion LaTeX will complain that
-# it cannot find a .svg.pdf file. Please read the documenation in
-# 'albs-uguide.txt' for more details on how the Automatic LaTeX Build
-# System works.
+# Currently we directly use inkscape in the makefile to convert svg to
+# pdf. Eventually we might want to modify the configuration scripts and
+# makefile so that we can support other platforms which might use a
+# different process for svg to pdf conversion (ie rsvg-convert), but for
+# now this is the simplest approach. Note that if inkscape is not
+# available then we do not define a svg to pdf conversion rule - so if
+# you try to build a document which needs this conversion LaTeX will
+# complain that it cannot find a .svg.pdf file. Please read the
+# documenation in 'albs-uguide.txt' for more details on how the Automatic
+# LaTeX Build System works.
 
 INKSCAPE = @inkscape@
-EPSTOPDF = @epstopdf@
 
 svg_enabled  = @svg_enabled@
 svg_figs     = $(filter %.svg.pdf, $(figs))
 svg_prebuild = $(svg_figs)
 
-svg_basic_figs = $(filter-out %-split.svg.pdf, $(svg_figs))
+# Note that we use sort to filter out duplicates and thus to avoid
+# "target given more than once in the same rule" warnings.
+
+svg_basic_figs = $(sort $(filter-out %-split.svg.pdf, $(svg_figs)))
 
 ifeq ($(svg_enabled),yes)
 $(svg_basic_figs) : %.svg.pdf : %.svg
-	$(INKSCAPE) --without-gui --export-text-to-path \
-    --export-eps $*.svg.eps \
-    $< 2>&1 \
-    | sed '/^.*Pango-WARNING.*$$/d;/^.*Xlib:.*$$/d;/^$$/d'
-	$(EPSTOPDF) $*.svg.eps
+	$(INKSCAPE) --without-gui \
+    --export-area-page --export-pdf $*.svg.pdf \
+    $<
 endif
 
 junk += $(svg_basic_figs) $(patsubst %.pdf, %.eps, $(svg_basic_figs))
@@ -44,11 +43,9 @@ define svg_split_template
 ifeq ($(svg_enabled),yes)
 $(1)-split.svg.pdf : $(2).svg
 	$(top_dir)/svg/svg-split-layers.rb $(3) $$< && mv $(1).svg $(1)-split.svg
-	$(INKSCAPE) --without-gui --export-text-to-path \
-    --export-eps $(1)-split.svg.eps \
-    $(1)-split.svg 2>&1 \
-    | sed '/^.*Pango-WARNING.*$$$$/d;/^.*Xlib:.*$$$$/d;/^$$$$/d'
-	$(EPSTOPDF) $(1)-split.svg.eps
+	$(INKSCAPE) --without-gui \
+    --export-area-page --export-pdf $(1)-split.svg.pdf \
+    $(1)-split.svg
 endif
 endef
 

@@ -1,53 +1,73 @@
 %=========================================================================
-% CBX Article Class (IEEE Computer Society Format)
+% CBX Article Class
 %=========================================================================
-% This class file formats a paper according to the IEEE Computer Society
-% Guidelines for 8.5 x 11 proceedings. This class file formats a paper
-% according to the conference submission guidelines. You should use
-% \conference, \title, \author, and \affiliation in your front matter.
-% The relevant guidelines are listed below. Note that I don't try to
-% implement centered captions, since this just doesn't seem to make sense
-% for captions which are more than just a title. I also use 9pt font for
-% captions -- 8pt font is silly. Although this class can be used for IEEE
-% Computer Society publications I also have code below which breaks the
-% guidelines but makes it look better in my opinion.
+% This class file formats a paper according to the conference submission
+% guidelines. You should use \conference, \title, \author, and
+% \affiliation in your front matter. The relevant guidelines are listed
+% below.
 %
 % Class Options
 %  - appearsin  : add appears in header
 %  - submitted  : add submitted & do not dist. header, draft watermark
 %  - draftcopy  : add draft copy & do not dist. header, draft watermark
-%  - blind      : remove author and affiliation information
+%  - submission : remove author information, confidential header, page num
 %  - pagenum    : add a page number to every page
 %  - shownotes  : show notes
 %
 % Author : Christopher Batten
-% Date : September 5, 2014
+% Date : May 26, 2015
+%
 
 %-------------------------------------------------------------------------
 % Formatting Guidlines
 %-------------------------------------------------------------------------
-% I figured out these guideliens from the Word Doc here:
+% Currently using guidelines from last year:
 %
-%  ftp://pubftp.computer.org/Press/Outgoing/proceedings/instruct8.5x11x2.doc
+%  http://asplos15.bilkent.edu.tr/submission.html
 %
-% All submissions should be single-spaced two-column text.
+% All submissions should contain a maximum of 11 pages of single-spaced
+% two-column text not including references. You may include any number of
+% pages for references, but see webpage for more instructions.
 %
+%  Page limit                  11 pages
 %  Paper size                  US Letter 8.5in x 11in
 %  Top margin                  1in
 %  Bottom margin               1in
 %  Left margin                 0.75in
 %  Right margin                0.75in
 %  Separation between columns  0.25in
-%  Title font                  14pt, Times, bold
-%  Body font                   10pt, Times
-%  Abstract font               9pt, Times, bold
-%  Section heading font        10pt, Times, smallcaps, centered, roman
-%  Subsection heading font     10pt, Times, italics, alpha
-%  Caption font                8pt, Times (I use 9pt)
-%  References                  8pt
+%  Body font                   10pt
+%  Abstract font               10pt, italicized
+%  Section heading font        12pt, bold
+%  Subsection heading font     10pt, bold
+%  Caption font                9pt, bold
+%  References                  8pt, no page limit, list all authors
 %
-% No page numbers with submission. Table captions are supposed to be
-% smallcaps and on top of the table.
+% Please ensure that you include page numbers with your submission. This
+% makes it easier for the reviewers to refer to different parts of your
+% paper when they provide comments. Please ensure that your submission
+% has a banner at the top of the title page, which contains the
+% submission number and the notice of confidentiality.
+%
+% Author List. All submissions are double blind. Therefore, please do not
+% include any author names in the submission. You must also ensure that
+% the metadata included in the PDF does not give away the authors. If you
+% are improving upon your prior work, refer to your prior work as a third
+% person.
+%
+% Figures and Tables. Ensure that the figures and tables are legible.
+% Please also ensure that you refer to your figures in the main text.
+% Many reviewers print the papers in gray-scale. Therefore, if you use
+% colors for your figures, ensure that the different colors are
+% distinguishable in gray-scale.
+%
+% References. There is no length limit for references. Each reference
+% must explicitly list all authors of the paper. Papers not meeting this
+% requirement will be rejected. Authors of NSF proposals should be
+% familiar with this requirement. Knowing all authors of related work
+% will help find the best reviewers. Since there is no length limit for
+% the number of pages used for references, there is no need to save space
+% here.
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{cbxarticle}[2012/06/02 ver 0.1]
@@ -58,9 +78,9 @@
 %-------------------------------------------------------------------------
 % These are the options which you can pass when you call \documentclass.
 %
-%  - appearsin  : appears in header
-%  - submitted  : submitted & do not distribute header, draft watermark
-%  - draftcopy  : draft copy & do not distribute header, draft watermark
+%  - appearsin  : add appears in header
+%  - submitted  : add submitted & do not dist. header, draft watermark
+%  - draftcopy  : add draft copy & do not dist. header, draft watermark
 %  - submission : remove author information, confidential header, page num
 %  - pagenum    : add a page number to every page
 %  - shownotes  : show notes
@@ -70,7 +90,6 @@
 \gdef\cbxarticle@appearsin{false}
 \gdef\cbxarticle@submitted{false}
 \gdef\cbxarticle@pagenum{false}
-\gdef\cbxarticle@blind{false}
 \gdef\cbxarticle@shownotes{false}
 \gdef\cbxarticle@submission{false}
 
@@ -78,7 +97,6 @@
 \DeclareOption{submitted}{\gdef\cbxarticle@submitted{true}}
 \DeclareOption{draftcopy}{\gdef\cbxarticle@draftcopy{true}}
 \DeclareOption{pagenum}{\gdef\cbxarticle@pagenum{true}}
-\DeclareOption{blind}{\gdef\cbxarticle@blind{true}}
 \DeclareOption{shownotes}{\gdef\cbxarticle@shownotes{true}}
 \DeclareOption{submission}{\gdef\cbxarticle@submission{true}}
 \ProcessOptions
@@ -114,11 +132,9 @@
 \RequirePackage{array}        % Extra table formatting
 \RequirePackage{comment}      % For adding comment blocks
 \RequirePackage{lipsum}       % Lorem Ipsum?
-\RequirePackage{url}
 
 \RequirePackage{calc}         % Basic math operations
 \RequirePackage{xifthen}      % Conditional code
-\RequirePackage{listings}
 
 %-------------------------------------------------------------------------
 % linespacing
@@ -162,35 +178,23 @@
 % Caption Fontsizes
 %-------------------------------------------------------------------------
 
-\DeclareCaptionFont{capfontfig}{\cbxsetfontsize{9pt}}
-\DeclareCaptionFont{capfonttbl}{\cbxsetfontsize{9pt}\scshape}
+\DeclareCaptionFont{capfont}{\cbxsetfontsize{9pt}}
 \newcommand{\cbxcaptionsize}{\cbxsetfontsize{9pt}}
-
-\DeclareCaptionLabelSeparator{hardspace}{.~}
 
 % Main caption setup
 
-\captionsetup[figure]
+\captionsetup
 {%
-  labelsep={hardspace},%
-  font={capfontfig},%
-  labelfont={},%
-  skip=6pt%
-}
-
-\captionsetup[table]
-{%
-  labelsep={period},%
-  font={capfonttbl},%
-  labelfont={sc},%
-  skip=4pt%
+  font={capfont},%
+  labelfont={bf},%
+  skip=8pt%
 }
 
 % Subcaption setup
 
 \captionsetup[sub]
 {%
-  font={capfontfig},%
+  font={capfont},%
   labelfont={},%
   skip=8pt,%
   justification=centering,%
@@ -209,8 +213,6 @@
 {%
   \mbox{\ref{#1}\subref{#1-#2}--\subref{#1-#3}}%
 }
-
-\renewcommand{\thetable}{\Roman{table}}
 
 %-------------------------------------------------------------------------
 % Assembly block formatting
@@ -241,13 +243,12 @@
     paperheight=11in,
     headsep=20pt,
     headheight=15pt,
-    tmargin=0.75in,
-    bmargin=1in,
-    columnsep=0.25in,
+    tmargin=1in,         % should be 1in
+    bmargin=1in,         % should be 1in
+    columnsep=0.25in,    % should be 0.25in
     paperwidth=8.5in,
-    hmargin=0.625in,
+    hmargin=0.75in,
     marginparwidth=0in,
-    footskip=0.4in,
   }
 }{
   \geometry
@@ -255,9 +256,10 @@
     paperheight=11in,
     headsep=20pt,
     headheight=15pt,
-    tmargin=1in,
-    bmargin=1in,
-    columnsep=0.25in,
+    vmargin=1in,
+    tmargin=1in,         % should be 1in
+    bmargin=1in,         % should be 1in
+    columnsep=0.25in,    % should be 0.25in
     paperwidth=10.5in,
     hmargin=1.75in,
     marginparwidth=1.5in,
@@ -295,14 +297,14 @@
 \renewcommand{\@maketitle}
 {%
   \centering
-  {\cbxsetfontsize{24pt}\@title\par}
+  {\cbxsetfontsize{16pt}\textbf{\@title}\par}
   \ifthenelse{ \equal{\cbxarticle@submission}{false} }
   {%
     \vspace{5pt}%
     {\cbxsetfontsize{10pt}\@author\par}
     {\cbxsetfontsize{10pt}\cbxarticle@affiliation\par}
   }{}
-  \vspace{12pt}
+  \vspace{20pt}
 }
 
 %-------------------------------------------------------------------------
@@ -313,10 +315,10 @@
 
 \renewenvironment{abstract}
 {%
-  \fontsize{9pt}{10pt}\selectfont\bfseries%
-  \textit{Abstract---}\ignorespaces%
+  \centerline{\cbxsetfontsize{12pt}\bf Abstract}%
+  \vspace*{5pt}%
+  \itshape%
 }{%
-  \par
 }
 
 %-------------------------------------------------------------------------
@@ -332,26 +334,22 @@
 \renewcommand{\section}
 {%
   \@startsection{section}{1}{\z@}%
-                {10pt plus 2pt minus 2pt}%
+                {8pt plus 2pt minus 2pt}%
                 {6pt plus 2pt minus 3pt}%
-                {\cbxsetfontsize{10pt}\scshape\centering}%
+                {\cbxsetfontsize{12pt}\bf}%
+%                {\cbxsetfontsize{12pt}\bf\MakeUppercase}%
 }
 
 \renewcommand{\subsection}
 {%
   \@startsection{subsection}{2}{\z@}%
-                {8pt plus 2pt minus 2pt}%
+                {6pt plus 2pt minus 2pt}%
                 {4pt plus 2pt minus 2pt}%
-                {\cbxsetfontsize{10pt}\itshape}%
+                {\cbxsetfontsize{10pt}\bf}%
 }
 
-\newcommand{\cbx@thesection}{\Roman{section}}
-\newcommand{\cbx@thesubsection}{\Alph{subsection}}
-
-\renewcommand{\thesection}{\Roman{section}}
-\renewcommand{\thesubsection}{\mbox{\thesection-\Alph{subsection}}}
-\renewcommand{\@seccntformat}[1]{\csname cbx@the#1\endcsname.\hspace{0.5em}}
-%\renewcommand{\@seccntformat}[2]{\Alph{#2}.\hspace{0.5em}}
+\renewcommand{\@seccntformat}[1]{\csname the#1\endcsname.\hspace{0.5em}}
+\renewcommand{\@seccntformat}[2]{\csname the#1\endcsname.\hspace{0.5em}}
 
 %-------------------------------------------------------------------------
 % Widow/Orphans
@@ -421,7 +419,7 @@
 {%
   \renewcommand{\cbxarticle@firstpageheader}
   {%
-    \itshape%
+    \vspace*{-0.1in}\itshape%
     Appears in the Proceedings of the \cbxarticle@conference%
   }
 }{}
@@ -435,7 +433,7 @@
   \SetWatermarkLightness{0.9}
   \renewcommand{\cbxarticle@firstpageheader}
   {%
-    \itshape --- Please Do Not Redistribute --- \\
+    \vspace*{-0.15in}\itshape --- Please Do Not Redistribute --- \\
     Submitted to the \cbxarticle@conference%
   }
   \renewcommand{\cbxarticle@mainpageheader}
@@ -621,33 +619,6 @@
 \newcommand{\cw}{\columnwidth}
 
 %-------------------------------------------------------------------------
-% Table row formatting
-%-------------------------------------------------------------------------
-
-\newcolumntype{+}
-{%
-  >{\global\let\currentrowstyle\relax}%
-}
-
-\newcolumntype{^}
-{%
-  >{\currentrowstyle}%
-}
-
-\newcommand{\rs}
-{%
-  \gdef\currentrowstyle{\lastrowstyle}%
-  \lastrowstyle\ignorespaces%
-}
-
-\newcommand{\rowstyle}[1]
-{%
-  \gdef\lastrowstyle{#1}%
-  \gdef\currentrowstyle{#1}%
-  #1\ignorespaces%
-}
-
-%-------------------------------------------------------------------------
 % Compact formatting
 %-------------------------------------------------------------------------
 
@@ -655,9 +626,6 @@
 \newcommand{\BF}[1]{\textbf{#1}}
 \newcommand{\IT}[1]{\textit{#1}}
 \newcommand{\RM}[1]{\textrm{#1}}
-\newcommand{\RD}[1]{\textcolor[RGB]{202,0,32}{#1}}
-\newcommand{\BL}[1]{\textcolor[RGB]{31,120,180}{#1}}
-
 \newcommand{\mmsq}{mm\tsup{2}}
 \newcommand{\umsq}{\textmu{}m\tsup{2}}
 
@@ -668,27 +636,4 @@
 {%
   \smallskip\textbf{#1} --%
 }
-
-\definecolor{cbxgreenA}    {RGB}{230, 248, 219}
-\definecolor{cbxgreenB}    {RGB}{190, 227, 169}
-\definecolor{cbxgreenC}    {RGB}{ 88, 171,  30}
-\definecolor{cbxgreenD}    {RGB}{ 42,  76,  19}
-\definecolor{cbxbluegreen} {RGB}{ 19,  76,  51}
-\definecolor{cbxblueA}     {RGB}{223, 238, 255}
-\definecolor{cbxblueB}     {RGB}{183, 206, 233}
-\definecolor{cbxblueC}     {RGB}{ 69, 136, 214}
-\definecolor{cbxblueD}     {RGB}{ 20,  50,  85}
-\definecolor{cbxbrownA}    {RGB}{247, 243, 204}
-\definecolor{cbxbrownB}    {RGB}{213, 205, 124}
-\definecolor{cbxbrownC}    {RGB}{143, 132,  19}
-\definecolor{cbxbrownD}    {RGB}{ 84,  67,   0}
-\definecolor{cbxredA}      {RGB}{254, 217, 217}
-\definecolor{cbxredB}      {RGB}{223, 167, 159}
-\definecolor{cbxredC}      {RGB}{176,  24,  24}
-\definecolor{cbxredD}      {RGB}{ 98,   9,   9}
-\definecolor{cbxblueitem}  {RGB}{ 40, 100, 150}
-\definecolor{dmlgrayBG}    {RGB}{240, 240, 240}
-\definecolor{dmlgrayTXT}   {RGB}{ 54,  54,  54}
-
-\newcommand{\fixme}[1]{{\footnotesize\color{red} [ #1 ]}}
 
