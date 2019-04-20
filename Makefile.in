@@ -34,6 +34,7 @@ extra_doc_texs   = \
   report-albs.tex \
   slides-albs.tex \
   poster-albs.tex \
+  poster-ada-albs.tex \
 
 doc_texs         = $(default_doc_texs) $(extra_doc_texs)
 
