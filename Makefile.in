@@ -28,13 +28,7 @@
 default_doc_texs = @PACKAGE_TARNAME@.tex
 
 extra_doc_texs   = \
-  paper-ieee-albs.tex \
-  paper-acmart-albs.tex \
-  paper-acm-albs.tex \
-  report-albs.tex \
   slides-albs.tex \
-  poster-albs.tex \
-  poster-ada-albs.tex \
 
 doc_texs         = $(default_doc_texs) $(extra_doc_texs)
 

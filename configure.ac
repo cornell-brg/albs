@@ -10,9 +10,9 @@
 # Project metadata
 #-------------------------------------------------------------------------
 
-m4_define( proj_name,         [Automatic LaTeX Build System])
-m4_define( proj_maintainer,   [Christopher Batten])
-m4_define( proj_abbreviation, [paper-albs])
+m4_define( proj_name,         [PyMTL Tutorial 2019])
+m4_define( proj_maintainer,   [Batten Research Group])
+m4_define( proj_abbreviation, [pymtl-tutorial-2019])
 
 #-------------------------------------------------------------------------
 # Project version information

@@ -1,0 +1,86 @@
+%=========================================================================
+% Example Using the Automatic LaTeX Build System
+%=========================================================================
+
+\documentclass{cbxslides}
+
+% albs modules
+
+\usepackage{svg}
+\usepackage{py}
+
+%-------------------------------------------------------------------------
+% Front matter
+%-------------------------------------------------------------------------
+
+\title
+{%
+  {\huge PyMTL Tutorial} \\[0.1in]
+  A Next-Generation Python-Based Framework for Hardware Generation,
+  Simulation, and Verification
+}
+
+\author    {Batten Research Group}
+\name      {PyMTL Tutorial @ ISCA'19}
+\abbrvinst {Batten Batten Group}
+
+\affiliation
+{%
+  Computer Systems Laboratory\\
+  Electrical and Computer Engineering \\
+  Cornell University \\
+  ISCA 2019
+}
+
+\headerwidth {0.9\paperwidth}
+\finalslide  {11}
+
+%-------------------------------------------------------------------------
+% Document
+%-------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------
+% Outline Slide
+%-------------------------------------------------------------------------
+
+\newcommand{\outlineslide}[1]
+{%
+  \begin{frame}
+    \vspace{0.04in}
+    \hspace{0.1in}
+    \begin{minipage}[t]{0.25\tw}
+      \vspace{0pt}
+
+      \fbox{\parbox[c][2.5in]{1in}{\centering Place Holder}}
+    \end{minipage}
+    \hspace{0.05in}
+    \begin{minipage}[t][2in][c]{0.65\tw}
+      \vspace{0pt}
+
+      \vspace{0.1in}
+      \Large \BF{Talk Outline}
+
+      \rule[0.17in]{\tw}{0.5pt}
+
+      \raggedright\small\vspace{-0.1in}
+      \tableofcontents[#1]
+    \end{minipage}
+  \end{frame}
+}
+
+%-------------------------------------------------------------------------
+% Document
+%-------------------------------------------------------------------------
+
+\begin{document}
+
+\frame[t,plain]{\titlepage}
+
+\input{sec-pymtl-overview}
+\input{sec-ex01-basics}
+\input{sec-ex02-cksum}
+\input{sec-ex03-proc}
+\input{sec-ex04-xcel}
+
+\end{document}
+
