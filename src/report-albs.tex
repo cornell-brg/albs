@@ -1,0 +1,61 @@
+%=========================================================================
+% Example Using the Automatic LaTeX Build System
+%=========================================================================
+
+\documentclass{cbxreport}
+
+% Automatix LaTeX build system modules
+
+\usepackage{svg}
+\usepackage{py}
+
+\begin{document}
+
+%-------------------------------------------------------------------------
+% Front Matter
+%-------------------------------------------------------------------------
+
+\title
+{%
+  Example Using the Automatic LaTeX Build System
+}
+
+\author
+{%
+  Christopher Batten
+}
+
+\institution
+{%
+  School of Electrical and Computer Engineering,
+  Cornell University, Ithaca, NY \\
+  cbatten@cornell.edu
+}
+
+\maketitle
+
+%-------------------------------------------------------------------------
+% Body
+%-------------------------------------------------------------------------
+
+\input{sec-intro}
+\input{sec-motivation}
+\input{sec-approach}
+\input{sec-methodology}
+\input{sec-evaluation}
+\input{sec-related}
+\input{sec-conclusions}
+
+%-------------------------------------------------------------------------
+% Back Matter
+%-------------------------------------------------------------------------
+
+\section*{Acknowledgments}
+
+This work was supported in part by ...
+
+\bibliographystyle{cbxabbrv}
+\bibliography{cbatten}
+
+\end{document}
+

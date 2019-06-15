@@ -56,8 +56,6 @@
 \RequirePackage{relsize}      % Relative font sizes
 \RequirePackage{fancyvrb}     % Pretty code formatting
 \RequirePackage{listings}
-\RequirePackage{pifont}
-\RequirePackage{colortbl}
 
 %-------------------------------------------------------------------------
 % Document Parameters
@@ -408,17 +406,6 @@
 
 \mode<presentation>
 
-\newcounter{taskseccount}
-\newcounter{taskcount}[taskseccount]
-\gdef\cbx@task{false}
-
-\newenvironment{task}
-{%
-  \gdef\cbx@task{true}%
-}{%
-  \gdef\cbx@task{false}%
-}
-
 \setbeamertemplate{frametitle}
 {%
   \ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
@@ -430,17 +417,7 @@
     \usebeamerfont{frametitle}%
     \vbox{}\vskip-1ex%
     \if@tempswa\else\csname beamer@fteleft\endcsname\fi%
-    \strut\textbf{%
-    \ifthenelse{ \equal{\cbx@task}{true} }%
-    {%
-      \stepcounter{taskcount}
-      \textcolor{cbxredC}{\ding{72} Task \thetaskseccount{}.\thetaskcount{}:~%
-      \insertframetitle{}%
-      ~\ding{72}}%
-    }{%
-      \insertframetitle{}%
-    }%
-    }\strut\par%
+    \strut\textbf{\insertframetitle}\strut\par%
     {%
       \ifx\insertframesubtitle\@empty%
       \else%
@@ -449,12 +426,7 @@
     }%
     \vskip-1.5ex%
     \if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
-    \ifthenelse{ \equal{\cbx@task}{true} }%
-    {%
-      \textcolor{cbxredC}{\rule{0.95\paperwidth}{0.5pt}}%
-    }{%
-      \rule{0.95\paperwidth}{0.5pt}%
-    }%
+    \rule{0.95\paperwidth}{0.5pt}%
   \end{beamercolorbox}%
   \vspace*{-0.1in}%
 }
