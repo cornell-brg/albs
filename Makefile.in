@@ -35,6 +35,7 @@ extra_doc_texs   = \
   slides-albs.tex \
   poster-albs.tex \
   poster-ada-albs.tex \
+  poster-deep3m-albs.tex \
 
 doc_texs         = $(default_doc_texs) $(extra_doc_texs)
 
