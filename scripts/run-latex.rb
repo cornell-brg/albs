@@ -255,8 +255,8 @@ def main()
       case line
         when /Fatal error occurred/                  then exit(1)
         when /There were multiply-defined labels/    then labels_multidef = true
-        when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
-        when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
+        when /.* Warning: Reference .* undefined/ then label_undef     = true
+        when /.* Warning: Citation .* undefined/  then citation_undef  = true
       end
     end
 
@@ -283,8 +283,8 @@ def main()
         when /Fatal error occurred/                  then exit(1)
         when /Rerun to get cross-references/         then unresolved_xref = true
         when /There were multiply-defined labels/    then labels_multidef = true
-        when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
-        when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
+        when /.* Warning: Reference .* undefined/ then label_undef     = true
+        when /.* Warning: Citation .* undefined/  then citation_undef  = true
       end
     end
 

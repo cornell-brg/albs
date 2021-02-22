@@ -25,10 +25,11 @@
 # toplevel tex files to the default_doc_texs or the
 # extra_doc_texs make variables.
 
-default_doc_texs = @PACKAGE_TARNAME@.tex
-
+default_doc_texs =
 extra_doc_texs   = \
+  paper-albs.tex \
   paper-ieee-albs.tex \
+  paper-ieeetran-albs.tex \
   paper-acmart-albs.tex \
   paper-acm-albs.tex \
   report-albs.tex \
