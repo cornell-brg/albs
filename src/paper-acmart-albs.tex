@@ -1,6 +1,12 @@
 %=========================================================================
 % Example Using the Automatic LaTeX Build System
 %=========================================================================
+% We use hackdocumentclass because otherwise the build system will try to
+% scan through acmart.cls which gets it really confused. Note that if
+% you want to submit to an ACM journal you should use this:
+%
+% \hackdocumentclass[manuscript,screen,review]{acmart}
+%
 
 \newcommand{\hackdocumentclass}{\documentclass}
 \hackdocumentclass[sigconf]{acmart}
@@ -11,20 +17,15 @@
 \usepackage{svg}
 \usepackage{py}
 
-% Ensure letter paper
-
-\pdfpagewidth=8.5in
-\pdfpageheight=11in
-
 \begin{document}
 
 %-------------------------------------------------------------------------
 % Front Matter
 %-------------------------------------------------------------------------
 
+\setcopyright{acmcopyright}
 \copyrightyear{XXXX}
 \acmYear{XXXX}
-\setcopyright{acmcopyright}
 \acmConference{CONF-01}{Month 1--2, XXXX}{Ithaca, NY, USA}
 \acmPrice{15.00}
 \acmDOI{XX.XXXX/XXXX.XXXX}
@@ -37,21 +38,17 @@
   Example Using the Automatic LaTeX Build System
 }
 
-\author{%
-  Christopher Batten
-}
+% Note that the acmart format has lots of options for how to list
+% authors, so we probably need explore those when including multiple
+% authors especially at different institutions.
 
-\affiliation{
-  \vspace{0.07in}
-  \institution{%
-    School of Electrical and Computer Engineering,
-    Cornell University, Ithaca, NY%
-  }
-}
-
-\email{%
-  cbatten@cornell.edu%
-  \vspace{0.05in}
+\author{Christopher Batten}
+\email{cbatten@cornell.edu}
+\affiliation{%
+  \institution{School of Electrical and Computer Engineering, Cornell University}
+  \city{Ithaca}
+  \state{NY}
+  \country{USA}
 }
 
 % List the first author for headers
@@ -93,7 +90,6 @@
   This work was supported in part by ...
 \end{acks}
 
-%\clearpage
 \bibliographystyle{acmart}
 \balance
 \bibliography{cbatten}

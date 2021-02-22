@@ -101,7 +101,7 @@ def main()
   # General variables
 
   latex_bname = File::basename( $opts[:tex_full_name], ".tex" )
-  latex_out   = "#{latex_bname}.out"
+  latex_out   = "#{latex_bname}-latex.out"
   latex_aux   = "#{latex_bname}.aux"
   latex_bbl   = "#{latex_bname}.bbl"
   latex_bc    = "#{latex_bname}.bc"
