@@ -133,12 +133,18 @@ def main()
   citation_undef  = false
 
   IO.foreach(latex_out) do |line|
-    case line
-      when /Fatal error occurred/                  then exit(1)
-      when /Rerun to get cross-references/         then unresolved_xref = true
-      when /There were multiply-defined labels/    then labels_multidef = true
-      when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
-      when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
+    begin
+      case line
+        when /Fatal error occurred/                  then exit(1)
+        when /Rerun to get cross-references/         then unresolved_xref = true
+        when /There were multiply-defined labels/    then labels_multidef = true
+        when /LaTeX Warning: Reference .* undefined/ then label_undef     = true
+        when /LaTeX Warning: Citation .* undefined/  then citation_undef  = true
+      end
+    rescue ArgumentError
+      # Handle ArgumentError exception when the pdflatex output contains
+      # non-UTF8 characters. If so we assume the current line does not
+      # match any of the given strings and do nothing.
     end
   end
 
@@ -252,11 +258,17 @@ def main()
     citation_undef  = false
 
     IO.foreach(latex_out) do |line|
-      case line
-        when /Fatal error occurred/                  then exit(1)
-        when /There were multiply-defined labels/    then labels_multidef = true
-        when /.* Warning: Reference .* undefined/ then label_undef     = true
-        when /.* Warning: Citation .* undefined/  then citation_undef  = true
+      begin
+        case line
+          when /Fatal error occurred/               then exit(1)
+          when /There were multiply-defined labels/ then labels_multidef = true
+          when /.* Warning: Reference .* undefined/ then label_undef     = true
+          when /.* Warning: Citation .* undefined/  then citation_undef  = true
+        end
+      rescue ArgumentError
+        # Handle ArgumentError exception when the pdflatex output contains
+        # non-UTF8 characters. If so we assume the current line does not
+        # match any of the given strings and do nothing.
       end
     end
 
@@ -279,12 +291,18 @@ def main()
     citation_undef  = false
 
     IO.foreach(latex_out) do |line|
-      case line
-        when /Fatal error occurred/                  then exit(1)
-        when /Rerun to get cross-references/         then unresolved_xref = true
-        when /There were multiply-defined labels/    then labels_multidef = true
-        when /.* Warning: Reference .* undefined/ then label_undef     = true
-        when /.* Warning: Citation .* undefined/  then citation_undef  = true
+      begin
+        case line
+          when /Fatal error occurred/               then exit(1)
+          when /Rerun to get cross-references/      then unresolved_xref = true
+          when /There were multiply-defined labels/ then labels_multidef = true
+          when /.* Warning: Reference .* undefined/ then label_undef     = true
+          when /.* Warning: Citation .* undefined/  then citation_undef  = true
+        end
+      rescue ArgumentError
+        # Handle ArgumentError exception when the pdflatex output contains
+        # non-UTF8 characters. If so we assume the current line does not
+        # match any of the given strings and do nothing.
       end
     end
 
