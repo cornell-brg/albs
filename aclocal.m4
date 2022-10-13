@@ -25,27 +25,27 @@
 AC_DEFUN([ALBS_PROG_INSTALL],
 [
   AC_PROG_INSTALL
-   
+
   AC_ARG_VAR([STOW_PREFIX],[Prefix for stow-based installs])
   AC_ARG_ENABLE(stow,
     AS_HELP_STRING(--enable-stow,[Enable stow-based install]),
       [enable_stow="yes"],[enable_stow="no"])
-   
+
   AS_IF([ test "${enable_stow}" = "yes" ],
   [
-    AC_CHECK_PROGS([stow],[stow],[no])  
+    AC_CHECK_PROGS([stow],[stow],[no])
     AS_IF([ test "${stow}" = "no" ],
     [
       AC_MSG_ERROR([Cannot use --enable-stow since stow is not available])
     ])
-   
+
     AS_IF([ test "${prefix}" = "NONE" && test -n "${STOW_PREFIX}" ],
     [
       prefix="${STOW_PREFIX}"
       AC_MSG_NOTICE([Using \$STOW_PREFIX from environment])
       AC_MSG_NOTICE([prefix=${prefix}])
     ])
-   
+
   ])
 
   AC_SUBST([enable_stow])
@@ -72,7 +72,7 @@ AC_DEFUN([ALBS_PROG_PDFLATEX],
 # Checks to make sure that bibtex is in users path otherwise the
 # configuration fails. Technically, we don't need BibTeX if we are not
 # going to use a bibliography, but since pdflatex almost always comes
-# with bibtex we stop if we cannot find bibtex since it means 
+# with bibtex we stop if we cannot find bibtex since it means
 # something is probably setup wrong.
 
 AC_DEFUN([ALBS_PROG_BIBTEX],
@@ -121,7 +121,7 @@ AC_DEFUN([ALBS_MODULES],
   m4_foreach([ALBS_MODULE],[$1],
   [
 
-    # Create variations of the module name 
+    # Create variations of the module name
 
     m4_define([ALBS_MODULE_NORM],m4_normalize(ALBS_MODULE))
     m4_define([ALBS_MODULE_SHVAR_WITH],with_[]ALBS_MODULE_NORM)
@@ -129,7 +129,7 @@ AC_DEFUN([ALBS_MODULES],
 
     # Add command line option to disable module
 
-    AC_ARG_WITH(ALBS_MODULE_NORM, 
+    AC_ARG_WITH(ALBS_MODULE_NORM,
       AS_HELP_STRING([--without-ALBS_MODULE_NORM],
         [Disable the ALBS_MODULE_NORM module]),
       [ALBS_MODULE_SHVAR_WITH="no"],
@@ -145,7 +145,7 @@ AC_DEFUN([ALBS_MODULES],
               -a "$with_modules" = "yes" ],
     [
       AC_MSG_NOTICE([configuring module : ALBS_MODULE_NORM])
-      m4_include(ALBS_MODULE_NORM[]/ALBS_MODULE_NORM[].ac) 
+      m4_include(ALBS_MODULE_NORM[]/ALBS_MODULE_NORM[].ac)
     ],[
       AC_MSG_NOTICE([skipping module : ALBS_MODULE_NORM])
       ALBS_MODULE_SHVAR_EN="no"

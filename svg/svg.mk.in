@@ -25,8 +25,8 @@ svg_basic_figs = $(sort $(filter-out %-split.svg.pdf, $(svg_figs)))
 
 ifeq ($(svg_enabled),yes)
 $(svg_basic_figs) : %.svg.pdf : %.svg
-	$(INKSCAPE) --without-gui \
-    --export-area-page --export-pdf $*.svg.pdf \
+	$(INKSCAPE) --export-area-page \
+    --export-filename=$*.svg.pdf \
     $<
 endif
 
@@ -43,8 +43,8 @@ define svg_split_template
 ifeq ($(svg_enabled),yes)
 $(1)-split.svg.pdf : $(2).svg
 	$(top_dir)/svg/svg-split-layers.rb $(3) $$< && mv $(1).svg $(1)-split.svg
-	$(INKSCAPE) --without-gui \
-    --export-area-page --export-pdf $(1)-split.svg.pdf \
+	$(INKSCAPE) --export-area-page \
+    --export-filename=$(1)-split.svg.pdf \
     $(1)-split.svg
 endif
 endef
