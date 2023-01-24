@@ -42,7 +42,7 @@ svg_split_svg  = $(patsubst %.svg.pdf, %.svg, $(svg_split_figs))
 define svg_split_template
 ifeq ($(svg_enabled),yes)
 $(1)-split.svg.pdf : $(2).svg
-	$(top_dir)/svg/svg-split-layers.rb $(3) $$< && mv $(1).svg $(1)-split.svg
+	$(top_dir)/svg/svg-split-layers $(3) $$< && mv $(1).svg $(1)-split.svg
 	$(INKSCAPE) --export-area-page \
     --export-filename=$(1)-split.svg.pdf \
     $(1)-split.svg

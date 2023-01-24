@@ -1,0 +1,142 @@
+#!/usr/bin/env python
+#=========================================================================
+# svg-split-layers [options] layer1 layer2 ... svgfile
+#=========================================================================
+#
+#  -h --help           Display this message
+#
+# Simple script to make all listed layers visible and all remaining
+# layers not visible.
+#
+# Author : Christopher Batten
+# Date   : January 24, 2023
+#
+
+import tempfile
+import argparse
+import sys
+import os
+import re
+
+#-------------------------------------------------------------------------
+# Command line processing
+#-------------------------------------------------------------------------
+
+class ArgumentParserWithCustomError(argparse.ArgumentParser):
+  def error( self, msg = "" ):
+    if ( msg ): print("\n ERROR: %s" % msg)
+    print("")
+    file = open( sys.argv[0] )
+    for ( lineno, line ) in enumerate( file ):
+      if ( line[0] != '#' ): sys.exit(msg != "")
+      if ( (lineno == 2) or (lineno >= 4) ): print( line[1:].rstrip("\n") )
+
+def parse_cmdline():
+  p = ArgumentParserWithCustomError( add_help=False )
+
+  p.add_argument( "-h", "--help", action="store_true" )
+
+  p.add_argument( "layers", nargs="+" )
+  p.add_argument( "svgfile" )
+
+  opts = p.parse_args()
+  if opts.help: p.error()
+  return opts
+
+#=========================================================================
+# Main
+#=========================================================================
+
+def main():
+
+  opts = parse_cmdline()
+
+  # Determine output file name
+
+  srcfile_basename = os.path.splitext(os.path.basename(opts.svgfile))[0]
+  layer_names      = "_".join(opts.layers)
+  destfile_name    = f"{srcfile_basename}_{layer_names}.svg"
+
+  #-----------------------------------------------------------------------
+  # First pass to add newline before every SVG tag
+  #-----------------------------------------------------------------------
+
+  tmp = tempfile.NamedTemporaryFile()
+
+  tmpfile = open( tmp.name, "w" )
+  srcfile = open( opts.svgfile, "r" )
+
+  for line in srcfile:
+    if not line.startswith("<?xml"):
+      line = line.replace( "<", "\n<" )
+    tmpfile.write(line)
+
+  srcfile.close()
+  tmpfile.close()
+
+  #-----------------------------------------------------------------------
+  # Second pass to find layers
+  #-----------------------------------------------------------------------
+
+  group_begin_pattern = re.compile(r"^<g$")
+  group_end_pattern   = re.compile(r"^.*>$")
+  key_val_pattern     = re.compile(r"^\s*(.*)=\"(.*)\".*$")
+
+  group_collect = False
+  group_key_val = {}
+
+  destfile = open( destfile_name, "w" )
+  tmpfile  = open( tmp.name, "r" )
+
+  for line in tmpfile:
+
+    match_group_begin = group_begin_pattern.match(line)
+    match_group_end   = group_end_pattern.match(line)
+    match_key_val     = key_val_pattern.match(line)
+
+    # Scan until we find a group tag
+
+    if not group_collect:
+      if not match_group_begin:
+        destfile.write(line)
+      else:
+        group_collect = True
+        destfile.write("\n")
+
+    # Collect key/value pairs in group tag
+
+    elif group_collect:
+
+      key = match_key_val.group(1)
+      val = match_key_val.group(2)
+      group_key_val[key] = val
+
+    # When find end of group tag, print collected key/value pairs
+
+    if group_collect and match_group_end:
+
+      # Check to see if this is a layer group and if so determine if we
+      # should make it visible or not
+
+      if "inkscape:groupmode" in group_key_val:
+        if group_key_val["inkscape:groupmode"] == "layer":
+          if group_key_val["inkscape:label"] in opts.layers:
+            group_key_val["style"] = "display:inline"
+          else:
+            group_key_val["style"] = "display:none"
+
+      # Print out the key/value pairs
+
+      destfile.write("\n<g\n")
+      for key, value in group_key_val.items():
+        destfile.write(f"  {key}=\"{value}\"\n")
+      destfile.write(">\n")
+
+      group_collect = False
+      group_key_val = {}
+
+  tmpfile.close()
+  destfile.close()
+
+main()
+
