@@ -58,8 +58,13 @@ def main():
   destfile_name    = f"{srcfile_basename}_{layer_names}.svg"
 
   #-----------------------------------------------------------------------
-  # First pass to add newline before every SVG tag
+  # First pass to add newlines before and after the group tag
   #-----------------------------------------------------------------------
+
+  group_begin_pattern = re.compile(r"^(.*)<g$")
+  group_end_pattern   = re.compile(r"^(.*)>(.*)$")
+
+  group_collect = False
 
   tmp = tempfile.NamedTemporaryFile()
 
@@ -67,8 +72,8 @@ def main():
   srcfile = open( opts.svgfile, "r" )
 
   for line in srcfile:
-    if not line.startswith("<?xml"):
-      line = line.replace( "<", "\n<" )
+    line = line.replace( "<g", "\n<g" )
+    line = line.replace( "><", ">\n<" )
     tmpfile.write(line)
 
   srcfile.close()
@@ -79,10 +84,9 @@ def main():
   #-----------------------------------------------------------------------
 
   group_begin_pattern = re.compile(r"^<g$")
-  group_end_pattern   = re.compile(r"^.*>$")
+  group_end_pattern   = re.compile(r"^(.*)>$")
   key_val_pattern     = re.compile(r"^\s*(.*)=\"(.*)\".*$")
 
-  group_collect = False
   group_key_val = {}
 
   destfile = open( destfile_name, "w" )
@@ -127,10 +131,11 @@ def main():
 
       # Print out the key/value pairs
 
-      destfile.write("\n<g\n")
+      destfile.write("<!-- modified by svg-split-layers -->\n")
+      destfile.write("<g\n")
       for key, value in group_key_val.items():
         destfile.write(f"  {key}=\"{value}\"\n")
-      destfile.write(">\n")
+      destfile.write(">\n\n")
 
       group_collect = False
       group_key_val = {}
