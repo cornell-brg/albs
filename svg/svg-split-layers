@@ -57,42 +57,19 @@ def main():
   layer_names      = "_".join(opts.layers)
   destfile_name    = f"{srcfile_basename}_{layer_names}.svg"
 
-  #-----------------------------------------------------------------------
-  # First pass to add newlines before and after the group tag
-  #-----------------------------------------------------------------------
+  # Scan through to change display of layers
 
-  group_begin_pattern = re.compile(r"^(.*)<g$")
+  group_begin_pattern = re.compile(r"^.*<g$")
   group_end_pattern   = re.compile(r"^(.*)>(.*)$")
-
-  group_collect = False
-
-  tmp = tempfile.NamedTemporaryFile()
-
-  tmpfile = open( tmp.name, "w" )
-  srcfile = open( opts.svgfile, "r" )
-
-  for line in srcfile:
-    line = line.replace( "<g", "\n<g" )
-    line = line.replace( "><", ">\n<" )
-    tmpfile.write(line)
-
-  srcfile.close()
-  tmpfile.close()
-
-  #-----------------------------------------------------------------------
-  # Second pass to find layers
-  #-----------------------------------------------------------------------
-
-  group_begin_pattern = re.compile(r"^<g$")
-  group_end_pattern   = re.compile(r"^(.*)>$")
   key_val_pattern     = re.compile(r"^\s*(.*)=\"(.*)\".*$")
 
+  group_collect = False
   group_key_val = {}
 
   destfile = open( destfile_name, "w" )
-  tmpfile  = open( tmp.name, "r" )
+  srcfile  = open( opts.svgfile, "r" )
 
-  for line in tmpfile:
+  for line in srcfile:
 
     match_group_begin = group_begin_pattern.match(line)
     match_group_end   = group_end_pattern.match(line)
@@ -101,11 +78,9 @@ def main():
     # Scan until we find a group tag
 
     if not group_collect:
-      if not match_group_begin:
-        destfile.write(line)
-      else:
+      destfile.write(line)
+      if match_group_begin:
         group_collect = True
-        destfile.write("\n")
 
     # Collect key/value pairs in group tag
 
@@ -115,32 +90,34 @@ def main():
       val = match_key_val.group(2)
       group_key_val[key] = val
 
-    # When find end of group tag, print collected key/value pairs
+      # Check if this line also indicates the end of the group tag
 
-    if group_collect and match_group_end:
+      if ">" in line:
 
-      # Check to see if this is a layer group and if so determine if we
-      # should make it visible or not
+        # Get remainder string after >
 
-      if "inkscape:groupmode" in group_key_val:
-        if group_key_val["inkscape:groupmode"] == "layer":
-          if group_key_val["inkscape:label"] in opts.layers:
-            group_key_val["style"] = "display:inline"
-          else:
-            group_key_val["style"] = "display:none"
+        rem = line.split(">",1)[1]
 
-      # Print out the key/value pairs
+        # Check to see if this is a layer group and if so determine if we
+        # should make it visible or not
 
-      destfile.write("<!-- modified by svg-split-layers -->\n")
-      destfile.write("<g\n")
-      for key, value in group_key_val.items():
-        destfile.write(f"  {key}=\"{value}\"\n")
-      destfile.write(">\n\n")
+        if "inkscape:groupmode" in group_key_val:
+          if group_key_val["inkscape:groupmode"] == "layer":
+            if group_key_val["inkscape:label"] in opts.layers:
+              group_key_val["style"] = "display:inline"
+            else:
+              group_key_val["style"] = "display:none"
 
-      group_collect = False
-      group_key_val = {}
+        # Print out the key/value pairs
 
-  tmpfile.close()
+        for key, value in group_key_val.items():
+          destfile.write(f"  {key}=\"{value}\"\n")
+        destfile.write(f">{rem}")
+
+        group_collect = False
+        group_key_val = {}
+
+  srcfile.close()
   destfile.close()
 
 main()
