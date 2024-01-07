@@ -61,6 +61,7 @@
                      (CLOUDCOM)}}
 @string{PPOPP    = {Symp. on Principles and Practice of Parallel
                      Programming (PPoPP)}},
+@string{INPAR    = {Innovative Parallel Computing (InPar)}},
 @string{MAPREDUCE = {Int'l Workshop on MapReduce and Its Applications
                      (MAPREDUCE)}}
 
@@ -121,6 +122,8 @@
 @string{JOSS     = {Journal of Open-Source Software (JOSS)}}
 
 @string{TSE      = {IEEE Trans. on Software Engineering (TSE)}}
+
+@string{QUEUE    = {ACM Queue}}
 
 % Compilers
 
@@ -236,6 +239,18 @@
 
 @string{MPR      = {Microprocessor Report, The Linley Group}}
 @string{EUROMICRO = {EUROMICRO Conf.}}
+
+@string{MOBISYS  = {Int'l Conf. on Mobile Systems, Applications, and
+                     Services (MobiSys)}}
+
+@string{ISPDC    = {Int'l Symp. on Parallel and Distributed Computing (ISPDC)}}
+
+@string{PATMOS   = {Int'l Symp. on Power and Timing, Modeling,
+                     Optimization and Simulation (PATMOS)}}
+
+@string{SBACPAD  = {Int'l Symp. on Computer Architecture and High
+                     Performance Computing (SBAC-PAD)}}
+@string{MEMSYS   = {Int'l Sump. on Memory Systems (MEMSYS)}}
 
 % FPGAs
 
@@ -366,6 +381,7 @@
 @string{TOCS     = {ACM Trans. on Computer Systems (TOCS)}}
 @string{TOC      = {IEEE Trans. on Computers (TOC)}}
 @string{TOG      = {ACM Trans. on Graphics (TOG)}}
+@string{HPG      = {Conf. on High Performance Graphics (HPG)}},
 @string{CACM     = {Communications of the ACM}}
 @string{JACM     = {Journal of the ACM}}
 @string{PROCIEEE = {Proc. of the IEEE}}
@@ -387,8 +403,15 @@
 @string{TACAS    = {Int'l Conf. on Tools and Algorithms for the
                      Construction and Analysis of Systems (TACAS)}}
 @string{SIGCOMM  = {SIGCOMM}}
-
+@string{IPAS     = {Int'l Conf. on Image Processing, Applications, and
+                     Systems (IPAS)}}
+@string{ICDCS    = {Int'l Conf. on Distributed Computing Systems
+                     (ICDCS)}},
 @string{PNAS     = {Proceedings of the National Academy of Sciences (PNAS)}}
+@string{FMEC     = {Int'l Conf. on Fog and Mobile Edge Computing (FMEC)}}
+
+@string{JMLR     = {ACM Journal of Machine Learning Research (JMLR)}}
+@string{ICML     = {Int'l Con.f on Machine Learning (ICML)}}
 
 % Education
 
@@ -405,6 +428,84 @@
 %-------------------------------------------------------------------------
 % BRG
 %-------------------------------------------------------------------------
+
+@article{ou-tiled-ocns-nocs2020,
+  title     = {Implementing Low-Diameter On-Chip Networks for Manycore
+                Processors Using a Tiled Physical Design Methodology},
+  author    = {Yanghui Ou and Shady Agwa and Christopher Batten},
+  journal   = NOCS,
+  month     = SEP,
+  year      = {2020},
+}
+
+@article{torng-uecgra-hpca2021,
+  title     = {Ultra-Elastic CGRAs for Irregular Loop Specialization},
+  author    = {Christopher Torng and Peitian Pan and Yanghui Ou and Cheng
+                Tan and Christopher Batten},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2021},
+}
+
+@article{cheng-hb-pytorch-tcad2022,
+  title     = {A Tensor Processing Framework for CPU-Manycore
+                Heterogeneous Systems},
+  author    = {Lin Cheng and Peitian Pan and Zhongyuan Zhao and Krithik
+                Ranjan and Jack Weber and Bandhav Veluri and Borna Ehsani
+                and Max Ruttenberg and Dai Cheol Jung and Preslav Ivanov
+                and Dustin Richmond and Michael Taylor and Zhiru Zhang
+                and Christopher Batten},
+  journal   = TCAD,
+  month     = JUN,
+  year      = {2022},
+  volume    = {41},
+  number    = {6},
+  pages     = {1620--1635},
+}
+
+@article{caminal-cape-hpca2021,
+  title     = {CAPE: A Content-Addressable Processing Engine},
+  author    = {Helena Caminal and Kailin Yang and Srivatsa Srinivasa and
+                  Akshay Krishna Ramanathan Pennsylvania and Khalid
+                  Al-Hawaj and Tianshu Wu and Vijaykrishnan Narayanan and
+                  Christopher Batten and Jos\'{e} Mart\'{i}nez},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2021},
+}
+
+@article{afuye-sotfet-openram-esscirc2021,
+  title     = {Layout-Based Evaluation of Read/Write Performance of
+                  SOT-MRAM and SOTFET-RAM},
+  author    = {Olalekan Afuye and Shady Agwa and Christopher Batten and
+                  Alyssa Apsel},
+  journal   = ESSCIRC,
+  month     = SEP,
+  year      = {2021},
+}
+
+@article{jiang-umoc-dac2021,
+  title     = {UMOC: Unified Modular Ordering Constraints to Unify Cycle-
+                  and Register-Transfer-Level Modeling},
+  author    = {Shunning Jiang and Yanghui Ou and Peitian Pan and
+                  Christopher Batten},
+  journal   = DAC,
+  month     = DEC,
+  year      = {2021},
+}
+
+@article{jiang-pyh2-dt2021,
+  title     = {PyH2: Using PyMTL3 to Create Productive and Open-Source
+                Hardware Testing Methodologies},
+  author    = {Shunning Jiang and Yanghui Ou and Peitian Pan and Kaishuo
+                Cheng and Yixiao Zhang and Christopher Batten},
+  journal   = DT,
+  month     = APR,
+  year      = {2021},
+  volume    = {40},
+  number    = {4},
+  pages     = {53--61},
+}
 
 @article{alhawaj-eve-circuits-iscas2020,
   title     = {Towards a Reconfigurable Bit-Serial/Bit-Parallel Vector
@@ -649,7 +750,7 @@
 @article{olukotun-future-uproc-queue2005,
   title     = {The Future of Microprocessors},
   author    = {Kunle Olukotun and Lance Hammond},
-  journal   = {ACM Queue},
+  journal   = QUEUE,
   month     = SEP,
   year      = {2005},
   volume    = {3},
@@ -889,7 +990,7 @@
   journal   = ARXIV,
   month     = SEP,
   year      = {2015},
-  volume    = {arXiv:abs/1509.02058},
+  volume    = {arXiv:1509.02058},
 }
 
 @article{chronaki-critaware-schedule-ics2015,
@@ -2484,7 +2585,7 @@
   title     = {Scalable Parallel Programming with CUDA},
   author    = {John Nickolls and Ian Buck and Michael Garland and Kevin
                 Skadron},
-  journal   = {ACM Queue},
+  journal   = QUEUE,
   month     = MAR/APR,
   year      = {2008},
   volume    = {6},
@@ -3366,15 +3467,6 @@
   year      = {2012 (accessed Jan 2012)},
 }
 
-@article{yehia-specialization-hpca2009,
-  title     = {Reconciling Specialization and Flexibility Through
-                Compound Circuits},
-  author    = {S. Yehia and S. Girbal and H. Berry and O. Teman},
-  journal   = HPCA,
-  month     = FEB,
-  year      = {2009},
-}
-
 @article{fan-custom-loop-accel-hpca2009,
   title     = {Bridge the Computation Gap Between Programmable Processors
                 and Hardware Accelerators},
@@ -3623,24 +3715,13 @@
   year      = {2011},
 }
 
-@article{theano-theano-pact2011,
-  title     = {A Heterogeneous Parallel Framework for Domain-Specific
-                Languages},
-  author    = {Kevin J. Brown and Arvind K. Sujeeth and HyoukJoong Lee
-                and Tiark Rompf and Hassan Chafi and Martin Odersky and
-                Kunle Olukotun},
-  journal   = PACT,
-  month     = OCT,
-  year      = {2011},
-}
-
 @article{theano-theano-arxiv2016,
   author    = {Rami Al{-}Rfou and Guillaume Alain and Amjad Almahairi and
                 others},
   title     = {Theano: A Python Framework for Fast Computation of
                 Mathematical Expressions},
   journal   = ARXIV,
-  volume    = {arXiv:abs/1605.02688},
+  volume    = {arXiv:1605.02688},
   year      = {2016},
 }
 
@@ -4732,15 +4813,6 @@
   pages     = {748--766},
 }
 
-@article{binkert-photo-high-radix-switch-isca2011,
-  title     = {The Role of Optics in Future High Radix Switch Design},
-  author    = {Nathan Binkert and Al Davis and Norm Jouppi and Moray
-                McLaren and Naveen Muralimanohar and Jung Ho Ahn},
-  journal   = ISCA,
-  month     = JUN,
-  year      = {2011},
-}
-
 @article{udipi-photo-dram-isca2011,
   title     = {Combining Memory and a Controller with Photonics through
                 {3D}-Stacking to Enable Scalable and Energy-Efficient
@@ -4888,8 +4960,8 @@
 
 @article{binkert-photo-switch-isca2011,
   title     = {The Role of Optics in Future High-Radix Switch Design},
-  author    = {N. Binkert and A. Davis and N.~P. Jouppi and M. McLaren and
-                N. Mulralimanohar and R. Schreiber and J.~H. Ahn},
+  author    = {N. Binkert and A. Davis and N.~P. Jouppi and M. McLaren
+                and N. Mulralimanohar and R. Schreiber and J.~H. Ahn},
   journal   = ISCA,
   month     = JUN,
   year      = {2011},
@@ -5411,14 +5483,6 @@
   year      = {2010},
 }
 
-@article{kim-fbfly-micro2007,
-  title     = {Flattened Butterfly Topology for On-Chip Networks},
-  author    = {J. Kim and J. Balfour and W.~J. Dally},
-  journal   = MICRO,
-  month     = DEC,
-  year      = {2007},
-}
-
 @article{kumar-concentration-nocs2009,
   title     = {Exploring Concentration and Channel Slicing in On-Chip
                 Network Router},
@@ -5435,14 +5499,6 @@
   journal   = ICS,
   month     = JUN,
   year      = {2006},
-}
-
-@article{grot-express-cube-ocn-hpca2009,
-  title     = {Express Cube Topologies for On-Chip Interconnects},
-  author    = {B. Grot and J. Hestness and Stephen Keckler and O. Mutlu},
-  journal   = HPCA,
-  month     = FEB,
-  year      = {2009},
 }
 
 @article{kumar-evc-isca2007,
@@ -6326,8 +6382,7 @@
   title     = {ArchC: A SystemC-Based Architecture Description Language},
   author    = {Sandro Rigo and Guido Ara\'{u}jo and Marcus Bartholomeu
                 and Rodolfo Azevedo},
-  journal   = {Int'l Symp. on Computer Architecture and High Performance
-                Computing (SBAC-PAD)},
+  journal   = SBACPAD,
   month     = OCT,
   year      = {2004},
 }
@@ -6371,7 +6426,7 @@
   journal   = ARXIV,
   month     = SEP,
   year      = {2011},
-  volume    = {arXiv:abs/1109.4351},
+  volume    = {arXiv:1109.4351},
 }
 
 %-------------------------------------------------------------------------
@@ -8180,20 +8235,6 @@
   year      = {2013},
 }
 
-@article{govindaraju-dyser-unified-ieeemicro2012,
-  title     = {DySER: Unifying Functionality and Parallelism
-                Specialization for Energy-Efficient Computing},
-  author    = {V. Govindaraju and Chen-Han Ho and T. Nowatzki and J.
-                Chhugani and N. Satish and K. Sankaralingam and Changkyu
-                Kim},
-  journal   = IEEEMICRO,
-  month     = SEP/OCT,
-  year      = {2012},
-  volume    = {32},
-  number    = {5},
-  pages     = {38--51},
-}
-
 % TM + Loop-level parallelism
 
 @article{harris-tm-mcp2010,
@@ -9642,7 +9683,7 @@
 }
 
 @article{seo-sot-mram-2port-jetcas2016,
-  title     = {High-Performance and Energy-Efficient On-Chip Cache USing
+  title     = {High-Performance and Energy-Efficient On-Chip Cache Using
                 Dual Port (1R/1W) Spin-Orbit Torque MRAM},
   author    = {Yeongkyo Seo and Kon-Woo Kwon and Xuanyao Fong and Kaushik
                 Roy},
@@ -9717,19 +9758,6 @@
   year      = {2016},
 }
 
-@article{prezioso-memristor-nn-nature2015,
-  title     = {Training and Operation of an Integrated Neuromorphic
-                Network Based on Metal-Oxide Memristors},
-  author    = {M. Prezioso and F. Merrikh-Bayat and B. D. Hoskins and G.
-                C. Adam and K. K. Likharev and D. B. Strukov},
-  journal   = NATURE,
-  month     = MAY,
-  year      = {2015},
-  volume    = {521},
-  number    = {7550},
-  pages     = {61--64},
-}
-
 @article{chen-rram-nn-iedm2015,
   title     = {Optimized Learning Scheme for Grayscale Image Recognition
                 in a RRAM Based Analog Neuromorphic System},
@@ -9771,7 +9799,7 @@
   journal   = ARXIV,
   month     = FEB,
   year      = {2016},
-  volume    = {arXiv:abs/1602.02830},
+  volume    = {arXiv:1602.02830},
 }
 
 @article{courbariaux-bnn-nips2015,
@@ -9801,7 +9829,7 @@
   journal   = ARXIV,
   month     = MAR,
   year      = {2016},
-  volume    = {arXiv:abs/1603.05279},
+  volume    = {arXiv:1603.05279},
 }
 
 %-------------------------------------------------------------------------
@@ -9855,7 +9883,7 @@
                 Digital Hardware},
   key       = {migen},
   howpublished = {Online Webpage},
-  note      = {\url{https://github.com/m-labs/nmigen}},
+  note      = {\url{https://github.com/m-lnmigen}},
 }
 
 @article{bellows-jhdl-fccm1998,
@@ -10056,7 +10084,7 @@
 }
 
 @article{ahn-tesseract-isca2015,
-  title     = {A  Scalable Processing-in-Memory Accelerator for Parallel
+  title     = {A Scalable Processing-in-Memory Accelerator for Parallel
                 Graph Processing},
   author    = {Junwhan Ahn and Sungpack Hong and Sungjoo Yoo and Onur
                 Mutlu and Kiyoung Choi},
@@ -10423,7 +10451,7 @@
   journal   = ARXIV,
   month     = NOV,
   year      = {2016},
-  volume    = {arXiv:abs/1610.09405},
+  volume    = {arXiv:1610.09405},
 }
 
 @article{naylor-bluecheck-memocode2015,
@@ -10432,15 +10460,6 @@
   journal   = MEMOCODE,
   month     = SEP,
   year      = {2015},
-}
-
-@article{claessen-quickcheck-icfp2011,
-  title     = {QuickCheck: A Lightweight Tool for Random Testing of
-                Haskell Programs},
-  author    = {Koen Claessen and John Hughes},
-  journal   = ICFP,
-  month     = SEP,
-  year      = {2000},
 }
 
 %-------------------------------------------------------------------------
@@ -10536,16 +10555,6 @@
   journal   = DAC,
   month     = JUN,
   year      = {2011},
-}
-
-@article{gupta-sharing-micro2010,
-  title     = {Erasing Core Boundaries for Robust and Configurable
-                Performance},
-  author    = {Shantanu Gupta and Shuguang Feng and Amin Ansari and Scott
-                Mahlke},
-  journal   = MICRO,
-  month     = DEC,
-  year      = {2010},
 }
 
 @article{najaf-core-selectability-pact2009,
@@ -10941,16 +10950,6 @@
   year      = {2006},
 }
 
-@article{wu-mcd-dvfs-hpca2005,
-  title     = {Voltage and Frequency Control With Adaptive Reaction Time
-                in Multiple-Clock-Domain Processors},
-  author    = {Qiang Wu and Philo Juang and Margaret Martonosi and
-                Douglas W. Clark},
-  journal   = HPCA,
-  month     = FEB,
-  year      = {2005},
-}
-
 @article{wu-mcd-dvfs-asplos2004,
   title     = {Formal Online Methods for Voltage/Frequency Control in
                 Multiple Clock Domain Microprocessors},
@@ -11004,15 +11003,6 @@
   year      = {2016},
 }
 
-
-@article{huang-elastic-cgras-fpga2013,
-  title     = {Elastic CGRAs},
-  author    = {Yuanjie Huang and Paolo Ienne and Olivier Temam and Yunji
-                Chen and Chengyong Wu},
-  journal   = FPGA,
-  month     = FEB,
-  year      = {2013},
-}
 
 @article{peluso-vdd-hopping-vlsisoc2016,
   title     = {Ultra-Fine Grain Vdd-Hopping for Energy-Efficient
@@ -11200,7 +11190,7 @@
   journal   = ARXIV,
   month     = AUG,
   year      = {2016},
-  volume    = {arXiv:abs/1610.01832},
+  volume    = {arXiv:1610.01832},
 }
 
 @article{bohnenstiehl-kilocore-jssc2017,
@@ -11401,17 +11391,6 @@
   journal   = DATE,
   month     = MAR,
   year      = {2010}
-}
-
-@article{jiang-nocsim-ispass2013,
-  title     = {A Detailed and Flexible Cycle-Accurate Network-on-Chip
-                Simulator},
-  author    = {Nan Jiang and Daniel U. Becker and George Michelogiannakis
-                and James Balfour and Brian Towles and D. E. Shaw and
-                John Kim and William J. Dally},
-  journal   = ISPASS,
-  month     = APR,
-  year      = {2013}
 }
 
 @techreport{tran-noctweak-ucdtr2012,
@@ -12191,14 +12170,9 @@
   journal   = IEEEMICRO,
   month     = JUL,
   year      = {2015},
-}
-
-@article{branover-amd-fusion-apu-ieeemicro2012,
-  title     = {AMD Fusion APU: Llano},
-  author    = {Alexander Branover and Denis Foley and Maurice Steinman},
-  journal   = IEEEMICRO,
-  month     = JAN,
-  year      = {2012},
+  volume    = {35},
+  number    = {4},
+  pages     = {26--36},
 }
 
 @article{hutton-intel-stratix10-hotchips2015,
@@ -12236,15 +12210,6 @@
   journal   = DAC,
   month     = JUN,
   year      = {2018},
-}
-
-@article{landamozes-location-fences-spaa2011,
-  title     = {Location-Based Memory Fences},
-  author    = {Edya Ladan-Mozes and I-TIng Angelina Lee and Dmitry
-                Vyukov},
-  journal   = SPAA,
-  month     = JUN,
-  year      = {2011},
 }
 
 @article{blumofe-dag-spaa1996,
@@ -12891,16 +12856,6 @@
   pages     = {484--497},
 }
 
-@article{kim-neurocube-isca2016,
-  title     = {Neurocube: A Programmable Digital Neuromorphic
-                Architecture with High-Density 3D Memory},
-  author    = {Duckhwan Kim and Jaeha Kung and Sek Chai and Sudhakar
-                Yalamanchili and Saibal Mukhopadhyay},
-  journal   = ISCA,
-  month     = JUN,
-  year      = {2016},
-}
-
 @article{luo-dadiannao-toc2017,
   title     = {DaDianNao: A Neural Network Supercomputer},
   author    = {Tao Luo and Shaoli Liu and Ling Li and Yuqing Wang and
@@ -13003,6 +12958,7 @@
   month     = MAY,
   year      = {2015},
   volume    = {521},
+  number    = {7550},
   pages     = {61--64},
 }
 
@@ -13697,15 +13653,6 @@
   year      = {2002},
 }
 
-@article{acar-privatedeque-ppopp2013,
-  title     = {Scheduling Parallel Programs by Work Stealing with Private
-                Deques},
-  author    = {Umut A. Acar and Arthur Chargueraud and Mike Rainey},
-  journal   = PPOPP,
-  month     = AUG,
-  year      = {2013},
-}
-
 @misc{robinson-tbb-scheduler-misc2014,
   title     = {A Primer on Scheduling Fork-Join Parallelism with Work
                 Stealing},
@@ -13795,7 +13742,7 @@
 
 % Manycore with message passing
 
-@incollection{komuravelli-msg-passing-bookch2012,
+@incollection{kumar-msg-passing-bookch2012,
   title     = {The Case for Message Passing on Many-Core Chips},
   author    = {Rakesh Kumar and Timothy G. Mattson and Gilles Pokam and
                 Rob Van Der Wijngaart},
@@ -14101,7 +14048,7 @@
   journal   = ARXIV,
   month     = AUG,
   year      = {2018},
-  volume    = {arXiv:abs/1802.04799},
+  volume    = {arXiv:1802.04799},
 }
 
 @article{moreau-vta-arxiv2018,
@@ -14111,7 +14058,7 @@
   journal   = ARXIV,
   month     = AUG,
   year      = {2018},
-  volume    = {arXiv:abs/1802.04799},
+  volume    = {arXiv:1802.04799},
 }
 
 @article{moreau-vta-ieeemicro2019,
@@ -14315,7 +14262,7 @@
   journal   = ARXIV,
   month     = JUL,
   year      = {2020},
-  volume    = {arXiv:abs/2005.14165},
+  volume    = {arXiv:2005.14165},
 }
 
 @article{reed-exascale-big-data-cacm2015,
@@ -14510,6 +14457,1064 @@
   key       = {intel},
   howpublished = {Intel White Paper},
   note      = {\url{https://www.intel.com/content/dam/www/public/us/en/documents/white-papers/rack-scale-design-architecture-white-paper.pdf}},
+  year      = {2018},
+}
+
+%-------------------------------------------------------------------------
+% more cites for TCAD paper
+%-------------------------------------------------------------------------
+
+@article{hoffmann-remote-store-hipeac2010,
+  title     = {Remote Store Programming},
+  author    = {Henry Hoffmann and David Wentzlaff and Anant Agarwal},
+  journal   = HIPEAC,
+  year      = {2010},
+  month     = JAN,
+}
+
+@article{chou-uarch-mlp-isca2004,
+  title     = {Microarchitecture Optimizations for Exploiting
+                Memory-Level Parallelism},
+  author    = {Yuan Chou and Brian Fahs and Santosh Abraham},
+  journal   = ISCA,
+  year      = {2004},
+  month     = JUN,
+}
+
+%-------------------------------------------------------------------------
+% cites for CPS proposal
+%-------------------------------------------------------------------------
+
+@article{bick-m3-snails-commbio2021,
+  title     = {Millimeter-Sized Smart Sensors Reveal that a Solar Refuge
+                Protects Tree Snail Partula Hyalina from Extirpation},
+  author    = {Cindy S. Bick and Inhee Lee and Trevor Coote and Amanda E.
+                Haponski, David Blaauw and Diarmaid \'{O} Foighil},
+  journal   = {Communications Biology},
+  month     = JUN,
+  year      = {2021},
+  volume    = {4},
+  number    = {744},
+  pages     = {2399--3642},
+}
+
+@article{oh-m3-iot2-date2019,
+  title     = {{IoT$^2$ --} The Internet of Tiny Things: Realizing
+                mm-Scale Sensors through 3D Die Stacking},
+  author    = {Sechang Oh and Minchang Cho and Xiao Wu and Yejoong Kim
+                and Li-Xuan Chuo and Wootaek Lim and Pat Pannuto and
+                Suyoung Bang and Kaiyuan Yang and Hun-Seok Kim and Dennis
+                Sylvester and David Blaauw},
+  journal   = DATE,
+  month     = MAR,
+  year      = {2019},
+}
+
+@article{lee-m3-jssc2013,
+  title     = {A Modular 1 {mm$^3$} Die-Stacked Sensing Platform With Low
+                Power {I$^2$C} Inter-Die Communication and Multi-Modal
+                Energy Harvesting},
+  author    = {Sechang Oh and Minchang Cho and Xiao Wu and Yejoong Kim
+                and Li-Xuan Chuo and Wootaek Lim and Pat Pannuto and
+                Suyoung Bang and Kaiyuan Yang and Hun-Seok Kim and Dennis
+                Sylvester and David Blaauw},
+  journal   = JSSC,
+  month     = JAN,
+  year      = {2013},
+  volume    = {48},
+  number    = {1},
+  pages     = {229--243},
+}
+
+%-------------------------------------------------------------------------
+% cites for SCAPES proposal
+%-------------------------------------------------------------------------
+
+@article{tan-opencgra-iccd2020,
+  title     = {OpenCGRA: An Open-Source Unified Framework for Modeling,
+                Testing, and Evaluating CGRAs},
+  author    = {Cheng Tan and Chenhao Xie and Ang Li and Kevin J. Barker
+                and Antonino Tumeo},
+  journal   = ICCD,
+  month     = OCT,
+  year      = {2020},
+}
+
+%-------------------------------------------------------------------------
+% cites for big.VLITTLE paper
+%-------------------------------------------------------------------------
+
+%% Task parallelism on DPAs
+
+% compiler transformations
+
+@article{pharr-ispc-inpar2012,
+  title     = {ispc: A SPMD Compiler for High-Performance CPU Programming},
+  author    = {M. Pharr and W. R. Mark},
+  journal   = INPAR,
+  month     = OCT,
+  year      = {2012},
+}
+
+% persistent threads
+
+@article{aila-ray-traversal-hpg2009,
+  title     = {Understanding the Efficiency of Ray Traversal on GPUs},
+  author    = {T. Aila and S. Laine},
+  journal   = HPG,
+  month     = AUG,
+  year      = {2009},
+}
+
+% modfying gpu hardware for task-parallelism
+
+@article{huo-gpgpu-recursive-ics2013,
+  title     = {Efficient Scheduling of Recursive Control Flow on GPUs},
+  author    = {X. Huo and S. Krishnamoorthy and G. Agrawal},
+  journal   = ICS,
+  month     = JUN,
+  year      = {2013},
+}
+
+%% Sharing architectures
+
+@article{gonzalez-thread-fusion-islped2008,
+  title     = {Thread fusion},
+  author    = {Jose Gonzalez and Qiong Cai and Pedro Chaparro and
+                Grigorios Magklis and Ryan N. Rakvic and Antonio
+                Gonzalez},
+  journal   = ISLPED,
+  month     = AUG,
+  year      = {2008},
+}
+
+@article{mckeown-drafting-micro2014,
+  title     = {Execution Drafting: Energy Efficiency Through Computation
+              Deduplication},
+  author    = {Michael Mckeown and Jonathan Balkind and David Wentzlaff},
+  journal   = MICRO,
+  month     = DEC,
+  year      = {2014},
+}
+
+%% CPU-GPU computing
+
+@article{kaleem-adaptive-igpu-pact2014,
+  title     = {Adaptive Heterogeneous scheduling for integrated GPUs},
+  author    = {Rashid Kaleem and Rajkishore Barik and Tatiana Shpeisman
+                and Chunling Hu and Brian Lewis and Keshav Pingali},
+  journal   = PACT,
+  month     = AUG,
+  year      = {2014},
+}
+
+@article{lustig-gpu-offload-latency-hpca2013,
+  title     = {Reducing GPU Offload Latency via Fine-Grained CPU-GPU
+                Synchronization},
+  author    = {Daniel Lustig and Margaret Martonosi},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2013},
+}
+
+@article{orr-gpu-task-aggregation-isca2014,
+  title     = {Fine-Grain Task Aggregation and Coordination on GPUs},
+  author    = {Marc Orr and Bradford Beckmann and Steven Reinhardt and
+                David Wood},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2014},
+}
+
+%% Arm big.LITTLE system
+
+@article{zhu-web-browsing-big-little-hpca2013,
+  title     = {High-Performance and Energy-Efficient Mobile Web Browsing on
+                Big/Little Systems},
+  author    = {Yuhao Zhu and Vijay Janapa Reddi},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2013},
+}
+
+@misc{randhawa-software-big-little-wpaper2013,
+  title     = {Software Techniques for ARM big. LITTLE Systems},
+  author    = {Robin Randhawa},
+  howpublished = {ARM Whitepaper},
+  year      = {2013},
+}
+
+%% Auto-vectorization
+
+@article{adit-autovec-rvv-ieeemicro2022,
+  title     = {Performance Left on the Table: An Evaluation of Compiler
+                Auto-Vectorization for RISC-V},
+  author    = {Neil Adit and Adrian Sampson},
+  journal   = IEEEMICRO,
+  month     = SEP/OCT,
+  year      = {2022},
+  volume    = {42},
+  issue     = {5},
+  pages     = {41--48},
+}
+
+%% RISC-V Vector extension
+
+@misc{riscv-vector-ext,
+  title     = {RISC-V Vector Extension (Version 0.10)},
+  key       = {RISC-V International},
+  howpublished = {Online Webpage},
+  note      = {\url{https://github.com/riscv/riscv-v-spec/releases/tag/v1.0}},
+  year      = {2021},
+}
+
+%% Edge computing workloads
+
+@article{ra-odessa-interactive-mobisys2011,
+  title     = {Odessa: Enabling Interactive Perception Applications on
+                Mobile Devices},
+  author    = {Moo-Ryong Ra and Anmol Sheth and Lily Mummert and
+                Padmanabhan illai and David Wetherall and Amesh
+                Govindan},
+  journal   = MOBISYS,
+  month     = JUN,
+  year      = {2011}
+}
+
+@article{chen-ar-mobile-ispass2018,
+  title     = {Understanding the Characteristics of Mobile Augmented
+                Reality Applications},
+  author    = {Huixiang Chen and Yuting Dai and Hao Meng and Yilun Chen
+                and Tao Li},
+  journal   = ISPASS,
+  month     = APR,
+  year      = {2018},
+}
+
+@article{huzaifa-illixr-benchmarks-arxiv2021,
+  title     = {Exploring Extended Reality with ILLIXR: A New Playground
+                for Architecture Research},
+  author    = {Muhammad Huzaifa and Rishi Desai and Samuel Grayson and
+                Xutao Jiang and Ying Jing and Jae Lee and Fang Lu and
+                Yihan Pang and Joseph Ravichandran and Finn Sinclair
+                and Boyuan Tian and Hengzhi Yuan and Jeffrey Zhang and
+                Sarita V. Adve},
+  journal   = ARXIV,
+  month     = MAR,
+  year      = {2021},
+  volumen   = {arXiv:2004.04643},
+}
+
+@article{thabet-image-processing-mobile-ipas2014,
+  title     = {Image Processing on Mobile Devices: An Overview},
+  author    = {Rafika Thabet and Ramzi Mahmoudi and Mohamed Hedi Bedoui},
+  journal   = IPAS,
+  month     = NOV,
+  year      = {2014},
+}
+
+@article{wu-ml-at-facebook-hpca2019,
+  title     = {Machine Learning at Facebook: Understanding Inference at the Edge},
+  author    = {Carole-Jean Wu and David Brooks and Kevin Chen and Douglas
+                Chen and Sy Choudhury and Marat Dukhan and Kim
+                Hazelwood and Eldad Isaac and Yangqing Jia and Bill Jia
+                and Tommer Leyvand and Hao Lu and Yang Lu and Lin Qiao
+                and Brandon Reagen and Joe Spisak and Fei Sun and
+                Andrew Tulloch and Peter Vajda and Xiaodong Wang and
+                Yanghan Wang and Bram Wasti and Yiming Wu and Ran Xian
+                and Sungjoo Yoo and Peizhao Zhang},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2019},
+}
+
+@article{zhou-edge-intelligence-procieee2019,
+  title     = {Edge Intelligence: Paving the Last Mile of Artificial
+                Intelligence with Edge Computing},
+  author    = {Zhi Zhou and Xu Chen and En Li and Liekang Zeng and Ke Luo
+                and Junshan Zhang},
+  journal   = PROCIEEE,
+  month     = AUG,
+  year      = {2019},
+  volume    = {107},
+  number    = {8},
+  pages     = {1738--1762},
+}
+
+@article{wang-cnn-big-little-arm-tcad2019,
+  title     = {High-throughput CNN Inference on Embedded ARM Big.LITTLE
+                Multicore Processors},
+  author    = {Siqi Wang and Gayathri Ananthanarayanan and Yifan Zeng
+                and Neeraj Goel and Anuj Pathania and Tulika Mitra},
+  journal   = TCAD,
+  month     = SEP,
+  year      = {2019},
+  volume    = {39},
+  number    = {10},
+  pages     = {2254--2267},
+}
+
+@article{leng-vr-isca2019,
+  title     = {Energy-efficient Video Processing for Virtual Reality},
+  author    = {Yue Leng and Chi-Chun Chen and Qiuyue Sun and Jian Huang
+                and Yuhao Zhu},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2019}
+}
+
+@article{wang-deep-learning-mobile,
+  title     = {Deep Learning Towards Mobile Applications},
+  author    = {Ji Wang and Bokai Cao and Philip Yu and Lichao Sun and
+                Weidong Bao and Xiaomin Zhu},
+  journal   = ICDCS,
+  month     = JUL,
+  year      = {2018}
+}
+
+@article{dai-ml-on-mobile-fmec2019,
+  title     = {Machine Learning on Mobile: An On-device Inference App for
+                Skin Cancer Detection},
+  author    = {Xiangfeng Dai and Irena Spasi{\'c} and Bradley Meyer
+                and Samuel Chapman and Frederic eAndres},
+  journal   = FMEC,
+  month     = JUN,
+  year      = {2019},
+}
+
+@misc{parkhi-deep-face-bmva2015,
+  title     = {Deep Face Recognition},
+  author    = {Omkar M Parkhi and Andrea Vedaldi and Andrew Zisserman},
+  year      = {2015},
+  publisher = {British Machine Vision Association}
+}
+
+@article{bengio-npl-model-jmlr2003,
+  title     = {A Neural Probabilistic Language Model},
+  author    = {Yoshua Bengio and R{\'e}jean Ducharme and Pascal Vincent
+                and Christian Janvin},
+  journal   = JMLR,
+  month     = MAR,
+  year      = {2003},
+  volume    = {3},
+  pages     = {1137--1155},
+}
+
+@article{collobert-unified-nlp-icml2008,
+  title     = {A Unified Architecture for Natural Language Processing:
+                Deep Neural Networks with Multitask Learning},
+  author    = {Ronan Collobert and Jason Weston},
+  journal   = ICML,
+  month     = JUL,
+  year      = {2008}
+}
+
+@article{wang-neural-inference-dt2020,
+  title     = {Neural Network Inference on Mobile SoCs},
+  author    = {Siqi Wang and Anuj Pathania and Tulika Mitra},
+  journal   = DT,
+  month     = JAN,
+  year      = {2020},
+  volume    = {37},
+  number    = {5},
+  pages     = {50--57},
+}
+
+%% RISC-V vector machines
+
+@article{zaruba-ariane-tvlsi2019,
+  title     = {The Cost of Application-Class Processing: Energy and
+                Performance Analysis of a Linux-Ready 1.7-GHz 64-bit
+                RISC-V Core in 22-nm FDSOI Technology},
+  author    = {Florian Zaruba and Luca Benini},
+  journal   = TVLSI,
+  month     = NOV,
+  year      = {2019},
+  volume    = {27},
+  number    = {11},
+  pages     = {2629--2640},
+}
+
+@article{chen-xuantie-isca2020,
+  title     = {Xuantie-910: A Commercial Multi-core 12-stage Pipeline
+                Out-of-order 64-bit High Performance RISC-V Processor
+                with Vector Extension: Industrial Product},
+  author    = {Chen Chen and Xiaoyan Xiang and Chang Liu and Yunhai Shang
+                and Ren Guo and Dongqi Liu and Yimin Lu and Ziyi Hao
+                and Jiahui Luo and Zhijian Chen and Chunqiang Li and Yu
+                Pu and Jianyi Meng and Xiaolang Yan and Yuan Xie and
+                Xiaoning Qi},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2020},
+}
+
+%% Arm SVE vector machines
+
+@article{sato-fugaku-supercomputer-ispdc2020,
+  title     = {The Supercomputer "Fugaku" and Arm-SVE Enabled A64FX
+                Processor for Energy Efficiency and Sustained
+                Application Performance},
+  author    = {Mitsuhisa Sato},
+  journal   = ISPDC,
+  month     = JUL,
+  year      = {2020},
+}
+
+%% Mobile xcels
+
+@misc{google-edge-tpu-web,
+  title        = {Google Edge TPU},
+  key          = {Google},
+  howpublished = {Online Webpage},
+  note         = {\url{https://cloud.google.com/edge-tpu}},
+  year         = {2021 (accessed Apr 12, 2021)},
+}
+
+@misc{apple-npu-web,
+  title        = {Apple Neural Engine},
+  key          = {Apple},
+  howpublished = {Online Webpage},
+  note         = {\url{https://www.apple.com/newsroom/2020/11/apple-unleashes-m1/}},
+  year         = {2020 (accessed Apr 12, 2021)},
+}
+
+@article{terry-hololens-silicon-hotchips2019,
+  title     = {Silicon at the Heart of HoloLens 2},
+  author    = {Elene Terry},
+  journal   = HOTCHIPS,
+  month     = AUG,
+  year      = {2019},
+}
+
+%% RVV benchmarks
+
+@article{ramirez-rivec-taco2020,
+  title     = {A RISC-V Simulator and Benchmark Suite for Designing and
+                Evaluating Vector Architectures},
+  author    = {Crist{\'o}bal Ram{\'\i}rez Lazo and C{\'e}sar Alejandro
+                Hern{\'a}ndez and Oscar Palomar and Osman Unsal and
+                Marco Antonio Ram{\'\i}rez and Adri{\'a}n Cristal},
+  journal   = TACO,
+  month     = DEC,
+  year      = {2020},
+  volume    = {17},
+  number    = {4},
+  pages     = {1--30},
+}
+
+%% Reconfigurable architectures
+
+@article{tino-simtx-taco2020,
+  title     = {SIMT-X: Extending Single-Instruction Multi-Threading to
+                  Out-of-Order Cores},
+  author    = {Anita Tino and Caroline Collange and Andr{\'e} Seznec},
+  journal   = TACO,
+  month     = MAY,
+  year      = {2020},
+  volume    = {17},
+  number    = {2},
+  pages     = {1--23},
+}
+
+@article{bedoukian-rockcress-micro2021,
+  title     = {Software-Defined Vector Processing on Manycore Fabrics},
+  author    = {Philip Bedoukian and Neil Adit and Edwin Peguero and
+                Adrian Sampson},
+  journal   = MICRO,
+  month     = OCT,
+  year      = {2021}
+}
+
+@article{park-libra-micro2012,
+  title     = {Libra: Tailoring SIMD Execution Using Heterogeneous
+                Hardware and Dynamic Configurability},
+  author    = {Yongjun Park and Jason Jong Kyu Park and Hyunchul Park and
+                Scott Mahlke},
+  journal   = MICRO,
+  month     = OCT,
+  year      = {2012}
+}
+
+@article{gupta-erasing-core-boundaries-micro2010,
+  title     = {Erasing Core Boundaries for Robust and Configurable
+                Performance},
+  author    = {Shantanu Gupta and Shuguang Feng and Amin Ansari and Scott
+                Mahlke},
+  journal   = MICRO,
+  month     = OCT,
+  year      = {2010}
+}
+
+@article{tarjan-federation-dac2008,
+  title     = {Federation: Repurposing Scalar Cores for Out-Of-Order
+                Instruction Issue},
+  author    = {David Tarjan and Michael Boyer and Kevin Skadron},
+  journal   = DAC,
+  month     = JUN,
+  year      = {2008},
+}
+
+%% big.LITTLE energy/power
+
+@article{vasilakis-big-little-energy-patmos2017,
+  title     = {Modeling Energy-Performance Tradeoffs in ARM big.LITTLE
+                Architectures},
+  author    = {Evangelos Vasilakis and Ioannis Sourdis and Vassilis
+                Papaefstathiou and Antonis Psathakis and Manolis GH
+                Katevenis},
+  journal   = PATMOS,
+  month     = SEP,
+  year      = {2017},
+}
+
+%-------------------------------------------------------------------------
+% cites for Virtuvius+
+%-------------------------------------------------------------------------
+
+@article{minervini-vitruvius-taco2023,
+  title     = {Vitruvius+: An Area-Efficient RISC-V Decoupled Vector
+                Coprocessor for High Performance Computing
+                Applications},
+  author    = {Francesco Minervini and Oscar Palomar and Osman Unsal and
+                Enrico Reggiani and Josue Quiroga and Joan Marimon and
+                Carlos Rojas and Roger Figueras and Abraham Ruiz and
+                Alberto Gonzalez and Jonnatan Mendoza and Ivan Vargas
+                and C\'{e}sar Hernandez and Joan Cabre and Lina
+                Khoirunisya and Mustapha Bouhali and Julian Pavon and
+                Francesc Moll and Mauro Olivieri and Mario Kovac and
+                Mate Kovac and Leon Dragic and Mateo Valero and Adrian
+                Cristal},
+  journal   = TACO,
+  month     = MAR,
+  year      = {2023},
+  volume    = {20},
+  number    = {2},
+  pages     = {1--25},
+}
+
+%-------------------------------------------------------------------------
+% cites from HB fine-grain runtime ASPLOS'22 paper
+%-------------------------------------------------------------------------
+
+@article{pascal-96-core-isscc2020,
+  title     = {A 220{GOPS} 96-Core Processor with 6 Chiplets {3D}-Stacked
+                on an Active Interposer Offering 0.6ns/mm Latency,
+                {3Tb}/s/mm2 Inter-Chiplet Interconnects and
+                156{mW}/mm2@ 82\%-Peak-Efficiency {DC-DC} Converters},
+  author    = {Pascal Vivet and Eric Guthmuller and Yvain Thonnart and
+                Gael Pillonnet and Guillaume Moritz and Ivan
+                Miro-Panad\'{e}s and Cesar Fuguet and Jean Durupt and
+                Christian Bernard and Didier Varreau and Julian Pontes
+                and Sebastien Thuries and David Coriat and Michel
+                Harrand and Denis Dutoit and Didier Lattard and Lucile
+                Arnaud and Jean Charbonnier and Perceval Coudrain and
+                Arnaud Garnier and Frederic Berger and Alain Gueugnot
+                and Alain Greiner and Quentin Meunier and Alexis Farcy
+                and Alexandre Arriordaz and Severine Cheramy and Fabien
+                Clermidy},
+  journal   = ISSCC,
+  month     = FEB,
+  year      = {2020},
+  doi       = {10.1109/ISSCC19947.2020.9062927},
+}
+
+@article{zaruba-4096-riscv-ieeemicro2021,
+  title     = {Manticore: A 4096-Core {RISC-V} Chiplet Architecture for
+                Ultraefficient Floating-Point Computing},
+  author    = {Florian Zaruba and Fabian Schuiki and Luca Benini},
+  journal   = IEEEMICRO,
+  month     = MAR/APR,
+  year      = {2021},
+  doi       = {10.48550/arXiv.2008.06502},
+}
+
+@article{carlson-load-slice-isca2015,
+  title     = {The Load Slice Core Microarchitecture},
+  author    = {T. E. Carlson and W. Heirman and O. Allam and S. Kaxiras
+                and L. Eeckhout},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2015},
+}
+
+@article{tran-swoop-pldi2018,
+  title     = {{SWOOP}: Software-Hardware Co-Design for Non-Speculative,
+                Execute-Ahead, in-Order Cores},
+  author    = {Kim-Anh Tran and Alexandra Jimborean and Trevor Carlson
+                and Konstantinos Koukos and Magnus Sj\"{a}lander and
+                Stefanos Kaxiras},
+  journal   = PLDI,
+  month     = JUN,
+  year      = {2018},
+}
+
+@article{he-resnet-arxiv2015,
+  title     = {Deep Residual Learning for Image Recognition},
+  author    = {Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian
+                Sun},
+  journal   = ARXIV,
+  month     = DEC,
+  year      = {2015},
+  volume    = {arXiv:1512.03385},
+}
+
+@article{brahmakshatriya-hb-graphit-isca2021,
+  title     = {Taming the Zoo: The Unified GraphIt Compiler Framework
+                for Novel Architectures},
+  author    = {Ajay Brahmakshatriya and Emily Furst and Victor Ying and
+                Claire Hsu and Changwan Hong and Max Ruttenberg and
+                Yunming Zhang and Dai Cheol Jung and Dustin Richmond
+                and Michael Taylor and Julian Shun and Mark Oskin and
+                Daniel Sanchez and Saman Amarasinghe},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2021},
+  doi       = {10.1109/ISCA52012.2021.00041},
+}
+
+@article{tan-godson-t-ppopp2008,
+  title     = {Experience on Optimizing Irregular Computation for Memory
+                Hierarchy in Manycore Architecture},
+  author    = {Guangming Tan and Dongrui Fan and Junchao Zhang and
+                Andrew Russo and Guang R. Gao},
+  journal   = PPOPP,
+  month     = FEB,
+  year      = {2008},
+  doi       = {10.1145/1345206.1345255},
+}
+
+% cilk on manycore
+@article{long-cilk-cjc2008,
+  title     = {Architectural Support and Evaluation of Cilk Language on
+                Many-Core Architectures},
+  author    = {Guo-Ping Long and Jun-Chao Zhang and Dong-Rui Fan},
+  journal   = {Chinese Journal of Computers},
+  volume    = {31},
+  number    = {11},
+  pages     = {1975--1985},
+  year      = {2008},
+  doi       = {10.3724/SP.J.1016.2008.01975},
+}
+
+@article{li-conditional-division-pact2010,
+  title     = {Scalable Hardware Support for Conditional Parallelization},
+  author    = {Zheng Li and Jose Duato and Olivier Certner and Olivier
+                Temam},
+  journal   = PACT,
+  month     = SEP,
+  year      = {2010},
+}
+
+@article{palatin-capsule-micro2006,
+  title     = {CAPSULE: Hardware-Assisted Parallel Execution of
+                Component-Based Programs},
+  author    = {Pierre Palatin and Yves Lhuillier and Olivier Temam},
+  journal   = MICRO,
+  month     = OCT,
+  year      = {2006},
+  doi       = {10.1109/MICRO.2006.13},
+}
+
+@article{zakkak-java-manycore-jtres2016,
+  title     = {Building a Java Virtual Machine for Non-Cache-Coherent
+                Many-Core Architectures},
+  author    = {Foivos S. Zakkak and Polyvios Pratikakis},
+  journal   = {Int'l Workshop on Java Technologies for Real-Time and
+                Embedded Systems (JTRES)},
+  year      = {2016},
+  month     = AUG,
+  doi       = {10.1145/2990509.2990510},
+}
+
+@article{tagliavini-manycore-openmp-tpds2018,
+  title     = {Unleashing Fine-Grained Parallelism on Embedded Many-Core
+                Accelerators with Lightweight OpenMP Tasking},
+  author    = {Tagliavini, Giuseppe and Cesarini, Daniele and Marongiu,
+                Andrea},
+  journal   = TPDS,
+  year      = {2018},
+  volume    = {29},
+  number    = {9},
+  pages     = {2150-2163},
+  doi       = {10.1109/TPDS.2018.2814602},
+}
+
+@article{alvarez-runtime-guided-spm-pact2015,
+  title     = {Runtime-Guided Management of Scratchpad Memories in
+                Multicore Architectures},
+  author    = {Lluc Alvarez and Miquel Moret\'{o} and Marc Casas and
+                Emilio Castillo and Xavier Martorell and Jes\'{u}s
+                Labarta and Eduard Ayguad\'{e} and Mateo Valero},
+  journal   = PACT,
+  month     = OCT,
+  year      = {2015},
+  doi       = {10.1109/PACT.2015.26},
+}
+
+% work-stealing on cluster
+@article{pezzi-mpi-sbacbad2007,
+  title     = {On-line Scheduling of MPI-2 Programs with Hierarchical
+                Work Stealing},
+  author    = {Guilherme P. Pezzi and Marcia C. Cera and Elton Mathias
+                and Nicolas Maillard and Philippe O.A. Navaux},
+  journal   = SBACPAD,
+  year      = {2007},
+  month     = OCT,
+  doi       = {10.1109/SBAC-PAD.2007.36},
+}
+
+@article{vijay-lifeline-ppopp2011,
+  author    = {Vijay A. Saraswat and Prabhanjan Kambadur and Sreedhar
+                Kodali and David Grove and Sriram Krishnamoorthy},
+  title     = {Lifeline-Based Global Load Balancing},
+  journal   = PPOPP,
+  month     = FEB,
+  year      = {2011},
+  doi       = {10.1145/2038037.1941582},
+}
+
+@article{danowitz-cpudb-queue2012,
+  title     = {{CPU} {DB}: Recording Microprocessor History},
+  author    = {Andrew Danowitz and Kyle Kelley and James Mao and John P.
+                Stevenson and Mark Horowitz},
+  journal   = QUEUE,
+  month     = APR,
+  year      = {2012},
+  volume    = {10},
+  number    = {4},
+  pages     = {10--27},
+}
+
+@article{margerm-tapas-micro2018,
+  title     = {TAPAS: Generating Parallel Accelerators from Parallel
+                Programs},
+  author    = {Steven Margerm and Amirali Sharifian and Apala Guha and
+                Arrvindh Shriraman and Gilles Pokam},
+  journal   = MICRO,
+  month     = OCT,
+  year      = {2018},
+  doi       = {10.1109/MICRO.2018.00028},
+}
+
+@article{anderson-crayt3e-sc1997,
+  title     = {Performance of the CRAY T3E Multiprocessor},
+  author    = {E. Anderson and J. Brooks and C. Grassl and S. Scott},
+  journal   = SC,
+  month     = NOV,
+  year      = {1997},
+  doi       = {10.1145/509593.509632},
+}
+
+@article{vonbehren-capriccio-sosp2003,
+  author    = {Rob von Behren and Jeremy Condit and Feng Zhou and George
+                C. Necula and Eric Brewer},
+  title     = {Capriccio: Scalable Threads for Internet Services},
+  journal   = SOSP,
+  month     = OCT,
+  year      = {2003},
+  doi       = {10.1145/945445.945471},
+}
+
+@article{wang-benchmarking-tpu-arxiv2019,
+  title     = {Benchmarking {TPU}, {GPU}, and {CPU} Platforms for Deep
+                Learning},
+  author    = {Yu Emma Wang and Gu-Yeon Wei and David Brooks},
+  journal   = ARXIV,
+  month     = JUL,
+  year      = {2019},
+  volume    = {arXiv:1907.10701},
+}
+
+%-------------------------------------------------------------------------
+% EVE MICRO'22 Paper
+%-------------------------------------------------------------------------
+
+@article{cheon-fast-bitline-isocc2020,
+  title     = {A Bit-Line Boosting Technique for Fast Bit-Line
+               Computation without Read Disturbance},
+  author    = {Sungsoo Cheon and Jongsun Park},
+  journal   = ISOCC,
+  month     = OCT,
+  year      = {2020},
+}
+
+@article{si-local-cim-jssc2021,
+  title     = {A Local Computing Cell and 6T SRAM-Based
+                Computing-in-Memory Macro With 8-b MAC Operation for
+                Edge AI Chips},
+  author    = {Xin Si and Yung-Ning Tu and Wei-Hsing Huang and Jian-Wei
+                Su and Pei-Jung Lu and Jing-Hong Wang and Ta-Wei Liu
+                and Ssu-Yen Wu and Ruhui Liu and Yen-Chi Chou and
+                Yen-Lin Chung and William Shih and Chung-Chuan Lo and
+                Ren-Shuo Liu and Chih-Cheng Hsieh and Kea-Tiong Tang
+                and Nan-Chun Lien and Wei-Chiang Shih and Yajuan He and
+                Qiang Li and Meng-Fan Chang },
+  journal   = JSSC,
+  month     = APR,
+  year      = {2021},
+}
+
+@article{simon-blade-toc2020,
+  title     = {BLADE: An in-Cache Computing Architecture for Edge Devices},
+  author    = {William Andrew Simon and Yasir Mahmood Qureshi and Marco
+                Rios and Alexandre Levisse and Marina Zapater and David
+                Atienza},
+  journal   = TOC,
+  month     = FEB,
+  year      = {2020},
+}
+
+@article{agrawal-xcel-ram-tcas2019,
+  title     = {Xcel-RAM: Accelerating Binary Neural Networks in
+               High-Throughput SRAM Compute Arrays},
+  author    = {Amogh Agrawal and Akhilesh Jaiswal and Deboleena Roy and
+                Bing Han and Gopalakrishnan Srinivasan and Aayush Ankit
+                and Kaushik Roy},
+  journal   = TCASI,
+  month     = APR,
+  year      = {2019},
+}
+
+@article{agrawal-x-sram-tcas2018,
+  title     = {X-SRAM: Enabling In-Memory Boolean Computations in CMOS
+                Static Random Access Memories},
+  author    = {Amogh Agrawal and Akhilesh Jaiswal and Chankyu Lee and
+                Kaushik Roy},
+  journal   = TCASI,
+  month     = JUL,
+  year      = {2018},
+}
+
+@article{li-graphia-memsys2018,
+  title     = {GraphIA: an In-Situ Accelerator for Large-Scale Graph
+                Processing},
+  author    = {Gushu Li and Guohao Dai and Shuangchen Li and
+                Yu Wang and Yuan Xie},
+  journal   = MEMSYS,
+  month     = OCT,
+  year      = {2018},
+}
+
+@article{imrani-floatpim-isca2019,
+  title     = {FloatPIM: In-Memory Acceleration of Deep Neural Network
+                Training with High Precision},
+  author    = {Mohsen Imani and Saransh Gupta and Yeseong Kim and Tajana
+                Rosing},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2019},
+}
+
+@article{elliot-compram-dt1999,
+  title     = {Computational RAM: Implementing Processors in Memory},
+  author    = {D.G. Elliot and M. Stumm and W.M. Snelgrove and C.
+                Cojocaru and R. McKenzie},
+  journal   = DT,
+  month     = {Jan-Mar},
+  year      = {1999},
+}
+
+@article{song-pipelayer-hpca2017,
+  title     = {PipeLayer: A Pipelined ReRAM-Based Accelerator for Deep
+                Learning},
+  author    = {Linghao Song and Xuehai Qian and Hai Li and Yiran Chen},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2017},
+}
+
+@article{song-graphr-hpca2018,
+  title     = {GraphR: Accelerating Graph Processing Using ReRAM},
+  author    = {Linghao Song and Youwei Zhuo and Xuehai Qian and Hai Li
+                and Yiran Chen},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2018},
+}
+
+@article{qiu-resicra-hpca2020,
+  title     = {ResiRCA: A Resilient Energy Harvesting ReRAM
+                Crossbar-Based Accelerator for Intelligent Embedded
+                Processors},
+  author    = {Keni Qiu and Nicholas Jao and Mengying Zhao and Cyan
+                Subhra Mishra and Gulsum Gudukbay and Sethu Jose and
+                Jack Sampson and Mahmut Taylan Kandemir and
+                Vijaykrishnan Narayanan},
+  journal   = HPCA,
+  month     = FEB,
+  year      = {2020},
+}
+
+@article{challapalle-gaasx-isca2020,
+  title     = {GaaS-X: Graph Analytics Accelerator Supporting Sparse Data
+                Representation using Crossbar Architectures},
+  author    = {Nagadastagiri Challapalle and Sahithi Rampalli and Linghao
+                Song and Nandhini Chandramoorthy and Kathik Swaminathan
+                and John Sampson and Yiran Chen and Vijaykrishnan
+                Narayanan},
+  journal   = ISCA,
+  month     = MAY/JUN,
+  year      = {2020},
+}
+
+@article{li-timely-isca2020,
+  title     = {Timely: Pushing Data Movements And Interfaces In Pim
+                Accelerators Towards Local And In Time Domain},
+  author    = {Weitau Li and Pengfei Xu and Yang Zhao and Haitong Li and
+                Yuan Xie and Yingyan Lin},
+  journal   = ISCA,
+  month     = MAY/JUN,
+  year      = {2020},
+}
+
+@article{cheng-time-dac2017,
+  title     = {TIME: A Training-in-Memory Architecture for Memristor-Based
+                Deep Neural Networks},
+  author    = {Ming Cheng and Lixue Xia and Zhenhua Zhu and Yi Cai and
+                Yuan Xie and Yu Wang and Huazhung Yang},
+  journal   = DAC,
+  month     = JUN,
+  year      = {2017},
+}
+
+% abts-blackwidow-cos2007
+@article{abts-blackwidow-sc2007,
+  title     = {The Cray BlackWidow: A Highly Scalable Vector
+                Multiprocessor},
+  author    = {Dennis Abts and Abdulla Bataineh and Steve Scott and Greg
+                Faanes and Jim Schwarzmeier and Eric Lundberg and Tim
+                Johnson and Mike Bye and Gerald Schwoerer},
+  journal   = SC,
+  month     = NOV,
+  year      = {2007},
+}
+
+@article{peleg-mmx-micro1999,
+  title     = {MMX Technology Extension to the Intel Architecture},
+  author    = {A. Peleg and U. Weiser},
+  journal   = MICRO,
+  month     = AUG,
+  year      = {1996},
+}
+
+@article{cavalcante-ara-tvlsi2019,
+  title     = {Ara: A 1-GHz+ Scalable and Energy-Efficient RISC-V Vector
+                Processor with Multi-Precision Floating-Point Support
+                in 22nm FD-SOI},
+  author    = {Matheus Cavalcante and Fabian Schuiki and Florian Zaruba
+                and Michael Schaffner and Luca Benini},
+  journal   = TVLSI,
+  month     = FEB,
+  year      = {2019},
+  volume    = {28},
+  number    = {02},
+  pages     = {530--543},
+}
+
+@article{lowe-gem5-arxiv2020,
+  title     = {The gem5 Simulator: Version 20.0+},
+  author    = {Jason Lowe-Power and Abdul Mutaal Ahmad and Ayaz Akram and
+                Mohammad Alian and Rico Amslinger and Matteo Andreozzi
+                and Adri{\`a} Armejach and Nils Asmussen and Brad
+                Beckmann and Srikant Bharadwaj and others},
+  journal   = ARXIV,
+  month     = SEP,
+  year      = {2020},
+  volume    = {arXiv:2007.03152},
+}
+
+@article{rupley-samsung-ieeemicro2019,
+  title     = {Samsung M3 Processor},
+  author    = {Jeff Rupley and Brad Burgess and Brian Grayson and Gerald
+                D. Zuraski},
+  journal   = IEEEMICRO,
+  month     = MAR/APR,
+  year      = {2019},
+  volume    = {39},
+  number    = {2},
+  pages     = {37--44},
+}
+
+% staran-1976
+@article{sayre-staran-book1976,
+  title     = {Staran: An Associative Approach to Multiprocessor
+                Architecture},
+  author    = {Gordon E. Sayre},
+  journal   = {Computer Architecture},
+  year      = {1976},
+  volume    = {4},
+  number    = {2},
+  pages     = {199--221},
+  publisher = {Springer Berlin Heidelberg}
+}
+
+% asc-1994
+@article{sayre-asc-computer1994,
+  title     = {ASC: An Associative-Computing Paradigm},
+  author    = {Gordon E. Sayre},
+  journal   = COMPUTER,
+  month     = NOV,
+  year      = {1994},
+  volume    = {27},
+  number    = {11},
+  pages     = {19--25},
+}
+
+% ac-dimm-2013
+@article{guo-ac-dimm-isca2013,
+  title     = {AC-DIMM: Associative Computing with STT-MRAM},
+  author    = {Qing Guo and Xiaochen Guo and Ravi Patel and Engin Ipek
+                and Eby G. Friedman},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2013},
+}
+
+% gp-simd-2016
+@article{morad-gp-simd-taco2016,
+  title     = {Resistive GP-SIMD Processing-In-Memory},
+  author    = {Amir Morad and Leonid Yavits and Shahar Kvatinsky and Ran
+                Ginosar},
+  journal   = TACO,
+  month     = JAN,
+  year      = {2016},
+  volume    = {12},
+  number    = {4},
+  pages     = {1--22},
+}
+
+% caap-2015
+@article{yavits-caap-toc2015,
+  title     = {Computer Architecture with Associative Processor Replacing
+                Last-Level Cache and SIMD Accelerator},
+  author    = {Leonid Yavits and Amir Morad and Ran Ginosar},
+  journal   = TOC,
+  month     = FEB,
+  year      = {2015},
+  volume    = {64},
+  number    = {2},
+  pages     = {368--381},
+}
+
+% hyperAP-2020
+@article{zha-hyper-ap-isca2020,
+  title     = {Hyper-Ap: Enhancing Associative Processing Through A
+                Full-Stack Optimization},
+  author    = {Yue Zha and Jing Li},
+  journal   = ISCA,
+  month     = JUN,
+  year      = {2020},
+}
+
+% yantir-lprap-icecs2018,
+@article{lprap-2018,
+  title     = {Low-Power Resistive Associative Processor Implementation
+                Through the Multi-Compare},
+  author    = {Hasan Erdem Yantir and Ahmed M. Eltawil and Fadi J.
+                Kurdahi},
+  journal   = ICECS,
+  month     = DEC,
   year      = {2018},
 }
 
