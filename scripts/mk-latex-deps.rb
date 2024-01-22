@@ -276,7 +276,15 @@ def main()
   while ( !prereq_full_names.empty? ) do
     prereq_full_name = prereq_full_names.shift()
 
+    # This is hacky for now ... there are certain kinds of files we do
+    # not want to search through like images
+
+    if [".pdf", ".png", ".jpeg", "jpg"].include? File.extname(prereq_full_name)
+      next
+    end
+
     # For each line in prereq file see if it includes any other prereqs
+
     IO.foreach(prereq_full_name) do |line|
       for prereq_type in prereq_types
         prereq_full_names.push(prereq_type.check(line))
